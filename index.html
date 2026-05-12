@@ -22,7 +22,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .pin-input{width:100%;padding:14px;font-size:1.5rem;text-align:center;border-radius:12px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);color:#fff;letter-spacing:.5em;outline:none}
 .pin-input::placeholder{color:rgba(255,255,255,.5);letter-spacing:normal}
 .login-btn{width:100%;margin-top:16px;padding:16px;background:#fff;color:#764ba2;border:none;border-radius:12px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s}
-.login-btn:hover{transform:scale(1.02)}
 .topbar{background:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
 .topbar-name{font-weight:700;font-size:1rem}
 .topbar-day{font-size:.8rem;color:#888}
@@ -45,7 +44,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .session-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .session-header{padding:14px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
 .session-header-top{display:flex;justify-content:space-between;align-items:center}
-.session-cat{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
+.session-cat-badge{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
 .session-time{font-weight:800;font-size:1.1rem}
 .session-deadline{font-size:.75rem;opacity:.85;margin-top:2px}
 .session-closed{background:linear-gradient(135deg,#ccc,#999)!important}
@@ -54,8 +53,8 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .place-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:6px;background:#f9f9f9;cursor:pointer;transition:.15s;border:2px solid transparent}
 .place-item:hover{background:#f0f4ff}
 .place-item.selected{background:#eef0ff;border-color:#667eea}
-.place-radio{accent-color:#667eea;width:18px;height:18px;flex-shrink:0}
-.place-info{flex:1}
+.place-radio{accent-color:#667eea;width:18px;height:18px;flex-shrink:0;pointer-events:none}
+.place-info{flex:1;pointer-events:none}
 .place-name{font-weight:700;font-size:.95rem}
 .place-sub{font-size:.75rem;color:#888;margin-top:2px}
 .vote-bars{padding:0 12px 12px}
@@ -67,38 +66,32 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#e8f4e8;color:#2d7a2d;font-weight:600}
 .not-voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#f5f5f5;color:#999}
 .submit-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s}
-.submit-btn:hover{opacity:.9;transform:scale(1.01)}
+.submit-btn:hover{opacity:.9}
 .change-vote-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:10px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer}
 .admin-section{margin-top:20px;padding:16px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .admin-title{font-weight:800;margin-bottom:12px;color:#764ba2}
 .admin-form{display:flex;flex-direction:column;gap:8px}
-.admin-select,.admin-input{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
-.admin-select:focus,.admin-input:focus{border-color:#667eea}
+.admin-sel,.admin-input{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
+.admin-sel:focus,.admin-input:focus{border-color:#667eea}
 .admin-add-btn{padding:11px;background:#764ba2;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:24px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
-.refresh-bar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999;max-width:480px}
-.refresh-progress{height:3px;background:#667eea;transition:width 30s linear}
+.rbar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999;max-width:480px}
+.rprog{height:3px;background:#667eea;transition:width 30s linear}
 #mainScreen{padding:0}
 </style>
 </head>
 <body>
-
-<div class="refresh-bar"><div class="refresh-progress" id="refreshProgress"></div></div>
+<div class="rbar"><div class="rprog" id="rprog"></div></div>
 
 <div id="loginScreen" class="screen active">
   <div class="login-title">✈️ 삿포로 여행</div>
   <div class="login-sub">함께 투표하고 코스 정해요!</div>
-  <div class="name-grid">
-    <button class="name-btn" data-name="민지" onclick="selectName(this)">민지</button>
-    <button class="name-btn" data-name="친구1" onclick="selectName(this)">친구1</button>
-    <button class="name-btn" data-name="친구2" onclick="selectName(this)">친구2</button>
-    <button class="name-btn" data-name="친구3" onclick="selectName(this)">친구3</button>
-  </div>
+  <div class="name-grid" id="nameGrid"></div>
   <div class="pin-section">
     <div class="pin-label">🔒 PIN 4자리를 입력하세요</div>
     <input id="pinInput" type="password" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----">
-    <button class="login-btn" onclick="doLogin()">입장하기 🚀</button>
+    <button class="login-btn" id="loginBtn">입장하기 🚀</button>
   </div>
 </div>
 
@@ -106,392 +99,372 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
   <div class="topbar">
     <div>
       <div class="topbar-name" id="topbarName">안녕하세요!</div>
-      <div class="topbar-day" id="topbarStatus">상태 체크 해주세요 ✨</div>
+      <div id="topbarStatus" style="font-size:.8rem;color:#888">상태 체크 해주세요 ✨</div>
     </div>
-    <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+    <button class="logout-btn" id="logoutBtn">로그아웃</button>
   </div>
-
   <div style="padding:16px 16px 0">
-    <div class="status-card" id="statusCard">
+    <div class="status-card">
       <div class="status-title">📊 지금 내 상태는?</div>
       <div class="status-row">
         <span class="status-label">⚡ 체력</span>
         <div class="emoji-row" id="energyRow">
-          <button class="emoji-btn" data-val="1" onclick="setStatus('energy',1,this)">😴</button>
-          <button class="emoji-btn" data-val="2" onclick="setStatus('energy',2,this)">😐</button>
-          <button class="emoji-btn" data-val="3" onclick="setStatus('energy',3,this)">😊</button>
-          <button class="emoji-btn" data-val="4" onclick="setStatus('energy',4,this)">💪</button>
+          <button class="emoji-btn" data-type="energy" data-val="1">😴</button>
+          <button class="emoji-btn" data-type="energy" data-val="2">😐</button>
+          <button class="emoji-btn" data-type="energy" data-val="3">😊</button>
+          <button class="emoji-btn" data-type="energy" data-val="4">💪</button>
         </div>
       </div>
       <div class="status-row">
         <span class="status-label">🍜 배고픔</span>
         <div class="emoji-row" id="hungerRow">
-          <button class="emoji-btn" data-val="1" onclick="setStatus('hunger',1,this)">😌</button>
-          <button class="emoji-btn" data-val="2" onclick="setStatus('hunger',2,this)">🙂</button>
-          <button class="emoji-btn" data-val="3" onclick="setStatus('hunger',3,this)">😋</button>
-          <button class="emoji-btn" data-val="4" onclick="setStatus('hunger',4,this)">🤤</button>
+          <button class="emoji-btn" data-type="hunger" data-val="1">😌</button>
+          <button class="emoji-btn" data-type="hunger" data-val="2">🙂</button>
+          <button class="emoji-btn" data-type="hunger" data-val="3">😋</button>
+          <button class="emoji-btn" data-type="hunger" data-val="4">🤤</button>
         </div>
       </div>
       <div class="status-row">
         <span class="status-label">🚶 의지</span>
         <div class="emoji-row" id="motivRow">
-          <button class="emoji-btn" data-val="1" onclick="setStatus('motiv',1,this)">😩</button>
-          <button class="emoji-btn" data-val="2" onclick="setStatus('motiv',2,this)">😶</button>
-          <button class="emoji-btn" data-val="3" onclick="setStatus('motiv',3,this)">😎</button>
-          <button class="emoji-btn" data-val="4" onclick="setStatus('motiv',4,this)">🔥</button>
+          <button class="emoji-btn" data-type="motiv" data-val="1">😩</button>
+          <button class="emoji-btn" data-type="motiv" data-val="2">😶</button>
+          <button class="emoji-btn" data-type="motiv" data-val="3">😎</button>
+          <button class="emoji-btn" data-type="motiv" data-val="4">🔥</button>
         </div>
       </div>
       <div class="rest-row">
-        <input type="checkbox" class="rest-check" id="restCheck">
+        <input type="checkbox" id="restCheck" class="rest-check">
         <label for="restCheck" style="font-size:.9rem;cursor:pointer">🛋️ 쉬고 싶어요</label>
       </div>
       <div id="aiBox" class="ai-box" style="display:none"></div>
-      <button class="save-status-btn" onclick="saveStatus()">상태 저장하기 💾</button>
+      <button class="save-status-btn" id="saveStatusBtn">상태 저장하기 💾</button>
     </div>
-
     <div class="day-tabs">
-      <div class="day-tab active" id="tab1" onclick="switchDay(1)">1일차</div>
-      <div class="day-tab" id="tab2" onclick="switchDay(2)">2일차</div>
+      <div class="day-tab active" id="tab1" data-day="1">1일차</div>
+      <div class="day-tab" id="tab2" data-day="2">2일차</div>
     </div>
-
-    <div class="sessions-wrap" id="sessionsWrap">
-      <div style="text-align:center;padding:40px;color:#999">로딩중...</div>
-    </div>
-
+    <div class="sessions-wrap" id="sessionsWrap"><div style="text-align:center;padding:40px;color:#999">로딩중...</div></div>
     <div id="adminSection" class="admin-section" style="display:none">
       <div class="admin-title">⚙️ 관리자 (민지 전용)</div>
       <div class="admin-form">
-        <select id="adminDay" class="admin-select">
-          <option value="1">1일차</option>
-          <option value="2">2일차</option>
-        </select>
-        <select id="adminMeal" class="admin-select">
+        <select id="adminDay" class="admin-sel"><option value="1">1일차</option><option value="2">2일차</option></select>
+        <select id="adminMeal" class="admin-sel">
           <option value="lunch">🍱 점심</option>
           <option value="dinner">🍽️ 저녁</option>
           <option value="breakfast">🌅 아침</option>
           <option value="cafe">☕ 카페타임</option>
         </select>
-        <select id="adminCat" class="admin-select">
+        <select id="adminCat" class="admin-sel">
           <option value="식사">🍽️ 식사</option>
           <option value="카페">☕ 카페</option>
           <option value="구경거리">🏞️ 구경거리</option>
         </select>
         <input id="adminDeadline" type="datetime-local" class="admin-input">
-        <button class="admin-add-btn" onclick="addSession()">+ 투표 세션 추가</button>
+        <button class="admin-add-btn" id="addSessionBtn">+ 투표 세션 추가</button>
       </div>
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://pmzmmimyabuvpwoklkgc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SB_URL = 'https://pmzmmimyabuvpwoklkgc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-let currentUser = null;
-let currentDay = 1;
-let statusState = {energy:0, hunger:0, motiv:0, rest:false};
-let selectedPlaces = {};
-let refreshInterval = null;
+let CU = null, DAY = 1, SS = {e:0,h:0,m:0,r:false}, selPlaces = {}, RFI = null;
+const NAMES = ['민지','친구1','친구2','친구3'];
+const PINS = {'민지':'1111','친구1':'2222','친구2':'3333','친구3':'4444'};
+const ML = {breakfast:'🌅 아침',lunch:'🍱 점심',dinner:'🍽️ 저녁',cafe:'☕ 카페타임'};
+const CE = {'식사':'🍽️','카페':'☕','구경거리':'🏞️'};
 
-function selectName(btn) {
-  document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  window._selectedName = btn.dataset.name;
-}
+// Build name buttons
+const ng = document.getElementById('nameGrid');
+NAMES.forEach(n => {
+  const b = document.createElement('button');
+  b.className = 'name-btn'; b.textContent = n; b.dataset.name = n;
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.name-btn').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    window.SEL_NAME = n;
+  });
+  ng.appendChild(b);
+});
 
-async function doLogin() {
-  const name = window._selectedName || '';
-  if (!name) { showToast('이름을 선택해주세요!'); return; }
+// Login
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const name = window.SEL_NAME || '';
+  if (!name) { toast('이름을 선택해주세요!'); return; }
   const pin = document.getElementById('pinInput').value;
-  if (pin.length !== 4) { showToast('PIN 4자리를 입력해주세요!'); return; }
+  if (pin.length !== 4) { toast('PIN 4자리를 입력해주세요!'); return; }
   const {data, error} = await sb.from('members').select('*').eq('nickname', name).eq('pin', pin).single();
-  if (error || !data) { showToast('❌ PIN이 틀렸어요!'); return; }
-  currentUser = data;
-  localStorage.setItem('sapporo_user', JSON.stringify(data));
+  if (error || !data) { toast('❌ PIN이 틀렸어요!'); return; }
+  CU = data;
+  localStorage.setItem('su', JSON.stringify(data));
   showMain();
-}
+});
 
-function doLogout() {
-  localStorage.removeItem('sapporo_user');
-  currentUser = null;
-  clearInterval(refreshInterval);
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('su');
+  CU = null; clearInterval(RFI);
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('mainScreen').classList.remove('active');
   document.getElementById('pinInput').value = '';
   document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-  window._selectedName = '';
-}
+  window.SEL_NAME = '';
+});
 
 function showMain() {
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('mainScreen').classList.add('active');
-  document.getElementById('topbarName').textContent = currentUser.nickname + ' 님 👋';
-  if (currentUser.nickname === '민지') document.getElementById('adminSection').style.display = 'block';
-  loadStatus();
-  loadSessions();
-  startAutoRefresh();
+  document.getElementById('topbarName').textContent = CU.nickname + ' 님 👋';
+  if (CU.nickname === '민지') document.getElementById('adminSection').style.display = 'block';
+  loadStatus(); loadSessions(); startRF();
 }
 
-function setStatus(type, val, btn) {
-  statusState[type] = val;
-  const rowId = type === 'energy' ? 'energyRow' : type === 'hunger' ? 'hungerRow' : 'motivRow';
-  document.querySelectorAll('#' + rowId + ' .emoji-btn').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  updateAiBox();
-}
-
-function updateAiBox() {
-  const rest = document.getElementById('restCheck').checked;
-  statusState.rest = rest;
-  const {energy, hunger, motiv} = statusState;
-  if (!energy || !hunger || !motiv) return;
-  const aiBox = document.getElementById('aiBox');
-  aiBox.style.display = 'block';
-  let msg = '';
-  if (rest || (energy <= 1 && motiv <= 1)) {
-    msg = '🛋️ 오늘은 쉬는 게 어떨까요? 충분한 휴식도 여행의 일부예요!';
-  } else if (energy <= 2 && motiv <= 2) {
-    msg = '😌 컨디션이 좀 처지네요. 가까운 카페에서 여유롭게 시작해요~';
-  } else if (hunger >= 3) {
-    msg = '🍜 배가 많이 고프군요! 맛집 투표 빨리 하고 밥 먹으러 가요!';
-  } else if (energy >= 3 && motiv >= 3) {
-    msg = '🔥 컨디션 최고! 오늘 일정 다 소화할 수 있어요!';
-  } else {
-    msg = '🗺️ 좋아요! 투표하고 함께 즐거운 코스 정해봐요!';
-  }
-  aiBox.textContent = msg;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('restCheck').addEventListener('change', updateAiBox);
+// Status buttons (event delegation)
+document.querySelectorAll('.emoji-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    const type = b.dataset.type, val = parseInt(b.dataset.val);
+    SS[type[0]] = val;
+    const rowId = type === 'energy' ? 'energyRow' : type === 'hunger' ? 'hungerRow' : 'motivRow';
+    document.querySelectorAll('#' + rowId + ' .emoji-btn').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    updateAI();
+  });
 });
+document.getElementById('restCheck').addEventListener('change', () => { SS.r = document.getElementById('restCheck').checked; updateAI(); });
+
+function updateAI() {
+  if (!SS.e || !SS.h || !SS.m) return;
+  const box = document.getElementById('aiBox');
+  box.style.display = 'block';
+  let msg;
+  if (SS.r || (SS.e <= 1 && SS.m <= 1)) msg = '🛋️ 오늘은 쉬는 게 어떨까요? 충분한 휴식도 여행의 일부예요!';
+  else if (SS.e <= 2 && SS.m <= 2) msg = '😌 컨디션이 좀 처지네요. 가까운 카페에서 여유롭게 시작해요~';
+  else if (SS.h >= 3) msg = '🍜 배가 많이 고프군요! 맛집 투표 빨리 하고 밥 먹으러 가요!';
+  else if (SS.e >= 3 && SS.m >= 3) msg = '🔥 컨디션 최고! 오늘 일정 다 소화할 수 있어요!';
+  else msg = '🗺️ 좋아요! 투표하고 함께 즐거운 코스 정해봐요!';
+  box.textContent = msg;
+}
 
 async function loadStatus() {
-  const {data} = await sb.from('status_checks').select('*').eq('member_id', currentUser.id).eq('day_number', currentDay).order('created_at', {ascending:false}).limit(1);
+  const {data} = await sb.from('status_checks').select('*').eq('member_id', CU.id).eq('day_number', DAY).order('created_at', {ascending:false}).limit(1);
   if (data && data.length > 0) {
     const s = data[0];
-    const types = ['energy','hunger','motiv'];
-    const vals = [s.energy, s.hunger, s.motivation];
-    const rowIds = ['energyRow','hungerRow','motivRow'];
-    types.forEach((type, i) => {
-      statusState[type] = vals[i];
-      document.querySelectorAll('#' + rowIds[i] + ' .emoji-btn').forEach(b => {
-        b.classList.toggle('sel', parseInt(b.dataset.val) === vals[i]);
-      });
+    const map = [['e','energy','energyRow'],['h','hunger','hungerRow'],['m','motivation','motivRow']];
+    map.forEach(([k, col, rid]) => {
+      SS[k] = s[col];
+      document.querySelectorAll('#' + rid + ' .emoji-btn').forEach(b => { b.classList.toggle('sel', parseInt(b.dataset.val) === s[col]); });
     });
-    if (s.want_rest) { document.getElementById('restCheck').checked = true; statusState.rest = true; }
-    updateAiBox();
+    if (s.want_rest) { document.getElementById('restCheck').checked = true; SS.r = true; }
+    updateAI();
     document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅';
   }
 }
 
-async function saveStatus() {
-  if (!statusState.energy || !statusState.hunger || !statusState.motiv) { showToast('모든 상태를 선택해주세요!'); return; }
-  const mealTime = currentDay === 1 ? 'day1' : 'day2';
-  const {error} = await sb.from('status_checks').upsert({
-    member_id: currentUser.id, day_number: currentDay, meal_time: mealTime,
-    energy: statusState.energy, hunger: statusState.hunger,
-    motivation: statusState.motiv, want_rest: statusState.rest
-  }, {onConflict: 'member_id,day_number,meal_time'});
-  if (!error) { showToast('✅ 상태 저장 완료!'); document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅'; }
-  else showToast('저장 실패: ' + error.message);
-}
+document.getElementById('saveStatusBtn').addEventListener('click', async () => {
+  if (!SS.e || !SS.h || !SS.m) { toast('모든 상태를 선택해주세요!'); return; }
+  const mt = DAY === 1 ? 'day1' : 'day2';
+  const {error} = await sb.from('status_checks').upsert({member_id:CU.id,day_number:DAY,meal_time:mt,energy:SS.e,hunger:SS.h,motivation:SS.m,want_rest:SS.r},{onConflict:'member_id,day_number,meal_time'});
+  if (!error) { toast('✅ 상태 저장 완료!'); document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅'; }
+  else toast('오류: ' + error.message);
+});
 
-function switchDay(day) {
-  currentDay = day;
-  document.getElementById('tab1').classList.toggle('active', day === 1);
-  document.getElementById('tab2').classList.toggle('active', day === 2);
-  loadSessions();
-}
-
-const mealLabel = {breakfast:'🌅 아침', lunch:'🍱 점심', dinner:'🍽️ 저녁', cafe:'☕ 카페타임'};
-const catEmoji = {'식사':'🍽️', '카페':'☕', '구경거리':'🏞️'};
+// Day tabs
+document.querySelectorAll('.day-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    DAY = parseInt(t.dataset.day);
+    document.getElementById('tab1').classList.toggle('active', DAY === 1);
+    document.getElementById('tab2').classList.toggle('active', DAY === 2);
+    loadSessions();
+  });
+});
 
 async function loadSessions() {
   const wrap = document.getElementById('sessionsWrap');
   wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999">로딩중...</div>';
-  const {data: sessions, error} = await sb.from('vote_sessions').select('*').eq('day_number', currentDay).order('id');
+  const {data:sessions,error} = await sb.from('vote_sessions').select('*').eq('day_number',DAY).order('id');
   if (error) { wrap.innerHTML = '<div style="padding:20px;color:red">오류: ' + error.message + '</div>'; return; }
-  if (!sessions || sessions.length === 0) {
-    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;line-height:1.8">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>';
-    return;
-  }
-  const [{data: places}, {data: votes}, {data: members}] = await Promise.all([
+  if (!sessions || !sessions.length) { wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;line-height:1.8">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>'; return; }
+  const [{data:places},{data:votes},{data:members}] = await Promise.all([
     sb.from('places').select('*'),
-    sb.from('votes').select('*, members(nickname)'),
+    sb.from('votes').select('*,members(nickname)'),
     sb.from('members').select('*')
   ]);
-
   wrap.innerHTML = '';
-  for (const session of sessions) {
-    const sid = session.id;
-    const sessionVotes = (votes || []).filter(v => v.session_id === sid);
-    const myVote = sessionVotes.find(v => v.member_id === currentUser.id);
-    const sessionPlaces = (places || []).filter(p => p.category === session.category);
-    const now = new Date();
-    const deadline = session.deadline ? new Date(session.deadline) : null;
-    const isExpired = deadline && now > deadline;
-    const isClosed = session.is_closed;
-    const showVotes = isClosed || isExpired;
-
+  for (const sess of sessions) {
+    const sid = sess.id;
+    const svotes = (votes||[]).filter(v => v.session_id === sid);
+    const myVote = svotes.find(v => v.member_id === CU.id);
+    const splaces = (places||[]).filter(p => p.category === sess.category);
+    const now = new Date(), dl = sess.deadline ? new Date(sess.deadline) : null;
+    const expired = dl && now > dl, closed = sess.is_closed, done = closed || expired;
     const card = document.createElement('div');
     card.className = 'session-card';
+    card.dataset.sid = sid;
 
-    const headerClass = showVotes ? 'session-header session-closed' : 'session-header';
-    const deadlineText = deadline ? formatDeadline(deadline) : '마감 미정';
-    const statusText = isClosed ? '🔒 마감' : isExpired ? '⏰ 종료' : '🗳️ 투표중';
+    // Header
+    const statusTxt = closed ? '🔒 마감' : expired ? '⏰ 종료' : '🗳️ 투표중';
+    const hdrClass = done ? 'session-header session-closed' : 'session-header';
+    const dlTxt = dl ? fmtDl(dl) : '마감 미정';
+    card.innerHTML = '<div class="' + hdrClass + '"><div class="session-header-top"><span class="session-time">' + (ML[sess.meal_time]||sess.meal_time) + ' · ' + CE[sess.category] + ' ' + sess.category + '</span><span class="session-cat-badge">' + statusTxt + '</span></div><div class="session-deadline">⏱️ ' + dlTxt + '</div></div>';
 
-    let winnerHtml = '';
-    if (showVotes && session.winning_place_id) {
-      const winner = (places || []).find(p => p.id === session.winning_place_id);
-      if (winner) winnerHtml = '<div class="winner-banner">🏆 당선: ' + winner.name + '</div>';
+    // Winner
+    if (done && sess.winning_place_id) {
+      const w = (places||[]).find(p => p.id === sess.winning_place_id);
+      if (w) card.innerHTML += '<div class="winner-banner">🏆 당선: ' + w.name + '</div>';
     }
 
-    const votedMembers = (members || []).map(m => {
-      const voted = sessionVotes.find(v => v.member_id === m.id);
-      return voted ? '<span class="voted-chip">✅ ' + m.nickname + '</span>' : '<span class="not-voted-chip">⬜ ' + m.nickname + '</span>';
-    }).join('');
-
-    let placesHtml = '';
-    if (!showVotes) {
-      for (const place of sessionPlaces) {
-        const pid = place.id;
-        const isMyVote = myVote && myVote.place_id === pid;
-        const isSelected = selectedPlaces[sid] === pid;
-        // KEY FIX: wrap UUIDs in quotes in onclick
-        placesHtml += '<div class="place-item' + (isMyVote || isSelected ? ' selected' : '') + '" onclick="selectPlace('' + sid + '','' + pid + '',this)">' +
-          '<input type="radio" class="place-radio" name="sess_' + sid + '" ' + (isMyVote || isSelected ? 'checked' : '') + '>' +
-          '<div class="place-info"><div class="place-name">' + catEmoji[place.category] + ' ' + place.name + '</div>' +
-          '<div class="place-sub">' + (place.sub_category || '') + (place.price_range ? ' · ' + place.price_range : '') + (place.rating ? ' · ⭐' + place.rating : '') + '</div></div></div>';
+    // Place list (only if not done)
+    if (!done) {
+      const plist = document.createElement('div');
+      plist.className = 'places-list';
+      for (const pl of splaces) {
+        const isMine = myVote && myVote.place_id === pl.id;
+        const isSel = selPlaces[sid] === pl.id;
+        const item = document.createElement('div');
+        item.className = 'place-item' + (isMine || isSel ? ' selected' : '');
+        item.dataset.sid = sid;
+        item.dataset.pid = pl.id;
+        item.innerHTML = '<input type="radio" class="place-radio" name="s_' + sid.replace(/-/g,'') + '"' + (isMine || isSel ? ' checked' : '') + '>' +
+          '<div class="place-info"><div class="place-name">' + CE[pl.category] + ' ' + pl.name + '</div>' +
+          '<div class="place-sub">' + (pl.sub_category||'') + (pl.price_range ? ' · ' + pl.price_range : '') + (pl.rating ? ' · ⭐' + pl.rating : '') + '</div></div>';
+        plist.appendChild(item);
       }
+      card.appendChild(plist);
     }
 
-    let voteBarsHtml = '<div class="vote-bars">';
-    for (const place of sessionPlaces) {
-      const cnt = sessionVotes.filter(v => v.place_id === place.id).length;
-      const total = sessionVotes.length;
-      const pct = total > 0 ? Math.round(cnt / total * 100) : 0;
-      voteBarsHtml += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + catEmoji[place.category] + ' ' + place.name + '</span><span>' + cnt + '표 (' + pct + '%)</span></div>' +
-        '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
+    // Vote bars
+    const vb = document.createElement('div');
+    vb.className = 'vote-bars';
+    for (const pl of splaces) {
+      const cnt = svotes.filter(v => v.place_id === pl.id).length;
+      const pct = svotes.length > 0 ? Math.round(cnt / svotes.length * 100) : 0;
+      vb.innerHTML += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + CE[pl.category] + ' ' + pl.name + '</span><span>' + cnt + '표 (' + pct + '%)</span></div><div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
     }
-    voteBarsHtml += '</div>';
+    card.appendChild(vb);
 
-    let actionHtml = '';
-    if (!showVotes) {
+    // Who voted
+    const wv = document.createElement('div');
+    wv.className = 'who-voted';
+    (members||[]).forEach(m => {
+      const voted = svotes.find(v => v.member_id === m.id);
+      const chip = document.createElement('span');
+      chip.className = voted ? 'voted-chip' : 'not-voted-chip';
+      chip.textContent = (voted ? '✅ ' : '⬜ ') + m.nickname;
+      wv.appendChild(chip);
+    });
+    card.appendChild(wv);
+
+    // Action buttons
+    if (!done) {
       if (myVote) {
-        actionHtml = '<button class="change-vote-btn" onclick="cancelVote('' + sid + '')">🔄 투표 변경하기</button>';
+        const btn = document.createElement('button');
+        btn.className = 'change-vote-btn'; btn.textContent = '🔄 투표 변경하기';
+        btn.dataset.sid = sid; btn.dataset.action = 'cancel';
+        card.appendChild(btn);
       } else {
-        actionHtml = '<button class="submit-btn" onclick="submitVote('' + sid + '')">✈️ 투표 제출하기</button>';
+        const btn = document.createElement('button');
+        btn.className = 'submit-btn'; btn.textContent = '✈️ 투표 제출하기';
+        btn.dataset.sid = sid; btn.dataset.action = 'submit';
+        card.appendChild(btn);
       }
     }
 
-    let adminHtml = '';
-    if (currentUser.nickname === '민지' && !isClosed) {
-      adminHtml = '<button onclick="closeSession('' + sid + '')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (관리자)</button>';
+    // Admin close button
+    if (CU.nickname === '민지' && !closed) {
+      const btn = document.createElement('button');
+      btn.style.cssText = 'margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem';
+      btn.textContent = '🔒 세션 마감 (관리자)';
+      btn.dataset.sid = sid; btn.dataset.action = 'close';
+      card.appendChild(btn);
     }
-
-    card.innerHTML = '<div class="' + headerClass + '">' +
-      '<div class="session-header-top"><span class="session-time">' + (mealLabel[session.meal_time] || session.meal_time) + ' · ' + catEmoji[session.category] + ' ' + session.category + '</span>' +
-      '<span class="session-cat">' + statusText + '</span></div>' +
-      '<div class="session-deadline">⏱️ ' + deadlineText + '</div></div>' +
-      winnerHtml +
-      (placesHtml ? '<div class="places-list">' + placesHtml + '</div>' : '') +
-      voteBarsHtml +
-      '<div class="who-voted">' + votedMembers + '</div>' +
-      actionHtml + adminHtml;
 
     wrap.appendChild(card);
   }
 }
 
-function formatDeadline(d) {
-  const diff = d - new Date();
-  if (diff <= 0) return '마감됨';
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  if (h > 24) return d.toLocaleDateString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-  return h > 0 ? h + '시간 ' + m + '분 남음' : m + '분 남음';
-}
+// Event delegation for all session interactions
+document.getElementById('sessionsWrap').addEventListener('click', async (e) => {
+  const item = e.target.closest('.place-item');
+  const btn = e.target.closest('button[data-action]');
 
-function selectPlace(sessionId, placeId, el) {
-  selectedPlaces[sessionId] = placeId;
-  const card = el.closest('.session-card');
-  card.querySelectorAll('.place-item').forEach(item => {item.classList.remove('selected'); item.querySelector('.place-radio').checked = false;});
-  el.classList.add('selected');
-  el.querySelector('.place-radio').checked = true;
-}
-
-async function submitVote(sessionId) {
-  if (!selectedPlaces[sessionId]) { showToast('장소를 먼저 선택해주세요!'); return; }
-  const {error} = await sb.from('votes').upsert({
-    session_id: sessionId, member_id: currentUser.id, place_id: selectedPlaces[sessionId]
-  }, {onConflict: 'session_id,member_id'});
-  if (!error) { showToast('✅ 투표 완료!'); delete selectedPlaces[sessionId]; loadSessions(); }
-  else showToast('오류: ' + error.message);
-}
-
-async function cancelVote(sessionId) {
-  const {error} = await sb.from('votes').delete().eq('session_id', sessionId).eq('member_id', currentUser.id);
-  if (!error) { showToast('투표 취소됨. 다시 선택해주세요!'); loadSessions(); }
-  else showToast('오류: ' + error.message);
-}
-
-async function closeSession(sessionId) {
-  const {data: voteData} = await sb.from('votes').select('place_id').eq('session_id', sessionId);
-  let winner = null;
-  if (voteData && voteData.length > 0) {
-    const counts = {};
-    voteData.forEach(v => counts[v.place_id] = (counts[v.place_id] || 0) + 1);
-    winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+  if (item) {
+    const sid = item.dataset.sid, pid = item.dataset.pid;
+    if (!sid || !pid) return;
+    selPlaces[sid] = pid;
+    const card = item.closest('.session-card');
+    card.querySelectorAll('.place-item').forEach(x => { x.classList.remove('selected'); x.querySelector('.place-radio').checked = false; });
+    item.classList.add('selected');
+    item.querySelector('.place-radio').checked = true;
+    return;
   }
-  const {error} = await sb.from('vote_sessions').update({is_closed: true, winning_place_id: winner || null}).eq('id', sessionId);
-  if (!error) { showToast('🔒 세션 마감 완료!'); loadSessions(); }
-  else showToast('오류: ' + error.message);
-}
 
-async function addSession() {
+  if (btn) {
+    const sid = btn.dataset.sid, action = btn.dataset.action;
+    if (action === 'submit') {
+      if (!selPlaces[sid]) { toast('장소를 먼저 선택해주세요!'); return; }
+      const {error} = await sb.from('votes').upsert({session_id:sid,member_id:CU.id,place_id:selPlaces[sid]},{onConflict:'session_id,member_id'});
+      if (!error) { toast('✅ 투표 완료!'); delete selPlaces[sid]; loadSessions(); }
+      else toast('오류: ' + error.message);
+    } else if (action === 'cancel') {
+      const {error} = await sb.from('votes').delete().eq('session_id',sid).eq('member_id',CU.id);
+      if (!error) { toast('투표 취소됨. 다시 선택해주세요!'); loadSessions(); }
+      else toast('오류: ' + error.message);
+    } else if (action === 'close') {
+      const {data:vd} = await sb.from('votes').select('place_id').eq('session_id',sid);
+      let winner = null;
+      if (vd && vd.length) { const c={}; vd.forEach(v => c[v.place_id]=(c[v.place_id]||0)+1); winner = Object.keys(c).reduce((a,b) => c[a]>c[b]?a:b); }
+      const {error} = await sb.from('vote_sessions').update({is_closed:true,winning_place_id:winner||null}).eq('id',sid);
+      if (!error) { toast('🔒 세션 마감!'); loadSessions(); }
+      else toast('오류: ' + error.message);
+    }
+  }
+});
+
+// Admin add session
+document.getElementById('addSessionBtn').addEventListener('click', async () => {
   const day = parseInt(document.getElementById('adminDay').value);
   const meal = document.getElementById('adminMeal').value;
   const cat = document.getElementById('adminCat').value;
-  const deadline = document.getElementById('adminDeadline').value;
-  if (!deadline) { showToast('마감 시간을 설정해주세요!'); return; }
-  const {error} = await sb.from('vote_sessions').insert({
-    day_number: day, meal_time: meal, category: cat,
-    deadline: new Date(deadline).toISOString(), is_closed: false
-  });
-  if (!error) { showToast('✅ 투표 세션 추가됨!'); loadSessions(); }
-  else showToast('오류: ' + error.message);
+  const dl = document.getElementById('adminDeadline').value;
+  if (!dl) { toast('마감 시간을 설정해주세요!'); return; }
+  const {error} = await sb.from('vote_sessions').insert({day_number:day,meal_time:meal,category:cat,deadline:new Date(dl).toISOString(),is_closed:false});
+  if (!error) { toast('✅ 세션 추가됨!'); loadSessions(); }
+  else toast('오류: ' + error.message);
+});
+
+function fmtDl(d) {
+  const diff = d - new Date();
+  if (diff <= 0) return '마감됨';
+  const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000);
+  if (h > 24) return d.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return h > 0 ? h + '시간 ' + m + '분 남음' : m + '분 남음';
 }
 
-function startAutoRefresh() {
-  clearInterval(refreshInterval);
-  const bar = document.getElementById('refreshProgress');
-  function resetBar() {
-    bar.style.transition = 'none'; bar.style.width = '0%';
-    setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '100%'; }, 50);
-  }
-  resetBar();
-  refreshInterval = setInterval(() => { loadSessions(); resetBar(); }, 30000);
+function startRF() {
+  clearInterval(RFI);
+  const bar = document.getElementById('rprog');
+  function rb() { bar.style.transition='none'; bar.style.width='0%'; setTimeout(()=>{bar.style.transition='width 30s linear';bar.style.width='100%';},50); }
+  rb();
+  RFI = setInterval(() => { loadSessions(); rb(); }, 30000);
 }
 
-function showToast(msg) {
+function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('sapporo_user');
-  if (saved) { try { currentUser = JSON.parse(saved); showMain(); } catch(e) {} }
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const dt = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()+2) + ':' + pad(now.getMinutes());
+  const saved = localStorage.getItem('su');
+  if (saved) { try { CU = JSON.parse(saved); showMain(); } catch(e) {} }
+  const now = new Date(), pad = n => String(n).padStart(2,'0');
+  const dt = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours()+2)+':'+pad(now.getMinutes());
   const el = document.getElementById('adminDeadline');
   if (el) el.value = dt;
-  document.getElementById('restCheck').addEventListener('change', updateAiBox);
 });
 </script>
 </body>
