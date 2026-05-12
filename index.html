@@ -203,7 +203,7 @@ function selectName(btn) {
 }
 
 async function doLogin() {
-  const name = window._selectedName;
+  const name = window._selectedName || '';
   if (!name) { showToast('이름을 선택해주세요!'); return; }
   const pin = document.getElementById('pinInput').value;
   if (pin.length !== 4) { showToast('PIN 4자리를 입력해주세요!'); return; }
@@ -327,7 +327,8 @@ async function loadSessions() {
 
   wrap.innerHTML = '';
   for (const session of sessions) {
-    const sessionVotes = (votes || []).filter(v => v.session_id === session.id);
+    const sid = session.id;
+    const sessionVotes = (votes || []).filter(v => v.session_id === sid);
     const myVote = sessionVotes.find(v => v.member_id === currentUser.id);
     const sessionPlaces = (places || []).filter(p => p.category === session.category);
     const now = new Date();
@@ -357,10 +358,12 @@ async function loadSessions() {
     let placesHtml = '';
     if (!showVotes) {
       for (const place of sessionPlaces) {
-        const isMyVote = myVote && myVote.place_id === place.id;
-        const isSelected = selectedPlaces[session.id] === place.id;
-        placesHtml += '<div class="place-item' + (isMyVote || isSelected ? ' selected' : '') + '" onclick="selectPlace(' + session.id + ',' + place.id + ',this)">' +
-          '<input type="radio" class="place-radio" name="sess_' + session.id + '" ' + (isMyVote || isSelected ? 'checked' : '') + '>' +
+        const pid = place.id;
+        const isMyVote = myVote && myVote.place_id === pid;
+        const isSelected = selectedPlaces[sid] === pid;
+        // KEY FIX: wrap UUIDs in quotes in onclick
+        placesHtml += '<div class="place-item' + (isMyVote || isSelected ? ' selected' : '') + '" onclick="selectPlace('' + sid + '','' + pid + '',this)">' +
+          '<input type="radio" class="place-radio" name="sess_' + sid + '" ' + (isMyVote || isSelected ? 'checked' : '') + '>' +
           '<div class="place-info"><div class="place-name">' + catEmoji[place.category] + ' ' + place.name + '</div>' +
           '<div class="place-sub">' + (place.sub_category || '') + (place.price_range ? ' · ' + place.price_range : '') + (place.rating ? ' · ⭐' + place.rating : '') + '</div></div></div>';
       }
@@ -379,15 +382,15 @@ async function loadSessions() {
     let actionHtml = '';
     if (!showVotes) {
       if (myVote) {
-        actionHtml = '<button class="change-vote-btn" onclick="cancelVote(' + session.id + ')">🔄 투표 변경하기</button>';
+        actionHtml = '<button class="change-vote-btn" onclick="cancelVote('' + sid + '')">🔄 투표 변경하기</button>';
       } else {
-        actionHtml = '<button class="submit-btn" onclick="submitVote(' + session.id + ')">✈️ 투표 제출하기</button>';
+        actionHtml = '<button class="submit-btn" onclick="submitVote('' + sid + '')">✈️ 투표 제출하기</button>';
       }
     }
 
     let adminHtml = '';
     if (currentUser.nickname === '민지' && !isClosed) {
-      adminHtml = '<button onclick="closeSession(' + session.id + ')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (관리자)</button>';
+      adminHtml = '<button onclick="closeSession('' + sid + '')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (관리자)</button>';
     }
 
     card.innerHTML = '<div class="' + headerClass + '">' +
@@ -444,7 +447,7 @@ async function closeSession(sessionId) {
     voteData.forEach(v => counts[v.place_id] = (counts[v.place_id] || 0) + 1);
     winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
   }
-  const {error} = await sb.from('vote_sessions').update({is_closed: true, winning_place_id: winner ? parseInt(winner) : null}).eq('id', sessionId);
+  const {error} = await sb.from('vote_sessions').update({is_closed: true, winning_place_id: winner || null}).eq('id', sessionId);
   if (!error) { showToast('🔒 세션 마감 완료!'); loadSessions(); }
   else showToast('오류: ' + error.message);
 }
