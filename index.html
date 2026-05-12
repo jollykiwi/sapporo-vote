@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✈️ 삿포로 여행 투표</title>
+<title>&#x2708;&#xFE0F; Sapporo Vote</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -24,56 +24,54 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .login-btn{width:100%;margin-top:16px;padding:16px;background:#fff;color:#764ba2;border:none;border-radius:12px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s}
 .topbar{background:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
 .topbar-name{font-weight:700;font-size:1rem}
-.topbar-day{font-size:.8rem;color:#888}
 .logout-btn{background:none;border:none;color:#888;cursor:pointer;font-size:.85rem}
-.status-card{background:#fff;border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.status-title{font-weight:700;margin-bottom:12px;font-size:.95rem;color:#555}
-.status-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.status-label{min-width:60px;font-size:.85rem;color:#666}
-.emoji-row{display:flex;gap:6px;flex:1}
-.emoji-btn{background:#f5f5f5;border:2px solid transparent;border-radius:8px;padding:6px 10px;font-size:1.1rem;cursor:pointer;transition:.15s}
-.emoji-btn.sel{border-color:#667eea;background:#eef0ff}
-.rest-row{display:flex;align-items:center;gap:10px;margin-top:4px}
-.rest-check{width:20px;height:20px;cursor:pointer;accent-color:#667eea}
-.ai-box{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:.9rem;line-height:1.5}
-.save-status-btn{width:100%;margin-top:12px;padding:12px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.95rem}
-.day-tabs{display:flex;gap:8px;margin:0 0 16px}
-.day-tab{flex:1;padding:10px;background:#fff;border:2px solid #ddd;border-radius:10px;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
-.day-tab.active{background:#667eea;color:#fff;border-color:#667eea}
-.sessions-wrap{display:flex;flex-direction:column;gap:16px;padding-bottom:80px}
-.session-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.session-header{padding:14px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.session-header-top{display:flex;justify-content:space-between;align-items:center}
-.session-cat-badge{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
-.session-time{font-weight:800;font-size:1.1rem}
-.session-deadline{font-size:.75rem;opacity:.85;margin-top:2px}
-.session-closed{background:linear-gradient(135deg,#ccc,#999)!important}
-.winner-banner{background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;font-weight:700;color:#92400e}
-.places-list{padding:12px}
-.place-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:6px;background:#f9f9f9;cursor:pointer;transition:.15s;border:2px solid transparent}
-.place-item:hover{background:#f0f4ff}
-.place-item.selected{background:#eef0ff;border-color:#667eea}
-.place-radio{accent-color:#667eea;width:18px;height:18px;flex-shrink:0;pointer-events:none}
-.place-info{flex:1;pointer-events:none}
-.place-name{font-weight:700;font-size:.95rem}
-.place-sub{font-size:.75rem;color:#888;margin-top:2px}
-.vote-bars{padding:0 12px 12px}
-.vote-bar-row{margin-bottom:8px}
-.vote-bar-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px}
-.vote-bar-track{background:#eee;border-radius:6px;height:8px;overflow:hidden}
-.vote-bar-fill{height:8px;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:6px;transition:.5s}
-.who-voted{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap}
-.voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#e8f4e8;color:#2d7a2d;font-weight:600}
-.not-voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#f5f5f5;color:#999}
-.submit-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s}
-.submit-btn:hover{opacity:.9}
-.change-vote-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:10px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer}
-.admin-section{margin-top:20px;padding:16px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.admin-title{font-weight:800;margin-bottom:12px;color:#764ba2}
-.admin-form{display:flex;flex-direction:column;gap:8px}
-.admin-sel,.admin-input{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
-.admin-sel:focus,.admin-input:focus{border-color:#667eea}
-.admin-add-btn{padding:11px;background:#764ba2;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+.scard{background:#fff;border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.stitle{font-weight:700;margin-bottom:12px;font-size:.95rem;color:#555}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.slabel{min-width:65px;font-size:.85rem;color:#666}
+.erow{display:flex;gap:6px;flex:1}
+.ebtn{background:#f5f5f5;border:2px solid transparent;border-radius:8px;padding:6px 10px;font-size:1.1rem;cursor:pointer;transition:.15s}
+.ebtn.sel{border-color:#667eea;background:#eef0ff}
+.restrow{display:flex;align-items:center;gap:10px;margin-top:4px}
+.restchk{width:20px;height:20px;cursor:pointer;accent-color:#667eea}
+.aibox{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:.9rem;line-height:1.5}
+.savebtn{width:100%;margin-top:12px;padding:12px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.95rem}
+.dtabs{display:flex;gap:8px;margin:0 0 16px}
+.dtab{flex:1;padding:10px;background:#fff;border:2px solid #ddd;border-radius:10px;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
+.dtab.active{background:#667eea;color:#fff;border-color:#667eea}
+.swrap{display:flex;flex-direction:column;gap:16px;padding-bottom:80px}
+.scard2{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.shdr{padding:14px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.shdr-top{display:flex;justify-content:space-between;align-items:center}
+.sbadge{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
+.stime{font-weight:800;font-size:1.1rem}
+.sdl{font-size:.75rem;opacity:.85;margin-top:2px}
+.closed{background:linear-gradient(135deg,#ccc,#999)!important}
+.wbanner{background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;font-weight:700;color:#92400e}
+.plist{padding:12px}
+.pitem{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:6px;background:#f9f9f9;cursor:pointer;transition:.15s;border:2px solid transparent}
+.pitem:hover{background:#f0f4ff}
+.pitem.sel{background:#eef0ff;border-color:#667eea}
+.pradio{accent-color:#667eea;width:18px;height:18px;flex-shrink:0;pointer-events:none}
+.pinfo{flex:1;pointer-events:none}
+.pname{font-weight:700;font-size:.95rem}
+.psub{font-size:.75rem;color:#888;margin-top:2px}
+.vbars{padding:0 12px 12px}
+.vbrow{margin-bottom:8px}
+.vblabel{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px}
+.vbtrack{background:#eee;border-radius:6px;height:8px;overflow:hidden}
+.vbfill{height:8px;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:6px;transition:.5s}
+.wvoted{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap}
+.vchip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#e8f4e8;color:#2d7a2d;font-weight:600}
+.nvchip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#f5f5f5;color:#999}
+.subbtn{width:calc(100% - 24px);margin:0 12px 12px;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s}
+.chgbtn{width:calc(100% - 24px);margin:0 12px 12px;padding:10px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer}
+.admsec{margin-top:20px;padding:16px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.admtitle{font-weight:800;margin-bottom:12px;color:#764ba2}
+.admform{display:flex;flex-direction:column;gap:8px}
+.admsel,.admipt{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
+.admsel:focus,.admipt:focus{border-color:#667eea}
+.addbtn{padding:11px;background:#764ba2;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:24px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .rbar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999;max-width:480px}
@@ -85,386 +83,298 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 <div class="rbar"><div class="rprog" id="rprog"></div></div>
 
 <div id="loginScreen" class="screen active">
-  <div class="login-title">✈️ 삿포로 여행</div>
-  <div class="login-sub">함께 투표하고 코스 정해요!</div>
+  <div class="login-title">&#x2708;&#xFE0F; &#xC0BF;&#xD3EC;&#xB85C; &#xC5EC;&#xD589;</div>
+  <div class="login-sub">&#xD568;&#xAED8; &#xD22C;&#xD45C;&#xD558;&#xACE0; &#xCF54;&#xC2A4; &#xC815;&#xD574;&#xC694;!</div>
   <div class="name-grid" id="nameGrid"></div>
   <div class="pin-section">
-    <div class="pin-label">🔒 PIN 4자리를 입력하세요</div>
+    <div class="pin-label">&#x1F512; PIN 4&#xC790;&#xB9AC;&#xB97C; &#xC785;&#xB825;&#xD558;&#xC138;&#xC694;</div>
     <input id="pinInput" type="password" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----">
-    <button class="login-btn" id="loginBtn">입장하기 🚀</button>
+    <button class="login-btn" id="loginBtn">&#xC785;&#xC7A5;&#xD558;&#xAE30; &#x1F680;</button>
   </div>
 </div>
 
 <div id="mainScreen" class="screen">
   <div class="topbar">
     <div>
-      <div class="topbar-name" id="topbarName">안녕하세요!</div>
-      <div id="topbarStatus" style="font-size:.8rem;color:#888">상태 체크 해주세요 ✨</div>
+      <div class="topbar-name" id="topbarName">&#xC548;&#xB155;&#xD558;&#xC138;&#xC694;!</div>
+      <div id="topbarStatus" style="font-size:.8rem;color:#888">&#xC0C1;&#xD0DC; &#xCCB4;&#xD06C; &#xD574;&#xC8FC;&#xC138;&#xC694; &#x2728;</div>
     </div>
-    <button class="logout-btn" id="logoutBtn">로그아웃</button>
+    <button class="logout-btn" id="logoutBtn">&#xB85C;&#xADF8;&#xC544;&#xC6C3;</button>
   </div>
   <div style="padding:16px 16px 0">
-    <div class="status-card">
-      <div class="status-title">📊 지금 내 상태는?</div>
-      <div class="status-row">
-        <span class="status-label">⚡ 체력</span>
-        <div class="emoji-row" id="energyRow">
-          <button class="emoji-btn" data-type="energy" data-val="1">😴</button>
-          <button class="emoji-btn" data-type="energy" data-val="2">😐</button>
-          <button class="emoji-btn" data-type="energy" data-val="3">😊</button>
-          <button class="emoji-btn" data-type="energy" data-val="4">💪</button>
+    <div class="scard">
+      <div class="stitle">&#x1F4CA; &#xC9C0;&#xAE08; &#xB0B4; &#xC0C1;&#xD0DC;&#xB294;?</div>
+      <div class="srow">
+        <span class="slabel">&#x26A1; &#xCCB4;&#xB825;</span>
+        <div class="erow" id="eRow">
+          <button class="ebtn" data-type="e" data-val="1">&#x1F634;</button>
+          <button class="ebtn" data-type="e" data-val="2">&#x1F610;</button>
+          <button class="ebtn" data-type="e" data-val="3">&#x1F60A;</button>
+          <button class="ebtn" data-type="e" data-val="4">&#x1F4AA;</button>
         </div>
       </div>
-      <div class="status-row">
-        <span class="status-label">🍜 배고픔</span>
-        <div class="emoji-row" id="hungerRow">
-          <button class="emoji-btn" data-type="hunger" data-val="1">😌</button>
-          <button class="emoji-btn" data-type="hunger" data-val="2">🙂</button>
-          <button class="emoji-btn" data-type="hunger" data-val="3">😋</button>
-          <button class="emoji-btn" data-type="hunger" data-val="4">🤤</button>
+      <div class="srow">
+        <span class="slabel">&#x1F35C; &#xBC30;&#xACE0;&#xD514;</span>
+        <div class="erow" id="hRow">
+          <button class="ebtn" data-type="h" data-val="1">&#x1F60C;</button>
+          <button class="ebtn" data-type="h" data-val="2">&#x1F642;</button>
+          <button class="ebtn" data-type="h" data-val="3">&#x1F60B;</button>
+          <button class="ebtn" data-type="h" data-val="4">&#x1F924;</button>
         </div>
       </div>
-      <div class="status-row">
-        <span class="status-label">🚶 의지</span>
-        <div class="emoji-row" id="motivRow">
-          <button class="emoji-btn" data-type="motiv" data-val="1">😩</button>
-          <button class="emoji-btn" data-type="motiv" data-val="2">😶</button>
-          <button class="emoji-btn" data-type="motiv" data-val="3">😎</button>
-          <button class="emoji-btn" data-type="motiv" data-val="4">🔥</button>
+      <div class="srow">
+        <span class="slabel">&#x1F6B6; &#xC758;&#xC9C0;</span>
+        <div class="erow" id="mRow">
+          <button class="ebtn" data-type="m" data-val="1">&#x1F629;</button>
+          <button class="ebtn" data-type="m" data-val="2">&#x1F636;</button>
+          <button class="ebtn" data-type="m" data-val="3">&#x1F60E;</button>
+          <button class="ebtn" data-type="m" data-val="4">&#x1F525;</button>
         </div>
       </div>
-      <div class="rest-row">
-        <input type="checkbox" id="restCheck" class="rest-check">
-        <label for="restCheck" style="font-size:.9rem;cursor:pointer">🛋️ 쉬고 싶어요</label>
+      <div class="restrow">
+        <input type="checkbox" id="restCheck" class="restchk">
+        <label for="restCheck" style="font-size:.9rem;cursor:pointer">&#x1F6CB;&#xFE0F; &#xC26C;&#xACE0; &#xC2F6;&#xC5B4;&#xC694;</label>
       </div>
-      <div id="aiBox" class="ai-box" style="display:none"></div>
-      <button class="save-status-btn" id="saveStatusBtn">상태 저장하기 💾</button>
+      <div id="aiBox" class="aibox" style="display:none"></div>
+      <button class="savebtn" id="saveBtn">&#xC0C1;&#xD0DC; &#xC800;&#xC7A5;&#xD558;&#xAE30; &#x1F4BE;</button>
     </div>
-    <div class="day-tabs">
-      <div class="day-tab active" id="tab1" data-day="1">1일차</div>
-      <div class="day-tab" id="tab2" data-day="2">2일차</div>
+    <div class="dtabs">
+      <div class="dtab active" id="tab1" data-day="1">1&#xC77C;&#xCC28;</div>
+      <div class="dtab" id="tab2" data-day="2">2&#xC77C;&#xCC28;</div>
     </div>
-    <div class="sessions-wrap" id="sessionsWrap"><div style="text-align:center;padding:40px;color:#999">로딩중...</div></div>
-    <div id="adminSection" class="admin-section" style="display:none">
-      <div class="admin-title">⚙️ 관리자 (민지 전용)</div>
-      <div class="admin-form">
-        <select id="adminDay" class="admin-sel"><option value="1">1일차</option><option value="2">2일차</option></select>
-        <select id="adminMeal" class="admin-sel">
-          <option value="lunch">🍱 점심</option>
-          <option value="dinner">🍽️ 저녁</option>
-          <option value="breakfast">🌅 아침</option>
-          <option value="cafe">☕ 카페타임</option>
+    <div class="swrap" id="swrap"><div style="text-align:center;padding:40px;color:#999">&#xB85C;&#xB529;&#xC911;...</div></div>
+    <div id="admSec" class="admsec" style="display:none">
+      <div class="admtitle">&#x2699;&#xFE0F; &#xAD00;&#xB9AC;&#xC790; (&#xBBFC;&#xC9C0; &#xC804;&#xC6A9;)</div>
+      <div class="admform">
+        <select id="admDay" class="admsel"><option value="1">1&#xC77C;&#xCC28;</option><option value="2">2&#xC77C;&#xCC28;</option></select>
+        <select id="admMeal" class="admsel">
+          <option value="lunch">&#x1F371; &#xC810;&#xC2EC;</option>
+          <option value="dinner">&#x1F37D;&#xFE0F; &#xC800;&#xB141;</option>
+          <option value="breakfast">&#x1F305; &#xC544;&#xCE68;</option>
+          <option value="cafe">&#x2615; &#xCE74;&#xD398;&#xD0C0;&#xC784;</option>
         </select>
-        <select id="adminCat" class="admin-sel">
-          <option value="식사">🍽️ 식사</option>
-          <option value="카페">☕ 카페</option>
-          <option value="구경거리">🏞️ 구경거리</option>
+        <select id="admCat" class="admsel">
+          <option value="식사">&#x1F37D;&#xFE0F; &#xC2DD;&#xC0AC;</option>
+          <option value="카페">&#x2615; &#xCE74;&#xD398;</option>
+          <option value="구경거리">&#x1F3DE;&#xFE0F; &#xAD6C;&#xACBD;&#xAC70;&#xB9AC;</option>
         </select>
-        <input id="adminDeadline" type="datetime-local" class="admin-input">
-        <button class="admin-add-btn" id="addSessionBtn">+ 투표 세션 추가</button>
+        <input id="admDl" type="datetime-local" class="admipt">
+        <button class="addbtn" id="addBtn">+ &#xD22C;&#xD45C; &#xC138;&#xC158; &#xCD94;&#xAC00;</button>
       </div>
     </div>
   </div>
 </div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toastEl"></div>
 
 <script>
-const SB_URL = 'https://pmzmmimyabuvpwoklkgc.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
-const sb = supabase.createClient(SB_URL, SB_KEY);
-
-let CU = null, DAY = 1, SS = {e:0,h:0,m:0,r:false}, selPlaces = {}, RFI = null;
-const NAMES = ['민지','친구1','친구2','친구3'];
-const PINS = {'민지':'1111','친구1':'2222','친구2':'3333','친구3':'4444'};
-const ML = {breakfast:'🌅 아침',lunch:'🍱 점심',dinner:'🍽️ 저녁',cafe:'☕ 카페타임'};
-const CE = {'식사':'🍽️','카페':'☕','구경거리':'🏞️'};
+const SU='https://pmzmmimyabuvpwoklkgc.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
+const db=supabase.createClient(SU,SK);
+let CU=null,DAY=1,ST={e:0,h:0,m:0,r:false},SEL={},RFI=null;
 
 // Build name buttons
-const ng = document.getElementById('nameGrid');
-NAMES.forEach(n => {
-  const b = document.createElement('button');
-  b.className = 'name-btn'; b.textContent = n; b.dataset.name = n;
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.name-btn').forEach(x => x.classList.remove('selected'));
-    b.classList.add('selected');
-    window.SEL_NAME = n;
-  });
-  ng.appendChild(b);
+['민지','친구1','친구2','친구3'].forEach(n=>{
+  const b=document.createElement('button');
+  b.className='name-btn';b.textContent=n;b.dataset.name=n;
+  b.addEventListener('click',()=>{document.querySelectorAll('.name-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');window.SN=n;});
+  document.getElementById('nameGrid').appendChild(b);
 });
 
-// Login
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const name = window.SEL_NAME || '';
-  if (!name) { toast('이름을 선택해주세요!'); return; }
-  const pin = document.getElementById('pinInput').value;
-  if (pin.length !== 4) { toast('PIN 4자리를 입력해주세요!'); return; }
-  const {data, error} = await sb.from('members').select('*').eq('nickname', name).eq('pin', pin).single();
-  if (error || !data) { toast('❌ PIN이 틀렸어요!'); return; }
-  CU = data;
-  localStorage.setItem('su', JSON.stringify(data));
-  showMain();
+document.getElementById('loginBtn').addEventListener('click',async()=>{
+  const name=window.SN||'';
+  if(!name){showT('이름을 선택해주세요!');return;}
+  const pin=document.getElementById('pinInput').value;
+  if(pin.length!==4){showT('PIN 4자리를 입력해주세요!');return;}
+  const{data,error}=await db.from('members').select('*').eq('nickname',name).eq('pin',pin).single();
+  if(error||!data){showT('PIN이 틀렸어요!');return;}
+  CU=data;localStorage.setItem('sv',JSON.stringify(data));showMain();
 });
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('su');
-  CU = null; clearInterval(RFI);
+document.getElementById('logoutBtn').addEventListener('click',()=>{
+  localStorage.removeItem('sv');CU=null;clearInterval(RFI);
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('mainScreen').classList.remove('active');
-  document.getElementById('pinInput').value = '';
-  document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-  window.SEL_NAME = '';
+  document.getElementById('pinInput').value='';
+  document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('selected'));
+  window.SN='';
 });
 
-function showMain() {
+function showMain(){
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('mainScreen').classList.add('active');
-  document.getElementById('topbarName').textContent = CU.nickname + ' 님 👋';
-  if (CU.nickname === '민지') document.getElementById('adminSection').style.display = 'block';
-  loadStatus(); loadSessions(); startRF();
+  document.getElementById('topbarName').textContent=CU.nickname+' 님';
+  if(CU.nickname==='민지')document.getElementById('admSec').style.display='block';
+  loadSt();loadSess();startRF();
 }
 
-// Status buttons (event delegation)
-document.querySelectorAll('.emoji-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    const type = b.dataset.type, val = parseInt(b.dataset.val);
-    SS[type[0]] = val;
-    const rowId = type === 'energy' ? 'energyRow' : type === 'hunger' ? 'hungerRow' : 'motivRow';
-    document.querySelectorAll('#' + rowId + ' .emoji-btn').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel');
-    updateAI();
+document.querySelectorAll('.ebtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const t=b.dataset.type,v=parseInt(b.dataset.val);
+    ST[t]=v;
+    const rid=t==='e'?'eRow':t==='h'?'hRow':'mRow';
+    document.querySelectorAll('#'+rid+' .ebtn').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');updateAI();
   });
 });
-document.getElementById('restCheck').addEventListener('change', () => { SS.r = document.getElementById('restCheck').checked; updateAI(); });
+document.getElementById('restCheck').addEventListener('change',()=>{ST.r=document.getElementById('restCheck').checked;updateAI();});
 
-function updateAI() {
-  if (!SS.e || !SS.h || !SS.m) return;
-  const box = document.getElementById('aiBox');
-  box.style.display = 'block';
+function updateAI(){
+  if(!ST.e||!ST.h||!ST.m)return;
+  const box=document.getElementById('aiBox');box.style.display='block';
   let msg;
-  if (SS.r || (SS.e <= 1 && SS.m <= 1)) msg = '🛋️ 오늘은 쉬는 게 어떨까요? 충분한 휴식도 여행의 일부예요!';
-  else if (SS.e <= 2 && SS.m <= 2) msg = '😌 컨디션이 좀 처지네요. 가까운 카페에서 여유롭게 시작해요~';
-  else if (SS.h >= 3) msg = '🍜 배가 많이 고프군요! 맛집 투표 빨리 하고 밥 먹으러 가요!';
-  else if (SS.e >= 3 && SS.m >= 3) msg = '🔥 컨디션 최고! 오늘 일정 다 소화할 수 있어요!';
-  else msg = '🗺️ 좋아요! 투표하고 함께 즐거운 코스 정해봐요!';
-  box.textContent = msg;
+  if(ST.r||(ST.e<=1&&ST.m<=1))msg='쉬는 게 어떨까요? 충분한 휴식도 여행의 일부예요!';
+  else if(ST.e<=2&&ST.m<=2)msg='컨디션이 좀 처지네요. 가까운 카페에서 여유롭게 시작해요~';
+  else if(ST.h>=3)msg='배가 많이 고프군요! 맛집 투표 빨리 하고 밥 먹으러 가요!';
+  else if(ST.e>=3&&ST.m>=3)msg='컨디션 최고! 오늘 일정 다 소화할 수 있어요!';
+  else msg='좋아요! 투표하고 함께 즐거운 코스 정해봐요!';
+  box.textContent=msg;
 }
 
-async function loadStatus() {
-  const {data} = await sb.from('status_checks').select('*').eq('member_id', CU.id).eq('day_number', DAY).order('created_at', {ascending:false}).limit(1);
-  if (data && data.length > 0) {
-    const s = data[0];
-    const map = [['e','energy','energyRow'],['h','hunger','hungerRow'],['m','motivation','motivRow']];
-    map.forEach(([k, col, rid]) => {
-      SS[k] = s[col];
-      document.querySelectorAll('#' + rid + ' .emoji-btn').forEach(b => { b.classList.toggle('sel', parseInt(b.dataset.val) === s[col]); });
+async function loadSt(){
+  const{data}=await db.from('status_checks').select('*').eq('member_id',CU.id).eq('day_number',DAY).order('created_at',{ascending:false}).limit(1);
+  if(data&&data.length){
+    const s=data[0];
+    [['e','energy','eRow'],['h','hunger','hRow'],['m','motivation','mRow']].forEach(([k,col,rid])=>{
+      ST[k]=s[col];
+      document.querySelectorAll('#'+rid+' .ebtn').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.val)===s[col]));
     });
-    if (s.want_rest) { document.getElementById('restCheck').checked = true; SS.r = true; }
-    updateAI();
-    document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅';
+    if(s.want_rest){document.getElementById('restCheck').checked=true;ST.r=true;}
+    updateAI();document.getElementById('topbarStatus').textContent='상태 업데이트됨';
   }
 }
 
-document.getElementById('saveStatusBtn').addEventListener('click', async () => {
-  if (!SS.e || !SS.h || !SS.m) { toast('모든 상태를 선택해주세요!'); return; }
-  const mt = DAY === 1 ? 'day1' : 'day2';
-  const {error} = await sb.from('status_checks').upsert({member_id:CU.id,day_number:DAY,meal_time:mt,energy:SS.e,hunger:SS.h,motivation:SS.m,want_rest:SS.r},{onConflict:'member_id,day_number,meal_time'});
-  if (!error) { toast('✅ 상태 저장 완료!'); document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅'; }
-  else toast('오류: ' + error.message);
+document.getElementById('saveBtn').addEventListener('click',async()=>{
+  if(!ST.e||!ST.h||!ST.m){showT('모든 상태를 선택해주세요!');return;}
+  const mt=DAY===1?'day1':'day2';
+  const{error}=await db.from('status_checks').upsert({member_id:CU.id,day_number:DAY,meal_time:mt,energy:ST.e,hunger:ST.h,motivation:ST.m,want_rest:ST.r},{onConflict:'member_id,day_number,meal_time'});
+  if(!error){showT('상태 저장 완료!');document.getElementById('topbarStatus').textContent='상태 업데이트됨';}
+  else showT('오류: '+error.message);
 });
 
-// Day tabs
-document.querySelectorAll('.day-tab').forEach(t => {
-  t.addEventListener('click', () => {
-    DAY = parseInt(t.dataset.day);
-    document.getElementById('tab1').classList.toggle('active', DAY === 1);
-    document.getElementById('tab2').classList.toggle('active', DAY === 2);
-    loadSessions();
+document.querySelectorAll('.dtab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    DAY=parseInt(t.dataset.day);
+    document.getElementById('tab1').classList.toggle('active',DAY===1);
+    document.getElementById('tab2').classList.toggle('active',DAY===2);
+    loadSess();
   });
 });
 
-async function loadSessions() {
-  const wrap = document.getElementById('sessionsWrap');
-  wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999">로딩중...</div>';
-  const {data:sessions,error} = await sb.from('vote_sessions').select('*').eq('day_number',DAY).order('id');
-  if (error) { wrap.innerHTML = '<div style="padding:20px;color:red">오류: ' + error.message + '</div>'; return; }
-  if (!sessions || !sessions.length) { wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;line-height:1.8">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>'; return; }
-  const [{data:places},{data:votes},{data:members}] = await Promise.all([
-    sb.from('places').select('*'),
-    sb.from('votes').select('*,members(nickname)'),
-    sb.from('members').select('*')
-  ]);
-  wrap.innerHTML = '';
-  for (const sess of sessions) {
-    const sid = sess.id;
-    const svotes = (votes||[]).filter(v => v.session_id === sid);
-    const myVote = svotes.find(v => v.member_id === CU.id);
-    const splaces = (places||[]).filter(p => p.category === sess.category);
-    const now = new Date(), dl = sess.deadline ? new Date(sess.deadline) : null;
-    const expired = dl && now > dl, closed = sess.is_closed, done = closed || expired;
-    const card = document.createElement('div');
-    card.className = 'session-card';
-    card.dataset.sid = sid;
+const ML={breakfast:'아침',lunch:'점심',dinner:'저녁',cafe:'카페타임'};
+const CE={'식사':'[식사]','카페':'[카페]','구경거리':'[구경]'};
 
-    // Header
-    const statusTxt = closed ? '🔒 마감' : expired ? '⏰ 종료' : '🗳️ 투표중';
-    const hdrClass = done ? 'session-header session-closed' : 'session-header';
-    const dlTxt = dl ? fmtDl(dl) : '마감 미정';
-    card.innerHTML = '<div class="' + hdrClass + '"><div class="session-header-top"><span class="session-time">' + (ML[sess.meal_time]||sess.meal_time) + ' · ' + CE[sess.category] + ' ' + sess.category + '</span><span class="session-cat-badge">' + statusTxt + '</span></div><div class="session-deadline">⏱️ ' + dlTxt + '</div></div>';
-
-    // Winner
-    if (done && sess.winning_place_id) {
-      const w = (places||[]).find(p => p.id === sess.winning_place_id);
-      if (w) card.innerHTML += '<div class="winner-banner">🏆 당선: ' + w.name + '</div>';
-    }
-
-    // Place list (only if not done)
-    if (!done) {
-      const plist = document.createElement('div');
-      plist.className = 'places-list';
-      for (const pl of splaces) {
-        const isMine = myVote && myVote.place_id === pl.id;
-        const isSel = selPlaces[sid] === pl.id;
-        const item = document.createElement('div');
-        item.className = 'place-item' + (isMine || isSel ? ' selected' : '');
-        item.dataset.sid = sid;
-        item.dataset.pid = pl.id;
-        item.innerHTML = '<input type="radio" class="place-radio" name="s_' + sid.replace(/-/g,'') + '"' + (isMine || isSel ? ' checked' : '') + '>' +
-          '<div class="place-info"><div class="place-name">' + CE[pl.category] + ' ' + pl.name + '</div>' +
-          '<div class="place-sub">' + (pl.sub_category||'') + (pl.price_range ? ' · ' + pl.price_range : '') + (pl.rating ? ' · ⭐' + pl.rating : '') + '</div></div>';
+async function loadSess(){
+  const w=document.getElementById('swrap');
+  w.innerHTML='<div style="text-align:center;padding:40px;color:#999">로딩중...</div>';
+  const{data:sess,error}=await db.from('vote_sessions').select('*').eq('day_number',DAY).order('id');
+  if(error){w.innerHTML='<div style="padding:20px;color:red">오류: '+error.message+'</div>';return;}
+  if(!sess||!sess.length){w.innerHTML='<div style="text-align:center;padding:40px;color:#999;line-height:1.8">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요!</div>';return;}
+  const[{data:pl},{data:vs},{data:mb}]=await Promise.all([db.from('places').select('*'),db.from('votes').select('*,members(nickname)'),db.from('members').select('*')]);
+  w.innerHTML='';
+  for(const s of sess){
+    const sid=s.id,sv=(vs||[]).filter(v=>v.session_id===sid),mv=sv.find(v=>v.member_id===CU.id);
+    const sp=(pl||[]).filter(p=>p.category===s.category);
+    const now=new Date(),dl=s.deadline?new Date(s.deadline):null;
+    const exp=dl&&now>dl,cld=s.is_closed,done=cld||exp;
+    const card=document.createElement('div');card.className='scard2';card.dataset.sid=sid;
+    const stxt=cld?'마감':exp?'종료':'투표중';
+    const dlTxt=dl?fmtDl(dl):'마감 미정';
+    const hdrCls=done?'shdr closed':'shdr';
+    card.innerHTML='<div class="'+hdrCls+'"><div class="shdr-top"><span class="stime">'+(ML[s.meal_time]||s.meal_time)+' - '+(s.category)+'</span><span class="sbadge">'+stxt+'</span></div><div class="sdl">마감: '+dlTxt+'</div></div>';
+    if(done&&s.winning_place_id){const w2=(pl||[]).find(p=>p.id===s.winning_place_id);if(w2)card.innerHTML+='<div class="wbanner">당선: '+w2.name+'</div>';}
+    if(!done){
+      const plist=document.createElement('div');plist.className='plist';
+      for(const p of sp){
+        const mine=mv&&mv.place_id===p.id,isel=SEL[sid]===p.id;
+        const item=document.createElement('div');
+        item.className='pitem'+(mine||isel?' sel':'');
+        item.dataset.sid=sid;item.dataset.pid=p.id;
+        item.innerHTML='<input type="radio" class="pradio" name="r'+sid.replace(/-/g,'').substring(0,8)+'"'+(mine||isel?' checked':'')+'>'+
+          '<div class="pinfo"><div class="pname">'+p.name+'</div>'+
+          '<div class="psub">'+(p.sub_category||'')+(p.price_range?' - '+p.price_range:'')+(p.rating?' - '+p.rating+'★':'')+' </div></div>';
         plist.appendChild(item);
       }
       card.appendChild(plist);
     }
-
-    // Vote bars
-    const vb = document.createElement('div');
-    vb.className = 'vote-bars';
-    for (const pl of splaces) {
-      const cnt = svotes.filter(v => v.place_id === pl.id).length;
-      const pct = svotes.length > 0 ? Math.round(cnt / svotes.length * 100) : 0;
-      vb.innerHTML += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + CE[pl.category] + ' ' + pl.name + '</span><span>' + cnt + '표 (' + pct + '%)</span></div><div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
-    }
+    const vb=document.createElement('div');vb.className='vbars';
+    for(const p of sp){const cnt=sv.filter(v=>v.place_id===p.id).length,pct=sv.length?Math.round(cnt/sv.length*100):0;vb.innerHTML+='<div class="vbrow"><div class="vblabel"><span>'+p.name+'</span><span>'+cnt+'표 ('+pct+'%)</span></div><div class="vbtrack"><div class="vbfill" style="width:'+pct+'%"></div></div></div>';}
     card.appendChild(vb);
-
-    // Who voted
-    const wv = document.createElement('div');
-    wv.className = 'who-voted';
-    (members||[]).forEach(m => {
-      const voted = svotes.find(v => v.member_id === m.id);
-      const chip = document.createElement('span');
-      chip.className = voted ? 'voted-chip' : 'not-voted-chip';
-      chip.textContent = (voted ? '✅ ' : '⬜ ') + m.nickname;
-      wv.appendChild(chip);
-    });
+    const wv=document.createElement('div');wv.className='wvoted';
+    (mb||[]).forEach(m=>{const voted=sv.find(v=>v.member_id===m.id);const chip=document.createElement('span');chip.className=voted?'vchip':'nvchip';chip.textContent=(voted?'V ':'- ')+m.nickname;wv.appendChild(chip);});
     card.appendChild(wv);
-
-    // Action buttons
-    if (!done) {
-      if (myVote) {
-        const btn = document.createElement('button');
-        btn.className = 'change-vote-btn'; btn.textContent = '🔄 투표 변경하기';
-        btn.dataset.sid = sid; btn.dataset.action = 'cancel';
-        card.appendChild(btn);
-      } else {
-        const btn = document.createElement('button');
-        btn.className = 'submit-btn'; btn.textContent = '✈️ 투표 제출하기';
-        btn.dataset.sid = sid; btn.dataset.action = 'submit';
-        card.appendChild(btn);
-      }
+    if(!done){
+      if(mv){const b=document.createElement('button');b.className='chgbtn';b.textContent='투표 변경하기';b.dataset.sid=sid;b.dataset.act='cancel';card.appendChild(b);}
+      else{const b=document.createElement('button');b.className='subbtn';b.textContent='투표 제출하기';b.dataset.sid=sid;b.dataset.act='submit';card.appendChild(b);}
     }
-
-    // Admin close button
-    if (CU.nickname === '민지' && !closed) {
-      const btn = document.createElement('button');
-      btn.style.cssText = 'margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem';
-      btn.textContent = '🔒 세션 마감 (관리자)';
-      btn.dataset.sid = sid; btn.dataset.action = 'close';
-      card.appendChild(btn);
-    }
-
-    wrap.appendChild(card);
+    if(CU.nickname==='민지'&&!cld){const b=document.createElement('button');b.style.cssText='margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem';b.textContent='세션 마감 (관리자)';b.dataset.sid=sid;b.dataset.act='close';card.appendChild(b);}
+    w.appendChild(card);
   }
 }
 
-// Event delegation for all session interactions
-document.getElementById('sessionsWrap').addEventListener('click', async (e) => {
-  const item = e.target.closest('.place-item');
-  const btn = e.target.closest('button[data-action]');
-
-  if (item) {
-    const sid = item.dataset.sid, pid = item.dataset.pid;
-    if (!sid || !pid) return;
-    selPlaces[sid] = pid;
-    const card = item.closest('.session-card');
-    card.querySelectorAll('.place-item').forEach(x => { x.classList.remove('selected'); x.querySelector('.place-radio').checked = false; });
-    item.classList.add('selected');
-    item.querySelector('.place-radio').checked = true;
+document.getElementById('swrap').addEventListener('click',async(e)=>{
+  const item=e.target.closest('.pitem');
+  const btn=e.target.closest('button[data-act]');
+  if(item){
+    const sid=item.dataset.sid,pid=item.dataset.pid;
+    if(!sid||!pid)return;
+    SEL[sid]=pid;
+    const card=item.closest('.scard2');
+    card.querySelectorAll('.pitem').forEach(x=>{x.classList.remove('sel');x.querySelector('.pradio').checked=false;});
+    item.classList.add('sel');item.querySelector('.pradio').checked=true;
     return;
   }
-
-  if (btn) {
-    const sid = btn.dataset.sid, action = btn.dataset.action;
-    if (action === 'submit') {
-      if (!selPlaces[sid]) { toast('장소를 먼저 선택해주세요!'); return; }
-      const {error} = await sb.from('votes').upsert({session_id:sid,member_id:CU.id,place_id:selPlaces[sid]},{onConflict:'session_id,member_id'});
-      if (!error) { toast('✅ 투표 완료!'); delete selPlaces[sid]; loadSessions(); }
-      else toast('오류: ' + error.message);
-    } else if (action === 'cancel') {
-      const {error} = await sb.from('votes').delete().eq('session_id',sid).eq('member_id',CU.id);
-      if (!error) { toast('투표 취소됨. 다시 선택해주세요!'); loadSessions(); }
-      else toast('오류: ' + error.message);
-    } else if (action === 'close') {
-      const {data:vd} = await sb.from('votes').select('place_id').eq('session_id',sid);
-      let winner = null;
-      if (vd && vd.length) { const c={}; vd.forEach(v => c[v.place_id]=(c[v.place_id]||0)+1); winner = Object.keys(c).reduce((a,b) => c[a]>c[b]?a:b); }
-      const {error} = await sb.from('vote_sessions').update({is_closed:true,winning_place_id:winner||null}).eq('id',sid);
-      if (!error) { toast('🔒 세션 마감!'); loadSessions(); }
-      else toast('오류: ' + error.message);
+  if(btn){
+    const sid=btn.dataset.sid,act=btn.dataset.act;
+    if(act==='submit'){
+      if(!SEL[sid]){showT('장소를 먼저 선택해주세요!');return;}
+      const{error}=await db.from('votes').upsert({session_id:sid,member_id:CU.id,place_id:SEL[sid]},{onConflict:'session_id,member_id'});
+      if(!error){showT('투표 완료!');delete SEL[sid];loadSess();}else showT('오류: '+error.message);
+    }else if(act==='cancel'){
+      const{error}=await db.from('votes').delete().eq('session_id',sid).eq('member_id',CU.id);
+      if(!error){showT('투표 취소됨.');loadSess();}else showT('오류: '+error.message);
+    }else if(act==='close'){
+      const{data:vd}=await db.from('votes').select('place_id').eq('session_id',sid);
+      let winner=null;
+      if(vd&&vd.length){const c={};vd.forEach(v=>c[v.place_id]=(c[v.place_id]||0)+1);winner=Object.keys(c).reduce((a,b)=>c[a]>c[b]?a:b);}
+      const{error}=await db.from('vote_sessions').update({is_closed:true,winning_place_id:winner||null}).eq('id',sid);
+      if(!error){showT('세션 마감!');loadSess();}else showT('오류: '+error.message);
     }
   }
 });
 
-// Admin add session
-document.getElementById('addSessionBtn').addEventListener('click', async () => {
-  const day = parseInt(document.getElementById('adminDay').value);
-  const meal = document.getElementById('adminMeal').value;
-  const cat = document.getElementById('adminCat').value;
-  const dl = document.getElementById('adminDeadline').value;
-  if (!dl) { toast('마감 시간을 설정해주세요!'); return; }
-  const {error} = await sb.from('vote_sessions').insert({day_number:day,meal_time:meal,category:cat,deadline:new Date(dl).toISOString(),is_closed:false});
-  if (!error) { toast('✅ 세션 추가됨!'); loadSessions(); }
-  else toast('오류: ' + error.message);
+document.getElementById('addBtn').addEventListener('click',async()=>{
+  const day=parseInt(document.getElementById('admDay').value);
+  const meal=document.getElementById('admMeal').value;
+  const cat=document.getElementById('admCat').value;
+  const dl=document.getElementById('admDl').value;
+  if(!dl){showT('마감 시간을 설정해주세요!');return;}
+  const{error}=await db.from('vote_sessions').insert({day_number:day,meal_time:meal,category:cat,deadline:new Date(dl).toISOString(),is_closed:false});
+  if(!error){showT('세션 추가됨!');loadSess();}else showT('오류: '+error.message);
 });
 
-function fmtDl(d) {
-  const diff = d - new Date();
-  if (diff <= 0) return '마감됨';
-  const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000);
-  if (h > 24) return d.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-  return h > 0 ? h + '시간 ' + m + '분 남음' : m + '분 남음';
+function fmtDl(d){
+  const diff=d-new Date();
+  if(diff<=0)return '마감됨';
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+  if(h>24)return d.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return h>0?h+'시간 '+m+'분 남음':m+'분 남음';
 }
 
-function startRF() {
+function startRF(){
   clearInterval(RFI);
-  const bar = document.getElementById('rprog');
-  function rb() { bar.style.transition='none'; bar.style.width='0%'; setTimeout(()=>{bar.style.transition='width 30s linear';bar.style.width='100%';},50); }
-  rb();
-  RFI = setInterval(() => { loadSessions(); rb(); }, 30000);
+  const bar=document.getElementById('rprog');
+  function rb(){bar.style.transition='none';bar.style.width='0%';setTimeout(()=>{bar.style.transition='width 30s linear';bar.style.width='100%';},50);}
+  rb();RFI=setInterval(()=>{loadSess();rb();},30000);
 }
 
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
+function showT(msg){const t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('su');
-  if (saved) { try { CU = JSON.parse(saved); showMain(); } catch(e) {} }
-  const now = new Date(), pad = n => String(n).padStart(2,'0');
-  const dt = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours()+2)+':'+pad(now.getMinutes());
-  const el = document.getElementById('adminDeadline');
-  if (el) el.value = dt;
+window.addEventListener('DOMContentLoaded',()=>{
+  const sv=localStorage.getItem('sv');
+  if(sv){try{CU=JSON.parse(sv);showMain();}catch(e){}}
+  const now=new Date(),pad=n=>String(n).padStart(2,'0');
+  const dt=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours()+2)+':'+pad(now.getMinutes());
+  const el=document.getElementById('admDl');if(el)el.value=dt;
 });
 </script>
 </body>
