@@ -8,11 +8,10 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:480px;margin:0 auto;min-height:100vh}
-.screen{display:none;padding:20px;min-height:100vh}
-.screen.active{display:block}
-/* Login */
-#loginScreen{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-#loginScreen.active{display:flex}
+.screen{display:none!important;padding:20px;min-height:100vh}
+.screen.active{display:block!important}
+#loginScreen.active{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#loginScreen{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
 .login-title{font-size:2rem;font-weight:800;margin-bottom:8px}
 .login-sub{opacity:.8;margin-bottom:32px}
 .name-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-bottom:24px}
@@ -24,12 +23,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .pin-input::placeholder{color:rgba(255,255,255,.5);letter-spacing:normal}
 .login-btn{width:100%;margin-top:16px;padding:16px;background:#fff;color:#764ba2;border:none;border-radius:12px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s}
 .login-btn:hover{transform:scale(1.02)}
-/* Top bar */
 .topbar{background:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
 .topbar-name{font-weight:700;font-size:1rem}
 .topbar-day{font-size:.8rem;color:#888}
 .logout-btn{background:none;border:none;color:#888;cursor:pointer;font-size:.85rem}
-/* Status banner */
 .status-card{background:#fff;border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .status-title{font-weight:700;margin-bottom:12px;font-size:.95rem;color:#555}
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -41,11 +38,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .rest-check{width:20px;height:20px;cursor:pointer;accent-color:#667eea}
 .ai-box{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:.9rem;line-height:1.5}
 .save-status-btn{width:100%;margin-top:12px;padding:12px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.95rem}
-/* Tabs */
 .day-tabs{display:flex;gap:8px;margin:0 0 16px}
 .day-tab{flex:1;padding:10px;background:#fff;border:2px solid #ddd;border-radius:10px;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
 .day-tab.active{background:#667eea;color:#fff;border-color:#667eea}
-/* Session cards */
 .sessions-wrap{display:flex;flex-direction:column;gap:16px;padding-bottom:80px}
 .session-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .session-header{padding:14px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
@@ -53,7 +48,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .session-cat{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
 .session-time{font-weight:800;font-size:1.1rem}
 .session-deadline{font-size:.75rem;opacity:.85;margin-top:2px}
-.session-closed{background:linear-gradient(135deg,#ccc,#999)}
+.session-closed{background:linear-gradient(135deg,#ccc,#999)!important}
 .winner-banner{background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;font-weight:700;color:#92400e}
 .places-list{padding:12px}
 .place-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:6px;background:#f9f9f9;cursor:pointer;transition:.15s;border:2px solid transparent}
@@ -68,33 +63,29 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
 .vote-bar-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px}
 .vote-bar-track{background:#eee;border-radius:6px;height:8px;overflow:hidden}
 .vote-bar-fill{height:8px;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:6px;transition:.5s}
-.who-voted{padding:0 12px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.who-voted{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap}
 .voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#e8f4e8;color:#2d7a2d;font-weight:600}
 .not-voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#f5f5f5;color:#999}
 .submit-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s}
 .submit-btn:hover{opacity:.9;transform:scale(1.01)}
-.submit-btn:disabled{background:#ccc;transform:none;cursor:not-allowed}
 .change-vote-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:10px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer}
-/* Admin */
 .admin-section{margin-top:20px;padding:16px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .admin-title{font-weight:800;margin-bottom:12px;color:#764ba2}
 .admin-form{display:flex;flex-direction:column;gap:8px}
 .admin-select,.admin-input{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
 .admin-select:focus,.admin-input:focus{border-color:#667eea}
 .admin-add-btn{padding:11px;background:#764ba2;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
-/* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:24px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
-/* Refresh indicator */
-.refresh-bar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999}
+.refresh-bar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999;max-width:480px}
 .refresh-progress{height:3px;background:#667eea;transition:width 30s linear}
+#mainScreen{padding:0}
 </style>
 </head>
 <body>
 
 <div class="refresh-bar"><div class="refresh-progress" id="refreshProgress"></div></div>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="screen active">
   <div class="login-title">✈️ 삿포로 여행</div>
   <div class="login-sub">함께 투표하고 코스 정해요!</div>
@@ -111,7 +102,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
   </div>
 </div>
 
-<!-- MAIN SCREEN -->
 <div id="mainScreen" class="screen">
   <div class="topbar">
     <div>
@@ -122,7 +112,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
   </div>
 
   <div style="padding:16px 16px 0">
-    <!-- Status Check Card -->
     <div class="status-card" id="statusCard">
       <div class="status-title">📊 지금 내 상태는?</div>
       <div class="status-row">
@@ -160,18 +149,15 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
       <button class="save-status-btn" onclick="saveStatus()">상태 저장하기 💾</button>
     </div>
 
-    <!-- Day Tabs -->
     <div class="day-tabs">
       <div class="day-tab active" id="tab1" onclick="switchDay(1)">1일차</div>
       <div class="day-tab" id="tab2" onclick="switchDay(2)">2일차</div>
     </div>
 
-    <!-- Sessions -->
     <div class="sessions-wrap" id="sessionsWrap">
       <div style="text-align:center;padding:40px;color:#999">로딩중...</div>
     </div>
 
-    <!-- Admin Section -->
     <div id="adminSection" class="admin-section" style="display:none">
       <div class="admin-title">⚙️ 관리자 (민지 전용)</div>
       <div class="admin-form">
@@ -180,10 +166,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
           <option value="2">2일차</option>
         </select>
         <select id="adminMeal" class="admin-select">
-          <option value="lunch">점심</option>
-          <option value="dinner">저녁</option>
-          <option value="breakfast">아침</option>
-          <option value="cafe">카페타임</option>
+          <option value="lunch">🍱 점심</option>
+          <option value="dinner">🍽️ 저녁</option>
+          <option value="breakfast">🌅 아침</option>
+          <option value="cafe">☕ 카페타임</option>
         </select>
         <select id="adminCat" class="admin-select">
           <option value="식사">🍽️ 식사</option>
@@ -197,7 +183,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:4
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -209,26 +194,26 @@ let currentUser = null;
 let currentDay = 1;
 let statusState = {energy:0, hunger:0, motiv:0, rest:false};
 let selectedPlaces = {};
-let refreshTimer = null;
 let refreshInterval = null;
 
-// ===== LOGIN =====
-let selectedName = '';
 function selectName(btn) {
   document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  selectedName = btn.dataset.name;
+  window._selectedName = btn.dataset.name;
 }
+
 async function doLogin() {
-  if (!selectedName) { showToast('이름을 선택해주세요!'); return; }
+  const name = window._selectedName;
+  if (!name) { showToast('이름을 선택해주세요!'); return; }
   const pin = document.getElementById('pinInput').value;
   if (pin.length !== 4) { showToast('PIN 4자리를 입력해주세요!'); return; }
-  const {data, error} = await sb.from('members').select('*').eq('nickname', selectedName).eq('pin', pin).single();
+  const {data, error} = await sb.from('members').select('*').eq('nickname', name).eq('pin', pin).single();
   if (error || !data) { showToast('❌ PIN이 틀렸어요!'); return; }
   currentUser = data;
   localStorage.setItem('sapporo_user', JSON.stringify(data));
   showMain();
 }
+
 function doLogout() {
   localStorage.removeItem('sapporo_user');
   currentUser = null;
@@ -237,8 +222,9 @@ function doLogout() {
   document.getElementById('mainScreen').classList.remove('active');
   document.getElementById('pinInput').value = '';
   document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-  selectedName = '';
+  window._selectedName = '';
 }
+
 function showMain() {
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('mainScreen').classList.add('active');
@@ -249,7 +235,6 @@ function showMain() {
   startAutoRefresh();
 }
 
-// ===== STATUS CHECK =====
 function setStatus(type, val, btn) {
   statusState[type] = val;
   const rowId = type === 'energy' ? 'energyRow' : type === 'hunger' ? 'hungerRow' : 'motivRow';
@@ -257,6 +242,7 @@ function setStatus(type, val, btn) {
   btn.classList.add('sel');
   updateAiBox();
 }
+
 function updateAiBox() {
   const rest = document.getElementById('restCheck').checked;
   statusState.rest = rest;
@@ -278,16 +264,20 @@ function updateAiBox() {
   }
   aiBox.textContent = msg;
 }
-document.getElementById('restCheck').addEventListener('change', updateAiBox);
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('restCheck').addEventListener('change', updateAiBox);
+});
 
 async function loadStatus() {
   const {data} = await sb.from('status_checks').select('*').eq('member_id', currentUser.id).eq('day_number', currentDay).order('created_at', {ascending:false}).limit(1);
   if (data && data.length > 0) {
     const s = data[0];
-    ['energy','hunger','motiv'].forEach((type, i) => {
-      const vals = [s.energy, s.hunger, s.motivation];
+    const types = ['energy','hunger','motiv'];
+    const vals = [s.energy, s.hunger, s.motivation];
+    const rowIds = ['energyRow','hungerRow','motivRow'];
+    types.forEach((type, i) => {
       statusState[type] = vals[i];
-      const rowIds = ['energyRow','hungerRow','motivRow'];
       document.querySelectorAll('#' + rowIds[i] + ' .emoji-btn').forEach(b => {
         b.classList.toggle('sel', parseInt(b.dataset.val) === vals[i]);
       });
@@ -297,6 +287,7 @@ async function loadStatus() {
     document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅';
   }
 }
+
 async function saveStatus() {
   if (!statusState.energy || !statusState.hunger || !statusState.motiv) { showToast('모든 상태를 선택해주세요!'); return; }
   const mealTime = currentDay === 1 ? 'day1' : 'day2';
@@ -309,7 +300,6 @@ async function saveStatus() {
   else showToast('저장 실패: ' + error.message);
 }
 
-// ===== DAY TABS =====
 function switchDay(day) {
   currentDay = day;
   document.getElementById('tab1').classList.toggle('active', day === 1);
@@ -317,7 +307,6 @@ function switchDay(day) {
   loadSessions();
 }
 
-// ===== SESSIONS =====
 const mealLabel = {breakfast:'🌅 아침', lunch:'🍱 점심', dinner:'🍽️ 저녁', cafe:'☕ 카페타임'};
 const catEmoji = {'식사':'🍽️', '카페':'☕', '구경거리':'🏞️'};
 
@@ -327,12 +316,14 @@ async function loadSessions() {
   const {data: sessions, error} = await sb.from('vote_sessions').select('*').eq('day_number', currentDay).order('id');
   if (error) { wrap.innerHTML = '<div style="padding:20px;color:red">오류: ' + error.message + '</div>'; return; }
   if (!sessions || sessions.length === 0) {
-    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>';
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;line-height:1.8">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>';
     return;
   }
-  const {data: places} = await sb.from('places').select('*');
-  const {data: votes} = await sb.from('votes').select('*, members(nickname)');
-  const {data: members} = await sb.from('members').select('*');
+  const [{data: places}, {data: votes}, {data: members}] = await Promise.all([
+    sb.from('places').select('*'),
+    sb.from('votes').select('*, members(nickname)'),
+    sb.from('members').select('*')
+  ]);
 
   wrap.innerHTML = '';
   for (const session of sessions) {
@@ -343,16 +334,17 @@ async function loadSessions() {
     const deadline = session.deadline ? new Date(session.deadline) : null;
     const isExpired = deadline && now > deadline;
     const isClosed = session.is_closed;
+    const showVotes = isClosed || isExpired;
 
     const card = document.createElement('div');
     card.className = 'session-card';
 
-    let headerClass = (isClosed || isExpired) ? 'session-header session-closed' : 'session-header';
-    let deadlineText = deadline ? formatDeadline(deadline) : '마감 미정';
-    let statusText = isClosed ? '🔒 투표 마감' : isExpired ? '⏰ 시간 종료' : '🗳️ 투표 중';
+    const headerClass = showVotes ? 'session-header session-closed' : 'session-header';
+    const deadlineText = deadline ? formatDeadline(deadline) : '마감 미정';
+    const statusText = isClosed ? '🔒 마감' : isExpired ? '⏰ 종료' : '🗳️ 투표중';
 
     let winnerHtml = '';
-    if ((isClosed || isExpired) && session.winning_place_id) {
+    if (showVotes && session.winning_place_id) {
       const winner = (places || []).find(p => p.id === session.winning_place_id);
       if (winner) winnerHtml = '<div class="winner-banner">🏆 당선: ' + winner.name + '</div>';
     }
@@ -363,37 +355,29 @@ async function loadSessions() {
     }).join('');
 
     let placesHtml = '';
-    const showVotes = isClosed || isExpired;
-
-    for (const place of sessionPlaces) {
-      const placeVotes = sessionVotes.filter(v => v.place_id === place.id).length;
-      const totalVotes = sessionVotes.length;
-      const pct = totalVotes > 0 ? Math.round(placeVotes / totalVotes * 100) : 0;
-      const isSelected = selectedPlaces[session.id] === place.id;
-      const isMyVote = myVote && myVote.place_id === place.id;
-      if (!isClosed && !isExpired) {
-        placesHtml += '<div class="place-item' + (isMyVote ? ' selected' : '') + '" onclick="selectPlace(' + session.id + ',' + place.id + ',this)">' +
-          '<input type="radio" class="place-radio" name="sess_' + session.id + '" ' + (isMyVote ? 'checked' : '') + ' readonly>' +
+    if (!showVotes) {
+      for (const place of sessionPlaces) {
+        const isMyVote = myVote && myVote.place_id === place.id;
+        const isSelected = selectedPlaces[session.id] === place.id;
+        placesHtml += '<div class="place-item' + (isMyVote || isSelected ? ' selected' : '') + '" onclick="selectPlace(' + session.id + ',' + place.id + ',this)">' +
+          '<input type="radio" class="place-radio" name="sess_' + session.id + '" ' + (isMyVote || isSelected ? 'checked' : '') + '>' +
           '<div class="place-info"><div class="place-name">' + catEmoji[place.category] + ' ' + place.name + '</div>' +
           '<div class="place-sub">' + (place.sub_category || '') + (place.price_range ? ' · ' + place.price_range : '') + (place.rating ? ' · ⭐' + place.rating : '') + '</div></div></div>';
       }
     }
 
-    let voteBarsHtml = '';
-    if (showVotes || sessionVotes.length > 0) {
-      voteBarsHtml = '<div class="vote-bars">';
-      for (const place of sessionPlaces) {
-        const placeVotes = sessionVotes.filter(v => v.place_id === place.id).length;
-        const totalVotes = sessionVotes.length;
-        const pct = totalVotes > 0 ? Math.round(placeVotes / totalVotes * 100) : 0;
-        voteBarsHtml += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + place.name + '</span><span>' + placeVotes + '표 (' + pct + '%)</span></div>' +
-          '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
-      }
-      voteBarsHtml += '</div>';
+    let voteBarsHtml = '<div class="vote-bars">';
+    for (const place of sessionPlaces) {
+      const cnt = sessionVotes.filter(v => v.place_id === place.id).length;
+      const total = sessionVotes.length;
+      const pct = total > 0 ? Math.round(cnt / total * 100) : 0;
+      voteBarsHtml += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + catEmoji[place.category] + ' ' + place.name + '</span><span>' + cnt + '표 (' + pct + '%)</span></div>' +
+        '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
     }
+    voteBarsHtml += '</div>';
 
     let actionHtml = '';
-    if (!isClosed && !isExpired) {
+    if (!showVotes) {
       if (myVote) {
         actionHtml = '<button class="change-vote-btn" onclick="cancelVote(' + session.id + ')">🔄 투표 변경하기</button>';
       } else {
@@ -401,9 +385,9 @@ async function loadSessions() {
       }
     }
 
-    let adminCloseHtml = '';
+    let adminHtml = '';
     if (currentUser.nickname === '민지' && !isClosed) {
-      adminCloseHtml = '<button onclick="closeSession(' + session.id + ')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (민지 전용)</button>';
+      adminHtml = '<button onclick="closeSession(' + session.id + ')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (관리자)</button>';
     }
 
     card.innerHTML = '<div class="' + headerClass + '">' +
@@ -411,19 +395,17 @@ async function loadSessions() {
       '<span class="session-cat">' + statusText + '</span></div>' +
       '<div class="session-deadline">⏱️ ' + deadlineText + '</div></div>' +
       winnerHtml +
-      ((!isClosed && !isExpired) ? '<div class="places-list">' + placesHtml + '</div>' : '') +
+      (placesHtml ? '<div class="places-list">' + placesHtml + '</div>' : '') +
       voteBarsHtml +
-      '<div class="who-voted" style="padding:4px 12px 8px">' + votedMembers + '</div>' +
-      actionHtml +
-      adminCloseHtml;
+      '<div class="who-voted">' + votedMembers + '</div>' +
+      actionHtml + adminHtml;
 
     wrap.appendChild(card);
   }
 }
 
 function formatDeadline(d) {
-  const now = new Date();
-  const diff = d - now;
+  const diff = d - new Date();
   if (diff <= 0) return '마감됨';
   const h = Math.floor(diff / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
@@ -434,13 +416,13 @@ function formatDeadline(d) {
 function selectPlace(sessionId, placeId, el) {
   selectedPlaces[sessionId] = placeId;
   const card = el.closest('.session-card');
-  card.querySelectorAll('.place-item').forEach(item => item.classList.remove('selected'));
+  card.querySelectorAll('.place-item').forEach(item => {item.classList.remove('selected'); item.querySelector('.place-radio').checked = false;});
   el.classList.add('selected');
   el.querySelector('.place-radio').checked = true;
 }
 
 async function submitVote(sessionId) {
-  if (!selectedPlaces[sessionId]) { showToast('장소를 선택해주세요!'); return; }
+  if (!selectedPlaces[sessionId]) { showToast('장소를 먼저 선택해주세요!'); return; }
   const {error} = await sb.from('votes').upsert({
     session_id: sessionId, member_id: currentUser.id, place_id: selectedPlaces[sessionId]
   }, {onConflict: 'session_id,member_id'});
@@ -450,69 +432,63 @@ async function submitVote(sessionId) {
 
 async function cancelVote(sessionId) {
   const {error} = await sb.from('votes').delete().eq('session_id', sessionId).eq('member_id', currentUser.id);
-  if (!error) { showToast('투표가 취소되었어요. 다시 투표해주세요!'); loadSessions(); }
+  if (!error) { showToast('투표 취소됨. 다시 선택해주세요!'); loadSessions(); }
   else showToast('오류: ' + error.message);
 }
 
 async function closeSession(sessionId) {
-  const {data: votes} = await sb.from('votes').select('place_id').eq('session_id', sessionId);
+  const {data: voteData} = await sb.from('votes').select('place_id').eq('session_id', sessionId);
   let winner = null;
-  if (votes && votes.length > 0) {
+  if (voteData && voteData.length > 0) {
     const counts = {};
-    votes.forEach(v => counts[v.place_id] = (counts[v.place_id] || 0) + 1);
+    voteData.forEach(v => counts[v.place_id] = (counts[v.place_id] || 0) + 1);
     winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
   }
   const {error} = await sb.from('vote_sessions').update({is_closed: true, winning_place_id: winner ? parseInt(winner) : null}).eq('id', sessionId);
-  if (!error) { showToast('🔒 세션이 마감되었어요!'); loadSessions(); }
+  if (!error) { showToast('🔒 세션 마감 완료!'); loadSessions(); }
   else showToast('오류: ' + error.message);
 }
 
 async function addSession() {
-  const day = document.getElementById('adminDay').value;
+  const day = parseInt(document.getElementById('adminDay').value);
   const meal = document.getElementById('adminMeal').value;
   const cat = document.getElementById('adminCat').value;
   const deadline = document.getElementById('adminDeadline').value;
   if (!deadline) { showToast('마감 시간을 설정해주세요!'); return; }
   const {error} = await sb.from('vote_sessions').insert({
-    day_number: parseInt(day), meal_time: meal, category: cat,
+    day_number: day, meal_time: meal, category: cat,
     deadline: new Date(deadline).toISOString(), is_closed: false
   });
   if (!error) { showToast('✅ 투표 세션 추가됨!'); loadSessions(); }
   else showToast('오류: ' + error.message);
 }
 
-// ===== AUTO REFRESH =====
 function startAutoRefresh() {
   clearInterval(refreshInterval);
   const bar = document.getElementById('refreshProgress');
-  bar.style.transition = 'none';
-  bar.style.width = '0%';
-  setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '100%'; }, 50);
-  refreshInterval = setInterval(() => {
-    loadSessions();
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
+  function resetBar() {
+    bar.style.transition = 'none'; bar.style.width = '0%';
     setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '100%'; }, 50);
-  }, 30000);
+  }
+  resetBar();
+  refreshInterval = setInterval(() => { loadSessions(); resetBar(); }, 30000);
 }
 
-// ===== TOAST =====
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ===== AUTO LOGIN =====
 window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('sapporo_user');
   if (saved) { try { currentUser = JSON.parse(saved); showMain(); } catch(e) {} }
   const now = new Date();
   const pad = n => String(n).padStart(2,'0');
-  const localDT = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()+2) + ':' + pad(now.getMinutes());
-  const deadlineEl = document.getElementById('adminDeadline');
-  if (deadlineEl) deadlineEl.value = localDT;
+  const dt = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()+2) + ':' + pad(now.getMinutes());
+  const el = document.getElementById('adminDeadline');
+  if (el) el.value = dt;
+  document.getElementById('restCheck').addEventListener('change', updateAiBox);
 });
 </script>
 </body>
