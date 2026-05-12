@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✈️ 삿포로 여행 코스 투표</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+.hero { text-align: center; padding: 40px 20px 20px; }
+.hero h1 { font-size: 2.4rem; font-weight: 800; background: linear-gradient(90deg, #f9ca24, #f0932b, #eb4d4b, #6c5ce7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.hero p { color: #a0a8c0; font-size: 1rem; margin-bottom: 6px; }
+.live-count { display: inline-block; background: rgba(255,255,255,0.1); border-radius: 20px; padding: 6px 18px; font-size: 0.85rem; color: #74b9ff; border: 1px solid rgba(116,185,255,0.3); margin-bottom: 30px; }
+.tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 20px; margin-bottom: 30px; }
+.tab-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #ccc; padding: 10px 22px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; }
+.tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-color: transparent; color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,92,231,0.4); }
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+.section { display: none; }
+.section.active { display: block; }
+.day-label { text-align: center; font-size: 1.1rem; color: #a29bfe; margin-bottom: 20px; font-weight: 600; }
+.course-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: all 0.3s; }
+.course-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.course-card.voted { border-color: #55efc4; background: rgba(85,239,196,0.08); box-shadow: 0 0 20px rgba(85,239,196,0.2); }
+.course-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.course-title { font-size: 1.15rem; font-weight: 700; }
+.vote-count { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; color: #fdcb6e; min-width: 50px; text-align: center; }
+.course-card.voted .vote-count { background: rgba(85,239,196,0.2); color: #55efc4; }
+.places { display: flex; flex-direction: column; gap: 8px; }
+.place-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 10px; }
+.place-emoji { font-size: 1.2rem; min-width: 24px; }
+.place-info { flex: 1; }
+.place-name { font-weight: 600; font-size: 0.95rem; }
+.place-desc { color: #a0a8c0; font-size: 0.8rem; margin-top: 1px; }
+.place-time { color: #74b9ff; font-size: 0.78rem; white-space: nowrap; }
+.progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 14px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); border-radius: 3px; transition: width 0.6s ease; }
+.course-card.voted .progress-fill { background: linear-gradient(90deg, #00b894, #55efc4); }
+.voted-badge { display: none; font-size: 0.78rem; color: #55efc4; font-weight: 700; margin-top: 8px; }
+.course-card.voted .voted-badge { display: block; }
+.result-section { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 24px; margin-top: 30px; border: 1px solid rgba(255,255,255,0.1); }
+.result-section h3 { margin-bottom: 16px; font-size: 1rem; color: #fdcb6e; }
+.result-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.result-name { flex: 1; font-size: 0.9rem; color: #ddd; }
+.result-bar-wrap { width: 120px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+.result-bar { height: 100%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); border-radius: 4px; transition: width 0.8s; }
+.result-pct { font-size: 0.8rem; color: #a29bfe; min-width: 35px; text-align: right; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: #1e2a45; border-radius: 20px; padding: 30px; text-align: center; max-width: 300px; width: 90%; border: 1px solid rgba(85,239,196,0.3); animation: popIn 0.3s ease; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal h3 { font-size: 1.5rem; margin-bottom: 8px; }
+.modal p { color: #a0a8c0; font-size: 0.9rem; margin-bottom: 20px; }
+.modal button { background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none; color: white; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>✈️ 삿포로 여행 코스 투표</h1>
+  <p>3박 4일 중 이틀, 어떤 코스로 갈까요? 🗳️</p>
+  <div class="live-count" id="totalVotesDisplay">총 0표 투표 중</div>
+</div>
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('day1',this)">📅 Day 1 코스 투표</button>
+  <button class="tab-btn" onclick="showTab('day2',this)">📅 Day 2 코스 투표</button>
+  <button class="tab-btn" onclick="showTab('results',this)">📊 실시간 결과</button>
+</div>
+<div class="container">
+<div class="section active" id="day1">
+  <div class="day-label">🌅 Day 1 — 삿포로 시내 탐방 (어떤 코스가 좋아?)</div>
+  <div class="course-card" id="d1a" onclick="vote('d1','a')">
+    <div class="course-header"><div class="course-title">🍜 미식 탐방 코스</div><div class="vote-count" id="vote-d1a">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">🌅</span><div class="place-info"><div class="place-name">Dekitateya 시계대 점</div><div class="place-desc">아침 식사 · 음식점 4.4★</div></div><span class="place-time">오전 9시</span></div>
+      <div class="place-item"><span class="place-emoji">🌊</span><div class="place-info"><div class="place-name">카이센동 우메도 삿포로</div><div class="place-desc">해산물 덮밥 4.3★</div></div><span class="place-time">점심 12시</span></div>
+      <div class="place-item"><span class="place-emoji">🍛</span><div class="place-info"><div class="place-name">수프카레 킹 센트럴점</div><div class="place-desc">홋카이도 명물 수프카레 4.3★</div></div><span class="place-time">저녁 6시</span></div>
+      <div class="place-item"><span class="place-emoji">🥩</span><div class="place-info"><div class="place-name">야키니쿠 시부키</div><div class="place-desc">야키니쿠 4.6★</div></div><span class="place-time">저녁 8시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d1a" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+  <div class="course-card" id="d1b" onclick="vote('d1','b')">
+    <div class="course-header"><div class="course-title">🏙️ 시내 관광 + 카페 코스</div><div class="vote-count" id="vote-d1b">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">🌳</span><div class="place-info"><div class="place-name">오도리 공원</div><div class="place-desc">삿포로 대표 공원 4.5★</div></div><span class="place-time">오전 10시</span></div>
+      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">MARUMI COFFEE STAND</div><div class="place-desc">세계적인 바리스타 카페 4.7★</div></div><span class="place-time">오전 11시</span></div>
+      <div class="place-item"><span class="place-emoji">🍜</span><div class="place-info"><div class="place-name">멘야 사이미</div><div class="place-desc">라면 맛집 4.2★</div></div><span class="place-time">점심 1시</span></div>
+      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">모리히코 카페</div><div class="place-desc">감성 카페 4.4★</div></div><span class="place-time">오후 3시</span></div>
+      <div class="place-item"><span class="place-emoji">🍷</span><div class="place-info"><div class="place-name">몰리에르</div><div class="place-desc">프렌치 파인다이닝 4.7★</div></div><span class="place-time">저녁 7시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d1b" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+  <div class="course-card" id="d1c" onclick="vote('d1','c')">
+    <div class="course-header"><div class="course-title">🛍️ 쇼핑 + 디저트 코스</div><div class="vote-count" id="vote-d1c">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">🍰</span><div class="place-info"><div class="place-name">기타이치홀</div><div class="place-desc">감성 카페 4.4★</div></div><span class="place-time">오전 10시</span></div>
+      <div class="place-item"><span class="place-emoji">🍫</span><div class="place-info"><div class="place-name">롯카테이 삿포로 본점</div><div class="place-desc">홋카이도 유명 과자 4.4★</div></div><span class="place-time">오전 11시</span></div>
+      <div class="place-item"><span class="place-emoji">🧇</span><div class="place-info"><div class="place-name">키노토야 베이크</div><div class="place-desc">아이스크림 치즈타르트 4.6★</div></div><span class="place-time">점심 후</span></div>
+      <div class="place-item"><span class="place-emoji">🏪</span><div class="place-info"><div class="place-name">無印良品 / 다이이치</div><div class="place-desc">쇼핑 & 홋카이도 특산품</div></div><span class="place-time">오후 3시</span></div>
+      <div class="place-item"><span class="place-emoji">🍦</span><div class="place-info"><div class="place-name">아이스크림바 홋카이도 밀크무라</div><div class="place-desc">유명 아이스크림 4.4★</div></div><span class="place-time">오후 5시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d1c" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+</div>
+<div class="section" id="day2">
+  <div class="day-label">🌆 Day 2 — 삿포로 시내 탐방 (어떤 코스가 좋아?)</div>
+  <div class="course-card" id="d2a" onclick="vote('d2','a')">
+    <div class="course-header"><div class="course-title">🍣 일식 정통 코스</div><div class="vote-count" id="vote-d2a">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">🍚</span><div class="place-info"><div class="place-name">니기리메시</div><div class="place-desc">아침 주먹밥 4.1★</div></div><span class="place-time">오전 8시</span></div>
+      <div class="place-item"><span class="place-emoji">🍜</span><div class="place-info"><div class="place-name">히노데 소바</div><div class="place-desc">정통 소바 4.3★</div></div><span class="place-time">점심 12시</span></div>
+      <div class="place-item"><span class="place-emoji">🍣</span><div class="place-info"><div class="place-name">스시 사이코우</div><div class="place-desc">스시 맛집 4.5★</div></div><span class="place-time">저녁 6시</span></div>
+      <div class="place-item"><span class="place-emoji">🍢</span><div class="place-info"><div class="place-name">오쿠시바 쇼텐 에키마에</div><div class="place-desc">홋카이도 소시지 야키토리 4.6★</div></div><span class="place-time">저녁 8시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d2a" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+  <div class="course-card" id="d2b" onclick="vote('d2','b')">
+    <div class="course-header"><div class="course-title">🏯 문화 + 온천 코스</div><div class="vote-count" id="vote-d2b">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">Cafe Noymond</div><div class="place-desc">파르페 카페 4.1★</div></div><span class="place-time">오전 10시</span></div>
+      <div class="place-item"><span class="place-emoji">🍱</span><div class="place-info"><div class="place-name">야부한 소바</div><div class="place-desc">인기 소바 맛집 4.4★</div></div><span class="place-time">점심 12시</span></div>
+      <div class="place-item"><span class="place-emoji">♨️</span><div class="place-info"><div class="place-name">Onsen Ryokan Yuen Sapporo</div><div class="place-desc">삿포로 시내 온천 여관 4.3★</div></div><span class="place-time">오후 3시</span></div>
+      <div class="place-item"><span class="place-emoji">🍛</span><div class="place-info"><div class="place-name">로지우라 커리 사무라이</div><div class="place-desc">수프카레 4.3★</div></div><span class="place-time">저녁 7시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d2b" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+  <div class="course-card" id="d2c" onclick="vote('d2','c')">
+    <div class="course-header"><div class="course-title">🎪 재밌는 체험 코스</div><div class="vote-count" id="vote-d2c">0 표</div></div>
+    <div class="places">
+      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">바리스타트 커피</div><div class="place-desc">감성 커피숍 4.4★</div></div><span class="place-time">오전 10시</span></div>
+      <div class="place-item"><span class="place-emoji">🥞</span><div class="place-info"><div class="place-name">Kitchen Oeufs</div><div class="place-desc">브런치 맛집 4.3★</div></div><span class="place-time">점심 12시</span></div>
+      <div class="place-item"><span class="place-emoji">🎵</span><div class="place-info"><div class="place-name">기타이치홀 (피아노 연주)</div><div class="place-desc">오타루 창고 카페 · 피아노 라이브</div></div><span class="place-time">오후 2시</span></div>
+      <div class="place-item"><span class="place-emoji">🛍️</span><div class="place-info"><div class="place-name">BRING Sapporo</div><div class="place-desc">의류 상점 4.8★</div></div><span class="place-time">오후 4시</span></div>
+      <div class="place-item"><span class="place-emoji">🐙</span><div class="place-info"><div class="place-name">히나짱 오꼬노미야끼</div><div class="place-desc">오코노미야끼 4.2★</div></div><span class="place-time">저녁 7시</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-d2c" style="width:0%"></div></div>
+    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  </div>
+</div>
+<div class="section" id="results">
+  <div class="result-section">
+    <h3>📅 Day 1 결과</h3>
+    <div class="result-row"><span class="result-name">🍜 미식 탐방 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1a" style="width:0%"></div></div><span class="result-pct" id="rp-d1a">0%</span></div>
+    <div class="result-row"><span class="result-name">🏙️ 시내 관광+카페 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1b" style="width:0%"></div></div><span class="result-pct" id="rp-d1b">0%</span></div>
+    <div class="result-row"><span class="result-name">🛍️ 쇼핑+디저트 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1c" style="width:0%"></div></div><span class="result-pct" id="rp-d1c">0%</span></div>
+  </div>
+  <div class="result-section">
+    <h3>🌆 Day 2 결과</h3>
+    <div class="result-row"><span class="result-name">🍣 일식 정통 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2a" style="width:0%"></div></div><span class="result-pct" id="rp-d2a">0%</span></div>
+    <div class="result-row"><span class="result-name">🏯 문화+온천 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2b" style="width:0%"></div></div><span class="result-pct" id="rp-d2b">0%</span></div>
+    <div class="result-row"><span class="result-name">🎪 재밌는 체험 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2c" style="width:0%"></div></div><span class="result-pct" id="rp-d2c">0%</span></div>
+  </div>
+</div>
+</div>
+<div class="modal-overlay" id="modal"><div class="modal"><h3>🎉</h3><p id="modal-msg">투표 완료!</p><button onclick="document.getElementById('modal').classList.remove('show')">확인</button></div></div>
+<script>
+const votes={d1:{a:0,b:0,c:0},d2:{a:0,b:0,c:0}};
+const myVote={d1:null,d2:null};
+function vote(day,option){const prev=myVote[day];if(prev===option){votes[day][option]--;myVote[day]=null;document.getElementById(day+prev).classList.remove('voted');showModal('🗳️ 투표를 취소했어요!');}else{if(prev){votes[day][prev]--;document.getElementById(day+prev).classList.remove('voted');}votes[day][option]++;myVote[day]=option;document.getElementById(day+option).classList.add('voted');const names={d1:{a:'🍜 미식 탐방',b:'🏙️ 시내+카페',c:'🛍️ 쇼핑+디저트'},d2:{a:'🍣 일식 정통',b:'🏯 문화+온천',c:'🎪 재밌는 체험'}};showModal('✅ '+names[day][option]+' 코스에 투표했어요!');}updateAll();}
+function updateAll(){['d1','d2'].forEach(day=>{const total=Object.values(votes[day]).reduce((a,b)=>a+b,0);['a','b','c'].forEach(opt=>{const v=votes[day][opt];const pct=total>0?Math.round(v/total*100):0;document.getElementById('vote-'+day+opt).textContent=v+' 표';document.getElementById('prog-'+day+opt).style.width=pct+'%';document.getElementById('r-'+day+opt).style.width=pct+'%';document.getElementById('rp-'+day+opt).textContent=pct+'%';});});const total=Object.values(votes.d1).reduce((a,b)=>a+b,0)+Object.values(votes.d2).reduce((a,b)=>a+b,0);document.getElementById('totalVotesDisplay').textContent='총 '+total+'표 투표 중';}
+function showTab(tab,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(tab).classList.add('active');btn.classList.add('active');}
+function showModal(msg){document.getElementById('modal-msg').textContent=msg;document.getElementById('modal').classList.add('show');setTimeout(()=>document.getElementById('modal').classList.remove('show'),2000);}
+</script>
+</body>
+</html>
