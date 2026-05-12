@@ -3,166 +3,517 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✈️ 삿포로 여행 코스 투표</title>
+<title>✈️ 삿포로 여행 투표</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
-.hero { text-align: center; padding: 40px 20px 20px; }
-.hero h1 { font-size: 2.4rem; font-weight: 800; background: linear-gradient(90deg, #f9ca24, #f0932b, #eb4d4b, #6c5ce7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-.hero p { color: #a0a8c0; font-size: 1rem; margin-bottom: 6px; }
-.live-count { display: inline-block; background: rgba(255,255,255,0.1); border-radius: 20px; padding: 6px 18px; font-size: 0.85rem; color: #74b9ff; border: 1px solid rgba(116,185,255,0.3); margin-bottom: 30px; }
-.tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 20px; margin-bottom: 30px; }
-.tab-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #ccc; padding: 10px 22px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; }
-.tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-color: transparent; color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,92,231,0.4); }
-.container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
-.section { display: none; }
-.section.active { display: block; }
-.day-label { text-align: center; font-size: 1.1rem; color: #a29bfe; margin-bottom: 20px; font-weight: 600; }
-.course-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: all 0.3s; }
-.course-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.course-card.voted { border-color: #55efc4; background: rgba(85,239,196,0.08); box-shadow: 0 0 20px rgba(85,239,196,0.2); }
-.course-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.course-title { font-size: 1.15rem; font-weight: 700; }
-.vote-count { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; color: #fdcb6e; min-width: 50px; text-align: center; }
-.course-card.voted .vote-count { background: rgba(85,239,196,0.2); color: #55efc4; }
-.places { display: flex; flex-direction: column; gap: 8px; }
-.place-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 10px; }
-.place-emoji { font-size: 1.2rem; min-width: 24px; }
-.place-info { flex: 1; }
-.place-name { font-weight: 600; font-size: 0.95rem; }
-.place-desc { color: #a0a8c0; font-size: 0.8rem; margin-top: 1px; }
-.place-time { color: #74b9ff; font-size: 0.78rem; white-space: nowrap; }
-.progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 14px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); border-radius: 3px; transition: width 0.6s ease; }
-.course-card.voted .progress-fill { background: linear-gradient(90deg, #00b894, #55efc4); }
-.voted-badge { display: none; font-size: 0.78rem; color: #55efc4; font-weight: 700; margin-top: 8px; }
-.course-card.voted .voted-badge { display: block; }
-.result-section { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 24px; margin-top: 30px; border: 1px solid rgba(255,255,255,0.1); }
-.result-section h3 { margin-bottom: 16px; font-size: 1rem; color: #fdcb6e; }
-.result-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.result-name { flex: 1; font-size: 0.9rem; color: #ddd; }
-.result-bar-wrap { width: 120px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-.result-bar { height: 100%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); border-radius: 4px; transition: width 0.8s; }
-.result-pct { font-size: 0.8rem; color: #a29bfe; min-width: 35px; text-align: right; }
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; }
-.modal-overlay.show { display: flex; }
-.modal { background: #1e2a45; border-radius: 20px; padding: 30px; text-align: center; max-width: 300px; width: 90%; border: 1px solid rgba(85,239,196,0.3); animation: popIn 0.3s ease; }
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.modal h3 { font-size: 1.5rem; margin-bottom: 8px; }
-.modal p { color: #a0a8c0; font-size: 0.9rem; margin-bottom: 20px; }
-.modal button { background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none; color: white; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#333;max-width:480px;margin:0 auto;min-height:100vh}
+.screen{display:none;padding:20px;min-height:100vh}
+.screen.active{display:block}
+/* Login */
+#loginScreen{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#loginScreen.active{display:flex}
+.login-title{font-size:2rem;font-weight:800;margin-bottom:8px}
+.login-sub{opacity:.8;margin-bottom:32px}
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-bottom:24px}
+.name-btn{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);color:#fff;padding:16px;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:.2s}
+.name-btn:hover,.name-btn.selected{background:rgba(255,255,255,.35);border-color:#fff}
+.pin-section{width:100%}
+.pin-label{margin-bottom:8px;opacity:.9}
+.pin-input{width:100%;padding:14px;font-size:1.5rem;text-align:center;border-radius:12px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);color:#fff;letter-spacing:.5em;outline:none}
+.pin-input::placeholder{color:rgba(255,255,255,.5);letter-spacing:normal}
+.login-btn{width:100%;margin-top:16px;padding:16px;background:#fff;color:#764ba2;border:none;border-radius:12px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s}
+.login-btn:hover{transform:scale(1.02)}
+/* Top bar */
+.topbar{background:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
+.topbar-name{font-weight:700;font-size:1rem}
+.topbar-day{font-size:.8rem;color:#888}
+.logout-btn{background:none;border:none;color:#888;cursor:pointer;font-size:.85rem}
+/* Status banner */
+.status-card{background:#fff;border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.status-title{font-weight:700;margin-bottom:12px;font-size:.95rem;color:#555}
+.status-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.status-label{min-width:60px;font-size:.85rem;color:#666}
+.emoji-row{display:flex;gap:6px;flex:1}
+.emoji-btn{background:#f5f5f5;border:2px solid transparent;border-radius:8px;padding:6px 10px;font-size:1.1rem;cursor:pointer;transition:.15s}
+.emoji-btn.sel{border-color:#667eea;background:#eef0ff}
+.rest-row{display:flex;align-items:center;gap:10px;margin-top:4px}
+.rest-check{width:20px;height:20px;cursor:pointer;accent-color:#667eea}
+.ai-box{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:.9rem;line-height:1.5}
+.save-status-btn{width:100%;margin-top:12px;padding:12px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.95rem}
+/* Tabs */
+.day-tabs{display:flex;gap:8px;margin:0 0 16px}
+.day-tab{flex:1;padding:10px;background:#fff;border:2px solid #ddd;border-radius:10px;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
+.day-tab.active{background:#667eea;color:#fff;border-color:#667eea}
+/* Session cards */
+.sessions-wrap{display:flex;flex-direction:column;gap:16px;padding-bottom:80px}
+.session-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.session-header{padding:14px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.session-header-top{display:flex;justify-content:space-between;align-items:center}
+.session-cat{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px}
+.session-time{font-weight:800;font-size:1.1rem}
+.session-deadline{font-size:.75rem;opacity:.85;margin-top:2px}
+.session-closed{background:linear-gradient(135deg,#ccc,#999)}
+.winner-banner{background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;font-weight:700;color:#92400e}
+.places-list{padding:12px}
+.place-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:6px;background:#f9f9f9;cursor:pointer;transition:.15s;border:2px solid transparent}
+.place-item:hover{background:#f0f4ff}
+.place-item.selected{background:#eef0ff;border-color:#667eea}
+.place-radio{accent-color:#667eea;width:18px;height:18px;flex-shrink:0}
+.place-info{flex:1}
+.place-name{font-weight:700;font-size:.95rem}
+.place-sub{font-size:.75rem;color:#888;margin-top:2px}
+.vote-bars{padding:0 12px 12px}
+.vote-bar-row{margin-bottom:8px}
+.vote-bar-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px}
+.vote-bar-track{background:#eee;border-radius:6px;height:8px;overflow:hidden}
+.vote-bar-fill{height:8px;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:6px;transition:.5s}
+.who-voted{padding:0 12px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#e8f4e8;color:#2d7a2d;font-weight:600}
+.not-voted-chip{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#f5f5f5;color:#999}
+.submit-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s}
+.submit-btn:hover{opacity:.9;transform:scale(1.01)}
+.submit-btn:disabled{background:#ccc;transform:none;cursor:not-allowed}
+.change-vote-btn{width:calc(100% - 24px);margin:0 12px 12px;padding:10px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer}
+/* Admin */
+.admin-section{margin-top:20px;padding:16px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.admin-title{font-weight:800;margin-bottom:12px;color:#764ba2}
+.admin-form{display:flex;flex-direction:column;gap:8px}
+.admin-select,.admin-input{padding:10px 12px;border:2px solid #ddd;border-radius:8px;font-size:.9rem;outline:none}
+.admin-select:focus,.admin-input:focus{border-color:#667eea}
+.admin-add-btn{padding:11px;background:#764ba2;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:24px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+/* Refresh indicator */
+.refresh-bar{height:3px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:999}
+.refresh-progress{height:3px;background:#667eea;transition:width 30s linear}
 </style>
 </head>
 <body>
-<div class="hero">
-  <h1>✈️ 삿포로 여행 코스 투표</h1>
-  <p>3박 4일 중 이틀, 어떤 코스로 갈까요? 🗳️</p>
-  <div class="live-count" id="totalVotesDisplay">총 0표 투표 중</div>
-</div>
-<div class="tabs">
-  <button class="tab-btn active" onclick="showTab('day1',this)">📅 Day 1 코스 투표</button>
-  <button class="tab-btn" onclick="showTab('day2',this)">📅 Day 2 코스 투표</button>
-  <button class="tab-btn" onclick="showTab('results',this)">📊 실시간 결과</button>
-</div>
-<div class="container">
-<div class="section active" id="day1">
-  <div class="day-label">🌅 Day 1 — 삿포로 시내 탐방 (어떤 코스가 좋아?)</div>
-  <div class="course-card" id="d1a" onclick="vote('d1','a')">
-    <div class="course-header"><div class="course-title">🍜 미식 탐방 코스</div><div class="vote-count" id="vote-d1a">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">🌅</span><div class="place-info"><div class="place-name">Dekitateya 시계대 점</div><div class="place-desc">아침 식사 · 음식점 4.4★</div></div><span class="place-time">오전 9시</span></div>
-      <div class="place-item"><span class="place-emoji">🌊</span><div class="place-info"><div class="place-name">카이센동 우메도 삿포로</div><div class="place-desc">해산물 덮밥 4.3★</div></div><span class="place-time">점심 12시</span></div>
-      <div class="place-item"><span class="place-emoji">🍛</span><div class="place-info"><div class="place-name">수프카레 킹 센트럴점</div><div class="place-desc">홋카이도 명물 수프카레 4.3★</div></div><span class="place-time">저녁 6시</span></div>
-      <div class="place-item"><span class="place-emoji">🥩</span><div class="place-info"><div class="place-name">야키니쿠 시부키</div><div class="place-desc">야키니쿠 4.6★</div></div><span class="place-time">저녁 8시</span></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d1a" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+
+<div class="refresh-bar"><div class="refresh-progress" id="refreshProgress"></div></div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="screen active">
+  <div class="login-title">✈️ 삿포로 여행</div>
+  <div class="login-sub">함께 투표하고 코스 정해요!</div>
+  <div class="name-grid">
+    <button class="name-btn" data-name="민지" onclick="selectName(this)">민지</button>
+    <button class="name-btn" data-name="친구1" onclick="selectName(this)">친구1</button>
+    <button class="name-btn" data-name="친구2" onclick="selectName(this)">친구2</button>
+    <button class="name-btn" data-name="친구3" onclick="selectName(this)">친구3</button>
   </div>
-  <div class="course-card" id="d1b" onclick="vote('d1','b')">
-    <div class="course-header"><div class="course-title">🏙️ 시내 관광 + 카페 코스</div><div class="vote-count" id="vote-d1b">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">🌳</span><div class="place-info"><div class="place-name">오도리 공원</div><div class="place-desc">삿포로 대표 공원 4.5★</div></div><span class="place-time">오전 10시</span></div>
-      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">MARUMI COFFEE STAND</div><div class="place-desc">세계적인 바리스타 카페 4.7★</div></div><span class="place-time">오전 11시</span></div>
-      <div class="place-item"><span class="place-emoji">🍜</span><div class="place-info"><div class="place-name">멘야 사이미</div><div class="place-desc">라면 맛집 4.2★</div></div><span class="place-time">점심 1시</span></div>
-      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">모리히코 카페</div><div class="place-desc">감성 카페 4.4★</div></div><span class="place-time">오후 3시</span></div>
-      <div class="place-item"><span class="place-emoji">🍷</span><div class="place-info"><div class="place-name">몰리에르</div><div class="place-desc">프렌치 파인다이닝 4.7★</div></div><span class="place-time">저녁 7시</span></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d1b" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
-  </div>
-  <div class="course-card" id="d1c" onclick="vote('d1','c')">
-    <div class="course-header"><div class="course-title">🛍️ 쇼핑 + 디저트 코스</div><div class="vote-count" id="vote-d1c">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">🍰</span><div class="place-info"><div class="place-name">기타이치홀</div><div class="place-desc">감성 카페 4.4★</div></div><span class="place-time">오전 10시</span></div>
-      <div class="place-item"><span class="place-emoji">🍫</span><div class="place-info"><div class="place-name">롯카테이 삿포로 본점</div><div class="place-desc">홋카이도 유명 과자 4.4★</div></div><span class="place-time">오전 11시</span></div>
-      <div class="place-item"><span class="place-emoji">🧇</span><div class="place-info"><div class="place-name">키노토야 베이크</div><div class="place-desc">아이스크림 치즈타르트 4.6★</div></div><span class="place-time">점심 후</span></div>
-      <div class="place-item"><span class="place-emoji">🏪</span><div class="place-info"><div class="place-name">無印良品 / 다이이치</div><div class="place-desc">쇼핑 & 홋카이도 특산품</div></div><span class="place-time">오후 3시</span></div>
-      <div class="place-item"><span class="place-emoji">🍦</span><div class="place-info"><div class="place-name">아이스크림바 홋카이도 밀크무라</div><div class="place-desc">유명 아이스크림 4.4★</div></div><span class="place-time">오후 5시</span></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d1c" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+  <div class="pin-section">
+    <div class="pin-label">🔒 PIN 4자리를 입력하세요</div>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----">
+    <button class="login-btn" onclick="doLogin()">입장하기 🚀</button>
   </div>
 </div>
-<div class="section" id="day2">
-  <div class="day-label">🌆 Day 2 — 삿포로 시내 탐방 (어떤 코스가 좋아?)</div>
-  <div class="course-card" id="d2a" onclick="vote('d2','a')">
-    <div class="course-header"><div class="course-title">🍣 일식 정통 코스</div><div class="vote-count" id="vote-d2a">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">🍚</span><div class="place-info"><div class="place-name">니기리메시</div><div class="place-desc">아침 주먹밥 4.1★</div></div><span class="place-time">오전 8시</span></div>
-      <div class="place-item"><span class="place-emoji">🍜</span><div class="place-info"><div class="place-name">히노데 소바</div><div class="place-desc">정통 소바 4.3★</div></div><span class="place-time">점심 12시</span></div>
-      <div class="place-item"><span class="place-emoji">🍣</span><div class="place-info"><div class="place-name">스시 사이코우</div><div class="place-desc">스시 맛집 4.5★</div></div><span class="place-time">저녁 6시</span></div>
-      <div class="place-item"><span class="place-emoji">🍢</span><div class="place-info"><div class="place-name">오쿠시바 쇼텐 에키마에</div><div class="place-desc">홋카이도 소시지 야키토리 4.6★</div></div><span class="place-time">저녁 8시</span></div>
+
+<!-- MAIN SCREEN -->
+<div id="mainScreen" class="screen">
+  <div class="topbar">
+    <div>
+      <div class="topbar-name" id="topbarName">안녕하세요!</div>
+      <div class="topbar-day" id="topbarStatus">상태 체크 해주세요 ✨</div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d2a" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+    <button class="logout-btn" onclick="doLogout()">로그아웃</button>
   </div>
-  <div class="course-card" id="d2b" onclick="vote('d2','b')">
-    <div class="course-header"><div class="course-title">🏯 문화 + 온천 코스</div><div class="vote-count" id="vote-d2b">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">Cafe Noymond</div><div class="place-desc">파르페 카페 4.1★</div></div><span class="place-time">오전 10시</span></div>
-      <div class="place-item"><span class="place-emoji">🍱</span><div class="place-info"><div class="place-name">야부한 소바</div><div class="place-desc">인기 소바 맛집 4.4★</div></div><span class="place-time">점심 12시</span></div>
-      <div class="place-item"><span class="place-emoji">♨️</span><div class="place-info"><div class="place-name">Onsen Ryokan Yuen Sapporo</div><div class="place-desc">삿포로 시내 온천 여관 4.3★</div></div><span class="place-time">오후 3시</span></div>
-      <div class="place-item"><span class="place-emoji">🍛</span><div class="place-info"><div class="place-name">로지우라 커리 사무라이</div><div class="place-desc">수프카레 4.3★</div></div><span class="place-time">저녁 7시</span></div>
+
+  <div style="padding:16px 16px 0">
+    <!-- Status Check Card -->
+    <div class="status-card" id="statusCard">
+      <div class="status-title">📊 지금 내 상태는?</div>
+      <div class="status-row">
+        <span class="status-label">⚡ 체력</span>
+        <div class="emoji-row" id="energyRow">
+          <button class="emoji-btn" data-val="1" onclick="setStatus('energy',1,this)">😴</button>
+          <button class="emoji-btn" data-val="2" onclick="setStatus('energy',2,this)">😐</button>
+          <button class="emoji-btn" data-val="3" onclick="setStatus('energy',3,this)">😊</button>
+          <button class="emoji-btn" data-val="4" onclick="setStatus('energy',4,this)">💪</button>
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="status-label">🍜 배고픔</span>
+        <div class="emoji-row" id="hungerRow">
+          <button class="emoji-btn" data-val="1" onclick="setStatus('hunger',1,this)">😌</button>
+          <button class="emoji-btn" data-val="2" onclick="setStatus('hunger',2,this)">🙂</button>
+          <button class="emoji-btn" data-val="3" onclick="setStatus('hunger',3,this)">😋</button>
+          <button class="emoji-btn" data-val="4" onclick="setStatus('hunger',4,this)">🤤</button>
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="status-label">🚶 의지</span>
+        <div class="emoji-row" id="motivRow">
+          <button class="emoji-btn" data-val="1" onclick="setStatus('motiv',1,this)">😩</button>
+          <button class="emoji-btn" data-val="2" onclick="setStatus('motiv',2,this)">😶</button>
+          <button class="emoji-btn" data-val="3" onclick="setStatus('motiv',3,this)">😎</button>
+          <button class="emoji-btn" data-val="4" onclick="setStatus('motiv',4,this)">🔥</button>
+        </div>
+      </div>
+      <div class="rest-row">
+        <input type="checkbox" class="rest-check" id="restCheck">
+        <label for="restCheck" style="font-size:.9rem;cursor:pointer">🛋️ 쉬고 싶어요</label>
+      </div>
+      <div id="aiBox" class="ai-box" style="display:none"></div>
+      <button class="save-status-btn" onclick="saveStatus()">상태 저장하기 💾</button>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d2b" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
-  </div>
-  <div class="course-card" id="d2c" onclick="vote('d2','c')">
-    <div class="course-header"><div class="course-title">🎪 재밌는 체험 코스</div><div class="vote-count" id="vote-d2c">0 표</div></div>
-    <div class="places">
-      <div class="place-item"><span class="place-emoji">☕</span><div class="place-info"><div class="place-name">바리스타트 커피</div><div class="place-desc">감성 커피숍 4.4★</div></div><span class="place-time">오전 10시</span></div>
-      <div class="place-item"><span class="place-emoji">🥞</span><div class="place-info"><div class="place-name">Kitchen Oeufs</div><div class="place-desc">브런치 맛집 4.3★</div></div><span class="place-time">점심 12시</span></div>
-      <div class="place-item"><span class="place-emoji">🎵</span><div class="place-info"><div class="place-name">기타이치홀 (피아노 연주)</div><div class="place-desc">오타루 창고 카페 · 피아노 라이브</div></div><span class="place-time">오후 2시</span></div>
-      <div class="place-item"><span class="place-emoji">🛍️</span><div class="place-info"><div class="place-name">BRING Sapporo</div><div class="place-desc">의류 상점 4.8★</div></div><span class="place-time">오후 4시</span></div>
-      <div class="place-item"><span class="place-emoji">🐙</span><div class="place-info"><div class="place-name">히나짱 오꼬노미야끼</div><div class="place-desc">오코노미야끼 4.2★</div></div><span class="place-time">저녁 7시</span></div>
+
+    <!-- Day Tabs -->
+    <div class="day-tabs">
+      <div class="day-tab active" id="tab1" onclick="switchDay(1)">1일차</div>
+      <div class="day-tab" id="tab2" onclick="switchDay(2)">2일차</div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-d2c" style="width:0%"></div></div>
-    <div class="voted-badge">✅ 내가 투표한 코스!</div>
+
+    <!-- Sessions -->
+    <div class="sessions-wrap" id="sessionsWrap">
+      <div style="text-align:center;padding:40px;color:#999">로딩중...</div>
+    </div>
+
+    <!-- Admin Section -->
+    <div id="adminSection" class="admin-section" style="display:none">
+      <div class="admin-title">⚙️ 관리자 (민지 전용)</div>
+      <div class="admin-form">
+        <select id="adminDay" class="admin-select">
+          <option value="1">1일차</option>
+          <option value="2">2일차</option>
+        </select>
+        <select id="adminMeal" class="admin-select">
+          <option value="lunch">점심</option>
+          <option value="dinner">저녁</option>
+          <option value="breakfast">아침</option>
+          <option value="cafe">카페타임</option>
+        </select>
+        <select id="adminCat" class="admin-select">
+          <option value="식사">🍽️ 식사</option>
+          <option value="카페">☕ 카페</option>
+          <option value="구경거리">🏞️ 구경거리</option>
+        </select>
+        <input id="adminDeadline" type="datetime-local" class="admin-input">
+        <button class="admin-add-btn" onclick="addSession()">+ 투표 세션 추가</button>
+      </div>
+    </div>
   </div>
 </div>
-<div class="section" id="results">
-  <div class="result-section">
-    <h3>📅 Day 1 결과</h3>
-    <div class="result-row"><span class="result-name">🍜 미식 탐방 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1a" style="width:0%"></div></div><span class="result-pct" id="rp-d1a">0%</span></div>
-    <div class="result-row"><span class="result-name">🏙️ 시내 관광+카페 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1b" style="width:0%"></div></div><span class="result-pct" id="rp-d1b">0%</span></div>
-    <div class="result-row"><span class="result-name">🛍️ 쇼핑+디저트 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d1c" style="width:0%"></div></div><span class="result-pct" id="rp-d1c">0%</span></div>
-  </div>
-  <div class="result-section">
-    <h3>🌆 Day 2 결과</h3>
-    <div class="result-row"><span class="result-name">🍣 일식 정통 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2a" style="width:0%"></div></div><span class="result-pct" id="rp-d2a">0%</span></div>
-    <div class="result-row"><span class="result-name">🏯 문화+온천 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2b" style="width:0%"></div></div><span class="result-pct" id="rp-d2b">0%</span></div>
-    <div class="result-row"><span class="result-name">🎪 재밌는 체험 코스</span><div class="result-bar-wrap"><div class="result-bar" id="r-d2c" style="width:0%"></div></div><span class="result-pct" id="rp-d2c">0%</span></div>
-  </div>
-</div>
-</div>
-<div class="modal-overlay" id="modal"><div class="modal"><h3>🎉</h3><p id="modal-msg">투표 완료!</p><button onclick="document.getElementById('modal').classList.remove('show')">확인</button></div></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
-const votes={d1:{a:0,b:0,c:0},d2:{a:0,b:0,c:0}};
-const myVote={d1:null,d2:null};
-function vote(day,option){const prev=myVote[day];if(prev===option){votes[day][option]--;myVote[day]=null;document.getElementById(day+prev).classList.remove('voted');showModal('🗳️ 투표를 취소했어요!');}else{if(prev){votes[day][prev]--;document.getElementById(day+prev).classList.remove('voted');}votes[day][option]++;myVote[day]=option;document.getElementById(day+option).classList.add('voted');const names={d1:{a:'🍜 미식 탐방',b:'🏙️ 시내+카페',c:'🛍️ 쇼핑+디저트'},d2:{a:'🍣 일식 정통',b:'🏯 문화+온천',c:'🎪 재밌는 체험'}};showModal('✅ '+names[day][option]+' 코스에 투표했어요!');}updateAll();}
-function updateAll(){['d1','d2'].forEach(day=>{const total=Object.values(votes[day]).reduce((a,b)=>a+b,0);['a','b','c'].forEach(opt=>{const v=votes[day][opt];const pct=total>0?Math.round(v/total*100):0;document.getElementById('vote-'+day+opt).textContent=v+' 표';document.getElementById('prog-'+day+opt).style.width=pct+'%';document.getElementById('r-'+day+opt).style.width=pct+'%';document.getElementById('rp-'+day+opt).textContent=pct+'%';});});const total=Object.values(votes.d1).reduce((a,b)=>a+b,0)+Object.values(votes.d2).reduce((a,b)=>a+b,0);document.getElementById('totalVotesDisplay').textContent='총 '+total+'표 투표 중';}
-function showTab(tab,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(tab).classList.add('active');btn.classList.add('active');}
-function showModal(msg){document.getElementById('modal-msg').textContent=msg;document.getElementById('modal').classList.add('show');setTimeout(()=>document.getElementById('modal').classList.remove('show'),2000);}
+const SUPABASE_URL = 'https://pmzmmimyabuvpwoklkgc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentDay = 1;
+let statusState = {energy:0, hunger:0, motiv:0, rest:false};
+let selectedPlaces = {};
+let refreshTimer = null;
+let refreshInterval = null;
+
+// ===== LOGIN =====
+let selectedName = '';
+function selectName(btn) {
+  document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedName = btn.dataset.name;
+}
+async function doLogin() {
+  if (!selectedName) { showToast('이름을 선택해주세요!'); return; }
+  const pin = document.getElementById('pinInput').value;
+  if (pin.length !== 4) { showToast('PIN 4자리를 입력해주세요!'); return; }
+  const {data, error} = await sb.from('members').select('*').eq('nickname', selectedName).eq('pin', pin).single();
+  if (error || !data) { showToast('❌ PIN이 틀렸어요!'); return; }
+  currentUser = data;
+  localStorage.setItem('sapporo_user', JSON.stringify(data));
+  showMain();
+}
+function doLogout() {
+  localStorage.removeItem('sapporo_user');
+  currentUser = null;
+  clearInterval(refreshInterval);
+  document.getElementById('loginScreen').classList.add('active');
+  document.getElementById('mainScreen').classList.remove('active');
+  document.getElementById('pinInput').value = '';
+  document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
+  selectedName = '';
+}
+function showMain() {
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('mainScreen').classList.add('active');
+  document.getElementById('topbarName').textContent = currentUser.nickname + ' 님 👋';
+  if (currentUser.nickname === '민지') document.getElementById('adminSection').style.display = 'block';
+  loadStatus();
+  loadSessions();
+  startAutoRefresh();
+}
+
+// ===== STATUS CHECK =====
+function setStatus(type, val, btn) {
+  statusState[type] = val;
+  const rowId = type === 'energy' ? 'energyRow' : type === 'hunger' ? 'hungerRow' : 'motivRow';
+  document.querySelectorAll('#' + rowId + ' .emoji-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updateAiBox();
+}
+function updateAiBox() {
+  const rest = document.getElementById('restCheck').checked;
+  statusState.rest = rest;
+  const {energy, hunger, motiv} = statusState;
+  if (!energy || !hunger || !motiv) return;
+  const aiBox = document.getElementById('aiBox');
+  aiBox.style.display = 'block';
+  let msg = '';
+  if (rest || (energy <= 1 && motiv <= 1)) {
+    msg = '🛋️ 오늘은 쉬는 게 어떨까요? 충분한 휴식도 여행의 일부예요!';
+  } else if (energy <= 2 && motiv <= 2) {
+    msg = '😌 컨디션이 좀 처지네요. 가까운 카페에서 여유롭게 시작해요~';
+  } else if (hunger >= 3) {
+    msg = '🍜 배가 많이 고프군요! 맛집 투표 빨리 하고 밥 먹으러 가요!';
+  } else if (energy >= 3 && motiv >= 3) {
+    msg = '🔥 컨디션 최고! 오늘 일정 다 소화할 수 있어요!';
+  } else {
+    msg = '🗺️ 좋아요! 투표하고 함께 즐거운 코스 정해봐요!';
+  }
+  aiBox.textContent = msg;
+}
+document.getElementById('restCheck').addEventListener('change', updateAiBox);
+
+async function loadStatus() {
+  const {data} = await sb.from('status_checks').select('*').eq('member_id', currentUser.id).eq('day_number', currentDay).order('created_at', {ascending:false}).limit(1);
+  if (data && data.length > 0) {
+    const s = data[0];
+    ['energy','hunger','motiv'].forEach((type, i) => {
+      const vals = [s.energy, s.hunger, s.motivation];
+      statusState[type] = vals[i];
+      const rowIds = ['energyRow','hungerRow','motivRow'];
+      document.querySelectorAll('#' + rowIds[i] + ' .emoji-btn').forEach(b => {
+        b.classList.toggle('sel', parseInt(b.dataset.val) === vals[i]);
+      });
+    });
+    if (s.want_rest) { document.getElementById('restCheck').checked = true; statusState.rest = true; }
+    updateAiBox();
+    document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅';
+  }
+}
+async function saveStatus() {
+  if (!statusState.energy || !statusState.hunger || !statusState.motiv) { showToast('모든 상태를 선택해주세요!'); return; }
+  const mealTime = currentDay === 1 ? 'day1' : 'day2';
+  const {error} = await sb.from('status_checks').upsert({
+    member_id: currentUser.id, day_number: currentDay, meal_time: mealTime,
+    energy: statusState.energy, hunger: statusState.hunger,
+    motivation: statusState.motiv, want_rest: statusState.rest
+  }, {onConflict: 'member_id,day_number,meal_time'});
+  if (!error) { showToast('✅ 상태 저장 완료!'); document.getElementById('topbarStatus').textContent = '상태 업데이트됨 ✅'; }
+  else showToast('저장 실패: ' + error.message);
+}
+
+// ===== DAY TABS =====
+function switchDay(day) {
+  currentDay = day;
+  document.getElementById('tab1').classList.toggle('active', day === 1);
+  document.getElementById('tab2').classList.toggle('active', day === 2);
+  loadSessions();
+}
+
+// ===== SESSIONS =====
+const mealLabel = {breakfast:'🌅 아침', lunch:'🍱 점심', dinner:'🍽️ 저녁', cafe:'☕ 카페타임'};
+const catEmoji = {'식사':'🍽️', '카페':'☕', '구경거리':'🏞️'};
+
+async function loadSessions() {
+  const wrap = document.getElementById('sessionsWrap');
+  wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999">로딩중...</div>';
+  const {data: sessions, error} = await sb.from('vote_sessions').select('*').eq('day_number', currentDay).order('id');
+  if (error) { wrap.innerHTML = '<div style="padding:20px;color:red">오류: ' + error.message + '</div>'; return; }
+  if (!sessions || sessions.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999">아직 투표 세션이 없어요.<br>민지가 곧 만들 거예요! 😊</div>';
+    return;
+  }
+  const {data: places} = await sb.from('places').select('*');
+  const {data: votes} = await sb.from('votes').select('*, members(nickname)');
+  const {data: members} = await sb.from('members').select('*');
+
+  wrap.innerHTML = '';
+  for (const session of sessions) {
+    const sessionVotes = (votes || []).filter(v => v.session_id === session.id);
+    const myVote = sessionVotes.find(v => v.member_id === currentUser.id);
+    const sessionPlaces = (places || []).filter(p => p.category === session.category);
+    const now = new Date();
+    const deadline = session.deadline ? new Date(session.deadline) : null;
+    const isExpired = deadline && now > deadline;
+    const isClosed = session.is_closed;
+
+    const card = document.createElement('div');
+    card.className = 'session-card';
+
+    let headerClass = (isClosed || isExpired) ? 'session-header session-closed' : 'session-header';
+    let deadlineText = deadline ? formatDeadline(deadline) : '마감 미정';
+    let statusText = isClosed ? '🔒 투표 마감' : isExpired ? '⏰ 시간 종료' : '🗳️ 투표 중';
+
+    let winnerHtml = '';
+    if ((isClosed || isExpired) && session.winning_place_id) {
+      const winner = (places || []).find(p => p.id === session.winning_place_id);
+      if (winner) winnerHtml = '<div class="winner-banner">🏆 당선: ' + winner.name + '</div>';
+    }
+
+    const votedMembers = (members || []).map(m => {
+      const voted = sessionVotes.find(v => v.member_id === m.id);
+      return voted ? '<span class="voted-chip">✅ ' + m.nickname + '</span>' : '<span class="not-voted-chip">⬜ ' + m.nickname + '</span>';
+    }).join('');
+
+    let placesHtml = '';
+    const showVotes = isClosed || isExpired;
+
+    for (const place of sessionPlaces) {
+      const placeVotes = sessionVotes.filter(v => v.place_id === place.id).length;
+      const totalVotes = sessionVotes.length;
+      const pct = totalVotes > 0 ? Math.round(placeVotes / totalVotes * 100) : 0;
+      const isSelected = selectedPlaces[session.id] === place.id;
+      const isMyVote = myVote && myVote.place_id === place.id;
+      if (!isClosed && !isExpired) {
+        placesHtml += '<div class="place-item' + (isMyVote ? ' selected' : '') + '" onclick="selectPlace(' + session.id + ',' + place.id + ',this)">' +
+          '<input type="radio" class="place-radio" name="sess_' + session.id + '" ' + (isMyVote ? 'checked' : '') + ' readonly>' +
+          '<div class="place-info"><div class="place-name">' + catEmoji[place.category] + ' ' + place.name + '</div>' +
+          '<div class="place-sub">' + (place.sub_category || '') + (place.price_range ? ' · ' + place.price_range : '') + (place.rating ? ' · ⭐' + place.rating : '') + '</div></div></div>';
+      }
+    }
+
+    let voteBarsHtml = '';
+    if (showVotes || sessionVotes.length > 0) {
+      voteBarsHtml = '<div class="vote-bars">';
+      for (const place of sessionPlaces) {
+        const placeVotes = sessionVotes.filter(v => v.place_id === place.id).length;
+        const totalVotes = sessionVotes.length;
+        const pct = totalVotes > 0 ? Math.round(placeVotes / totalVotes * 100) : 0;
+        voteBarsHtml += '<div class="vote-bar-row"><div class="vote-bar-label"><span>' + place.name + '</span><span>' + placeVotes + '표 (' + pct + '%)</span></div>' +
+          '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pct + '%"></div></div></div>';
+      }
+      voteBarsHtml += '</div>';
+    }
+
+    let actionHtml = '';
+    if (!isClosed && !isExpired) {
+      if (myVote) {
+        actionHtml = '<button class="change-vote-btn" onclick="cancelVote(' + session.id + ')">🔄 투표 변경하기</button>';
+      } else {
+        actionHtml = '<button class="submit-btn" onclick="submitVote(' + session.id + ')">✈️ 투표 제출하기</button>';
+      }
+    }
+
+    let adminCloseHtml = '';
+    if (currentUser.nickname === '민지' && !isClosed) {
+      adminCloseHtml = '<button onclick="closeSession(' + session.id + ')" style="margin:0 12px 12px;width:calc(100% - 24px);padding:8px;background:#fff;color:#c00;border:2px solid #c00;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 세션 마감 (민지 전용)</button>';
+    }
+
+    card.innerHTML = '<div class="' + headerClass + '">' +
+      '<div class="session-header-top"><span class="session-time">' + (mealLabel[session.meal_time] || session.meal_time) + ' · ' + catEmoji[session.category] + ' ' + session.category + '</span>' +
+      '<span class="session-cat">' + statusText + '</span></div>' +
+      '<div class="session-deadline">⏱️ ' + deadlineText + '</div></div>' +
+      winnerHtml +
+      ((!isClosed && !isExpired) ? '<div class="places-list">' + placesHtml + '</div>' : '') +
+      voteBarsHtml +
+      '<div class="who-voted" style="padding:4px 12px 8px">' + votedMembers + '</div>' +
+      actionHtml +
+      adminCloseHtml;
+
+    wrap.appendChild(card);
+  }
+}
+
+function formatDeadline(d) {
+  const now = new Date();
+  const diff = d - now;
+  if (diff <= 0) return '마감됨';
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 24) return d.toLocaleDateString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return h > 0 ? h + '시간 ' + m + '분 남음' : m + '분 남음';
+}
+
+function selectPlace(sessionId, placeId, el) {
+  selectedPlaces[sessionId] = placeId;
+  const card = el.closest('.session-card');
+  card.querySelectorAll('.place-item').forEach(item => item.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('.place-radio').checked = true;
+}
+
+async function submitVote(sessionId) {
+  if (!selectedPlaces[sessionId]) { showToast('장소를 선택해주세요!'); return; }
+  const {error} = await sb.from('votes').upsert({
+    session_id: sessionId, member_id: currentUser.id, place_id: selectedPlaces[sessionId]
+  }, {onConflict: 'session_id,member_id'});
+  if (!error) { showToast('✅ 투표 완료!'); delete selectedPlaces[sessionId]; loadSessions(); }
+  else showToast('오류: ' + error.message);
+}
+
+async function cancelVote(sessionId) {
+  const {error} = await sb.from('votes').delete().eq('session_id', sessionId).eq('member_id', currentUser.id);
+  if (!error) { showToast('투표가 취소되었어요. 다시 투표해주세요!'); loadSessions(); }
+  else showToast('오류: ' + error.message);
+}
+
+async function closeSession(sessionId) {
+  const {data: votes} = await sb.from('votes').select('place_id').eq('session_id', sessionId);
+  let winner = null;
+  if (votes && votes.length > 0) {
+    const counts = {};
+    votes.forEach(v => counts[v.place_id] = (counts[v.place_id] || 0) + 1);
+    winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+  }
+  const {error} = await sb.from('vote_sessions').update({is_closed: true, winning_place_id: winner ? parseInt(winner) : null}).eq('id', sessionId);
+  if (!error) { showToast('🔒 세션이 마감되었어요!'); loadSessions(); }
+  else showToast('오류: ' + error.message);
+}
+
+async function addSession() {
+  const day = document.getElementById('adminDay').value;
+  const meal = document.getElementById('adminMeal').value;
+  const cat = document.getElementById('adminCat').value;
+  const deadline = document.getElementById('adminDeadline').value;
+  if (!deadline) { showToast('마감 시간을 설정해주세요!'); return; }
+  const {error} = await sb.from('vote_sessions').insert({
+    day_number: parseInt(day), meal_time: meal, category: cat,
+    deadline: new Date(deadline).toISOString(), is_closed: false
+  });
+  if (!error) { showToast('✅ 투표 세션 추가됨!'); loadSessions(); }
+  else showToast('오류: ' + error.message);
+}
+
+// ===== AUTO REFRESH =====
+function startAutoRefresh() {
+  clearInterval(refreshInterval);
+  const bar = document.getElementById('refreshProgress');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '100%'; }, 50);
+  refreshInterval = setInterval(() => {
+    loadSessions();
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.transition = 'width 30s linear'; bar.style.width = '100%'; }, 50);
+  }, 30000);
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== AUTO LOGIN =====
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('sapporo_user');
+  if (saved) { try { currentUser = JSON.parse(saved); showMain(); } catch(e) {} }
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const localDT = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()+2) + ':' + pad(now.getMinutes());
+  const deadlineEl = document.getElementById('adminDeadline');
+  if (deadlineEl) deadlineEl.value = localDT;
+});
 </script>
 </body>
 </html>
