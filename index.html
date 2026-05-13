@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#x2708;&#xFE0F; Sapporo Vote</title>
+<title>✈️ Sapporo Vote</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
 body{background:#f0f4ff;min-height:100vh}
@@ -71,13 +71,13 @@ body{background:#f0f4ff;min-height:100vh}
 .ai-box.loaded{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:#1b5e20}
 .course-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .course-title{font-weight:700;color:#333;margin-bottom:12px;font-size:1rem}
-.course-step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.course-step{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
 .step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
 .step-body{flex:1}
 .step-name{font-weight:600;color:#333;font-size:.9rem}
 .step-dist{font-size:.75rem;color:#667eea;margin-top:2px}
 .step-transport{font-size:.72rem;background:#e8ecf5;color:#555;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:3px}
-.gen-course-btn{width:100%;padding:12px;background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:12px}
+.gen-course-btn{width:100%;padding:12px;background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer}
 .admin-card{background:#fff3e0;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .admin-title{font-weight:700;color:#e65100;margin-bottom:12px;font-size:.9rem}
 .admin-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
@@ -89,680 +89,558 @@ body{background:#f0f4ff;min-height:100vh}
 select.admin-input{background:#fff}
 .place-admin-card{background:#fff8f0;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .place-admin-title{font-weight:700;color:#e65100;margin-bottom:12px}
-.coord-row{display:flex;gap:8px}
-.coord-row input{flex:1}
 .section-title{font-size:.75rem;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px}
+.team-status-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0}
+.connect-arrow{text-align:center;color:#667eea;font-size:.75rem;padding:4px 0 4px 14px}
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:.85rem;pointer-events:none;opacity:0;transition:opacity .3s;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1}
 </style>
 </head>
+
 <body>
 <div id="toast"></div>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="screen active">
   <div class="login-title">&#x2708;&#xFE0F; Sapporo Vote</div>
-  <div class="login-sub">&#xBE44;&#xD589; &#xD22C;&#xD45C; &#xC2DC;&#xC2A4;&#xD15C;</div>
+  <div class="login-sub">비행 투표 시스템</div>
   <div class="name-grid" id="nameGrid"></div>
   <div class="pin-box">
-    <div class="pin-label" id="pinLabel">&#xC774;&#xB984;&#xC744; &#xC120;&#xD0DD;&#xD558;&#xC138;&#xC694;</div>
+    <div class="pin-label" id="pinLabel">이름을 선택하세요</div>
     <input type="password" class="pin-input" id="pinInput" placeholder="PIN" maxlength="4" inputmode="numeric">
   </div>
-  <button class="login-btn" id="enterBtn">&#xC785;&#xC7A5; &#xD558;&#xAE30;</button>
+  <button class="login-btn" id="enterBtn">입장 하기</button>
 </div>
 
-<!-- MAIN SCREEN -->
 <div id="mainScreen" class="screen">
   <div id="topbar">
     <div>
       <div class="tname" id="topName"></div>
-      <div class="tday" id="topDay">&#xC0B4;&#xD3EC;&#xB85C; &#xC5EC;&#xD589;</div>
+      <div class="tday">삿포로 여행</div>
     </div>
-    <button id="logoutBtn" onclick="doLogout()">&#xB85C;&#xADF8;&#xC544;&#xC6C3;</button>
+    <button id="logoutBtn">로그아웃</button>
   </div>
   <div class="tabs">
-    <div class="tab active" data-tab="vote" onclick="switchTab('vote')">&#xD22C;&#xD45C;</div>
-    <div class="tab" data-tab="status" onclick="switchTab('status')">&#xC0C1;&#xD0DC;</div>
-    <div class="tab" data-tab="course" onclick="switchTab('course')">&#xCF54;&#xC2A4;</div>
-    <div class="tab" data-tab="admin" onclick="switchTab('admin')" id="adminTab" style="display:none">&#xAD00;&#xB9AC;</div>
+    <div class="tab active" data-tab="vote">투표</div>
+    <div class="tab" data-tab="status">상태</div>
+    <div class="tab" data-tab="course">코스</div>
+    <div class="tab" data-tab="admin" id="adminTab" style="display:none">관리</div>
   </div>
 
-  <!-- TAB: VOTE -->
   <div id="tabVote" class="content">
     <div id="swrap"></div>
   </div>
 
-  <!-- TAB: STATUS -->
   <div id="tabStatus" class="content" style="display:none">
     <div class="status-card">
-      <div class="status-title">&#xC9C0;&#xAE08; &#xC0C1;&#xD0DC; &#xCCB4;&#xD06C;</div>
+      <div class="status-title">지금 상태 체크</div>
       <div class="status-row">
-        <div class="status-label">&#xCCB4;&#xB825; &#xC0C1;&#xD0DC;</div>
-        <div class="emoji-row" id="stamEnergyRow">
-          <button class="emo-btn" data-key="energy" data-val="100">&#xC5D0;&#xB108;&#xC9C0; &#xB9CC;&#xBB35;</button>
-          <button class="emo-btn" data-key="energy" data-val="60">&#xBCF4;&#xD1B5;</button>
-          <button class="emo-btn" data-key="energy" data-val="30">&#xC870;&#xAE08; &#xD588;&#xC784;</button>
-          <button class="emo-btn" data-key="energy" data-val="0">&#xB108;&#xBB34; &#xC9C0;&#xCE60;</button>
+        <div class="status-label">체력 상태</div>
+        <div class="emoji-row">
+          <button class="emo-btn" data-key="energy" data-val="100">에너지 만묵</button>
+          <button class="emo-btn" data-key="energy" data-val="60">보통</button>
+          <button class="emo-btn" data-key="energy" data-val="30">조금 했임;</button>
+          <button class="emo-btn" data-key="energy" data-val="0">너무 지침</button>
         </div>
       </div>
       <div class="status-row">
-        <div class="status-label">&#xBC30;&#xACE0;&#xD514; &#xC0C1;&#xD0DC;</div>
-        <div class="emoji-row" id="stamHungerRow">
-          <button class="emo-btn" data-key="hunger" data-val="100">&#xBC30;&#xACE0;&#xD30C;&#xC8FD;!</button>
-          <button class="emo-btn" data-key="hunger" data-val="60">&#xC870;&#xAE08; &#xBC30;&#xACE0;&#xD30C;</button>
-          <button class="emo-btn" data-key="hunger" data-val="30">&#xAD34;&#xCC2E;&#xC544;</button>
-          <button class="emo-btn" data-key="hunger" data-val="0">&#xBC30; &#xBD88;&#xB7EC;</button>
+        <div class="status-label">배고픔 상태</div>
+        <div class="emoji-row">
+          <button class="emo-btn" data-key="hunger" data-val="100">배고파죽!</button>
+          <button class="emo-btn" data-key="hunger" data-val="60">조금 배고파</button>
+          <button class="emo-btn" data-key="hunger" data-val="30">괴찮아</button>
+          <button class="emo-btn" data-key="hunger" data-val="0">배 불러</button>
         </div>
       </div>
       <div class="status-row">
-        <div class="status-label">&#xC678;&#xCD9C; &#xC758;&#xC9C0;</div>
-        <div class="emoji-row" id="stamWillRow">
-          <button class="emo-btn" data-key="will" data-val="100">&#xBC14;&#xB85C; &#xB098;&#xAC00;&#xC790;!</button>
-          <button class="emo-btn" data-key="will" data-val="60">&#xC0AC;&#xC2E4; &#xAD34;&#xCC2E;&#xC544;</button>
-          <button class="emo-btn" data-key="will" data-val="30">&#xC8FC;&#xD55C;&#xC788;&#xC73C;&#xBA74;&#xC5B4;</button>
-          <button class="emo-btn" data-key="will" data-val="0">&#xC27C;&#xACE0; &#xC2F6;&#xC5B4;</button>
+        <div class="status-label">외출 의지</div>
+        <div class="emoji-row">
+          <button class="emo-btn" data-key="will" data-val="100">바로 나가자!</button>
+          <button class="emo-btn" data-key="will" data-val="60">사실 괴찮아</button>
+          <button class="emo-btn" data-key="will" data-val="30">주한있으면어</button>
+          <button class="emo-btn" data-key="will" data-val="0">쉼고 싶어</button>
         </div>
       </div>
-      <button class="save-status-btn" onclick="saveStatus()">&#xC0C1;&#xD0DC; &#xC800;&#xC7A5;</button>
-      <div class="ai-box" id="aiBox">&#xC0C1;&#xD0DC;&#xB97C; &#xC785;&#xB825;&#xD558;&#xACE0; &#xC800;&#xC7A5;&#xD558;&#xBA74; AI &#xCD94;&#xCC9C;&#xC744; &#xBC1B;&#xC744; &#xC218; &#xC788;&#xC5B4;&#xC694;</div>
+      <button class="save-status-btn" id="saveStatusBtn">상태 저장</button>
+      <div class="ai-box" id="aiBox">상태를 입력하고 저장하면 AI 추천을 받을 수 있어요</div>
     </div>
-    <div class="status-card" id="teamStatusCard">
-      <div class="status-title">&#xD300; &#xC0C1;&#xD0DC; &#xD604;&#xD669;</div>
+    <div class="status-card">
+      <div class="status-title">팀 상태 현황</div>
       <div id="teamStatusWrap"></div>
     </div>
   </div>
 
-  <!-- TAB: COURSE -->
   <div id="tabCourse" class="content" style="display:none">
     <div class="course-card">
-      <div class="course-title">AI &#xCF54;&#xC2A4; &#xCD94;&#xCC9C;</div>
-      <div style="font-size:.85rem;color:#666;margin-bottom:12px">&#xD22C;&#xD45C; &#xACB0;&#xACFC; + &#xD300; &#xCCB4;&#xB825; &#xC0C1;&#xD0DC;&#xB97C; &#xBC14;&#xD0D5;&#xC73C;&#xB85C; &#xCF54;&#xC2A4;&#xB97C; &#xAD6C;&#xC131;&#xD574;&#xB4DC;&#xB9B4;&#xAC8C;&#xC694;</div>
-      <button class="gen-course-btn" onclick="genCourse()">&#xCF54;&#xC2A4; &#xC0DD;&#xC131;&#xD558;&#xAE30;</button>
+      <div class="course-title">AI 코스 추천</div>
+      <div style="font-size:.85rem;color:#666;margin-bottom:12px">투표 결과 + 팀 체력 상태를 바탕으로 코스를 구성해드릴게요. 장소 간 거리와 이동수단도 알려드려요.</div>
+      <button class="gen-course-btn" id="genCourseBtn">코스 생성하기</button>
       <div id="courseResult" style="margin-top:16px"></div>
     </div>
   </div>
 
-  <!-- TAB: ADMIN -->
   <div id="tabAdmin" class="content" style="display:none">
-    <!-- Admin: add place -->
     <div class="place-admin-card">
-      <div class="place-admin-title">&#xC7A5;&#xC18C; &#xCD94;&#xAC00;</div>
+      <div class="place-admin-title">장소 추가</div>
       <div class="admin-row">
-        <input class="admin-input" id="newPlaceName" placeholder="&#xC7A5;&#xC18C; &#xC774;&#xB984; (&#xD55C;&#xAD6D;&#xC5B4;)">
+        <input class="admin-input" id="newPlaceName" placeholder="장소 이름 (한국어)">
       </div>
       <div class="admin-row">
         <select class="admin-input" id="newPlaceCat">
-          <option value="&#xC2DD;&#xC0AC;">&#xC2DD;&#xC0AC;</option>
-          <option value="&#xCE74;&#xD398;">&#xCE74;&#xD398;</option>
-          <option value="&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;">&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;</option>
+          <option value="식사">식사</option>
+          <option value="카페">카페</option>
+          <option value="구경거리">구경거리</option>
         </select>
-        <input class="admin-input" id="newPlaceSub" placeholder="&#xC138;&#xBD80; &#xCE74;&#xD14C; (&#xB77C;&#xBA74;, &#xCE74;&#xD398; &#xB4F1;)">
+        <input class="admin-input" id="newPlaceSub" placeholder="세부 (라면, 카페 등)">
       </div>
       <div class="admin-row">
-        <input class="admin-input" id="newPlacePrice" placeholder="&#xAC00;&#xACA9;&#xB300; (&#xC608;: &#xA51C;1,000~3,000)">
-        <input class="admin-input" id="newPlaceDesc" placeholder="&#xC9E7;&#xC740; &#xC124;&#xBA85;">
+        <input class="admin-input" id="newPlacePrice" placeholder="가격대 (예: ꔜ1,000~3,000)">
+        <input class="admin-input" id="newPlaceDesc" placeholder="짧은 설명">
       </div>
-      <div class="coord-row admin-row">
-        <input class="admin-input" id="newPlaceLat" placeholder="&#xC704;&#xB3C4; (&#xC608;: 43.0625)" type="number" step="0.0001">
-        <input class="admin-input" id="newPlaceLng" placeholder="&#xACBD;&#xB3C4; (&#xC608;: 141.3549)" type="number" step="0.0001">
+      <div class="admin-row">
+        <input class="admin-input" id="newPlaceLat" placeholder="위도 (43.0625)" type="number" step="0.0001">
+        <input class="admin-input" id="newPlaceLng" placeholder="경도 (141.3549)" type="number" step="0.0001">
       </div>
       <div style="font-size:.75rem;color:#999;margin-bottom:8px">
-        &#xAD6C;&#xAE00; &#xC9C0;&#xB3C4;&#xC5D0;&#xC11C; &#xC7A5;&#xC18C;&#xB97C; &#xC9C1;&#xC811; &#xAC80;&#xC0C9;&#xD574;&#xC11C; &#xC88C;&#xD45C;&#xB97C; &#xD655;&#xC778;&#xD558;&#xC138;&#xC694;
-        <a href="https://maps.google.com" target="_blank" style="color:#667eea">&#xAD6C;&#xAE00; &#xC9C0;&#xB3C4; &#xC5F4;&#xAE30;</a>
+        구글 지도에서 좀표 확인: <a href="https://maps.google.com" target="_blank" style="color:#667eea">구글 지도</a>
       </div>
-      <button class="admin-btn success" onclick="addPlace()">&#xC7A5;&#xC18C; &#xCD94;&#xAC00;</button>
+      <button class="admin-btn success" id="addPlaceBtn">장소 추가</button>
     </div>
-
-    <!-- Admin: session management -->
     <div class="admin-card">
-      <div class="admin-title">&#xD22C;&#xD45C; &#xC138;&#xC158; &#xC0DD;&#xC131;</div>
+      <div class="admin-title">투표 세션 생성</div>
       <div class="admin-row">
         <select class="admin-input" id="newSessDay">
           <option value="1">Day 1</option>
           <option value="2">Day 2</option>
         </select>
         <select class="admin-input" id="newSessTime">
-          <option value="lunch">&#xC810;&#xC2EC;</option>
-          <option value="dinner">&#xC800;&#xB141;</option>
-          <option value="morning">&#xC544;&#xCE68;</option>
-          <option value="cafe">&#xCE74;&#xD398; &#xD0C0;&#xC784;</option>
-          <option value="free">&#xC790;&#xC720;&#xC2DC;&#xAC04;</option>
+          <option value="lunch">점심</option>
+          <option value="dinner">저녁</option>
+          <option value="morning">아침</option>
+          <option value="cafe">카페타임</option>
+          <option value="free">자유시간</option>
         </select>
         <select class="admin-input" id="newSessCat">
-          <option value="&#xC2DD;&#xC0AC;">&#xC2DD;&#xC0AC;</option>
-          <option value="&#xCE74;&#xD398;">&#xCE74;&#xD398;</option>
-          <option value="&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;">&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;</option>
+          <option value="식사">식사</option>
+          <option value="카페">카페</option>
+          <option value="구경거리">구경거리</option>
         </select>
       </div>
       <div class="admin-row">
         <input class="admin-input" id="newSessDeadline" type="datetime-local">
-        <button class="admin-btn" onclick="addSession()">&#xC138;&#xC158; &#xC0DD;&#xC131;</button>
+        <button class="admin-btn" id="addSessBtn">세션 생성</button>
       </div>
     </div>
     <div id="adminSessWrap"></div>
   </div>
 </div>
-
 <script>
-
 const SUPA='https://pmzmmimyabuvpwoklkgc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtem1taW15YWJ1dnB3b2tsa2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODQ4NjksImV4cCI6MjA5NDE2MDg2OX0.EDXynSQD9BEODXenSFW6cxM8zUgGQMmk32QrtgdT47M';
 const MEMBERS=[
-  {id:'m1',name:'&#xBBFC;&#xC9C0;',pin:'1111',admin:true},
-  {id:'m2',name:'&#xCE5C;&#xAD6C;1',pin:'2222',admin:false},
-  {id:'m3',name:'&#xCE5C;&#xAD6C;2',pin:'3333',admin:false},
-  {id:'m4',name:'&#xCE5C;&#xAD6C;3',pin:'4444',admin:false}
+  {id:'m1',name:'\uBBFC\uC9C0',pin:'1111',admin:true},
+  {id:'m2',name:'\uCE5C\uAD6C1',pin:'2222',admin:false},
+  {id:'m3',name:'\uCE5C\uAD6C2',pin:'3333',admin:false},
+  {id:'m4',name:'\uCE5C\uAD6C3',pin:'4444',admin:false}
 ];
 const PLACE_COORDS={
-  "&#xC57C;&#xD0A4;&#xB2C8;&#xCFE0; &#xC2DC;&#xBD80;&#xD0A4;":[43.0553,141.3544],
-  "&#xBA58;&#xC57C; &#xC0AC;&#xC774;&#xBBF8;":[43.0624,141.3549],
-  "&#xC2A4;&#xC2DC; &#xC820;":[43.0601,141.3536],
-  "&#xCE74;&#xB2C8; &#xD63C;&#xCF00;":[43.0608,141.3562],
-  "&#xBBF8;&#xC18C;&#xB178;":[43.0591,141.3541],
-  "&#xC0BF;&#xD3EC;&#xB85C; &#xB77C;&#xBA58; &#xACF5;&#xD654;&#xAD6D;":[43.0684,141.3508],
-  "&#xB204; &#xC2F1;&#xAC00;":[43.0699,141.3527],
-  "&#xC774;&#xCE58;&#xB780;":[43.0581,141.3539],
-  "&#xC2A4;&#xC2DC;&#xB85C;":[43.0672,141.3518],
-  "&#xC57C;&#xB9C8;&#xC774;&#xCE58;":[43.0546,141.3532],
-  "&#xC0BF;&#xD3EC;&#xB85C; &#xB9E5;&#xC8FC; &#xBC15;&#xBB3C;&#xAD00; &#xB808;&#xC2A4;&#xD1A0;&#xB791;":[43.0740,141.3741],
-  "&#xD150;&#xC9C4; &#xC2A4;&#xC2DC;":[43.0599,141.3546],
-  "&#xCE74;&#xD398; &#xB2E4; &#xBE48;&#xCE58;":[43.0614,141.3551],
-  "&#xB178;&#xB974;&#xBCA0;&#xC0AC; &#xCE74;&#xD398;":[43.0697,141.3523],
-  "&#xC6B0;&#xB2C8;&#xBB34;&#xB77C;&#xCE74;&#xBBF8; &#xC0BF;&#xD3EC;&#xB85C; &#xB2C8;&#xC870; &#xB9C8;&#xCF13;":[43.0625,141.3602],
-  "&#xCE74;&#xD398; &#xB4DC; &#xC624;&#xB77C;":[43.0612,141.3557],
-  "&#xC2A4;&#xB098;&#xAC00;&#xC640; &#xD558;&#xC774;&#xC6E8;&#xC774;":[43.0645,141.3489],
-  "&#xB9B4;&#xB77C; &#xB77C;&#xBC29;":[43.0608,141.3541],
-  "&#xCE74;&#xD398; &#xC5D0;&#xC2A4;&#xD0A4;&#xC2A4;":[43.0621,141.3563],
-  "&#xD638;&#xC2DC;&#xB178; &#xCEE4;&#xD53C;":[43.0689,141.3519],
-  "% &#xC544;&#xB77C;&#xBE44;&#xCE74;":[43.0595,141.3548],
-  "&#xD14C;&#xD1A0;&#xD14C; &#xCEE4;&#xD53C;":[43.0633,141.3572],
-  "&#xC624;&#xB3C4;&#xB9AC; &#xACF5;&#xC6D0;":[43.0601,141.3517],
-  "&#xC0BF;&#xD3EC;&#xB85C; &#xC2DC;&#xACC4;&#xD0D1;":[43.0643,141.3541],
-  "&#xD648;&#xCE74;&#xC774;&#xB3C4; &#xAD6C; &#xBCF8;&#xCCAD;&#xC0AC;":[43.0637,141.3478],
-  "&#xC2A4;&#xC2A4;&#xD0A4;&#xB178;":[43.0554,141.3543],
-  "&#xD0C0;&#xB204;&#xD0A4; &#xCF54;&#xC9C0;":[43.0601,141.3541],
-  "&#xB9C8;&#xB8E8;&#xC57C;&#xB9C8; &#xACF5;&#xC6D0;":[43.0513,141.3166],
-  "&#xC0BF;&#xD3EC;&#xB85C; &#xD329;&#xD1A0;&#xB9AC;":[43.0665,141.3620],
-  "&#xB2C8;&#xC870; &#xC2DC;&#xC7A5;":[43.0623,141.3601]
+'17803efa-df36-4e4e-be9e-ead0d2e805b5':[43.0684,141.3508],
+'1fa2e9d0-7cc9-4141-a344-8351abfc5bbc':[43.0699,141.3527],
+'40fec3d3-a267-470b-a8f7-a5ebc8bccfd2':[43.0625,141.3602],
+'76a926ee-dc8d-4005-b5e3-78b325417644':[43.0601,141.3517],
+'57c01384-e9d5-44d0-9bb7-3a9ea7ee43b9':[43.0601,141.3517],
+'ed5f1c7a-89d2-419b-a275-2fe3ebf702ab':[43.0608,141.3562],
+'d4c780b5-eb88-4161-b7b4-e7a943ff8196':[43.0614,141.3551],
+'6dd6f199-0be3-427b-abbc-ec7c3862f209':[43.0624,141.3549],
+'4c6f58d5-5ec8-4197-8eb1-7a35a568bd3f':[43.0612,141.3557],
+'167d0b31-242b-4930-b55b-a327cda3d5f3':[43.0645,141.3489],
+'62e153db-3501-477c-81a5-95825ae1c34f':[43.0624,141.3549],
+'5c5c2888-fda5-491b-863c-d9deaa76137c':[43.0621,141.3563],
+'898c0b92-bd48-4937-a37b-fda51b28770d':[43.0591,141.3541],
+'111b1452-546d-4b4a-8bc9-1f988511ad2a':[43.0601,141.3536],
+'eff1c17b-d404-4862-834d-8faf11aa144b':[43.0546,141.3532],
+'cfe1ea79-f086-4e18-9731-0781dc11acf6':[43.0553,141.3544],
+'36a6492c-08b9-4d4d-b96f-4f9e2fe0f1e7':[43.0608,141.3541],
+'8fa3fa2f-8cf9-41ec-8bc7-4a19ff757f4a':[43.0672,141.3518],
+'25a33567-abf1-469d-9512-7a3c0779c6cf':[43.0740,141.3741],
+'f5a8a849-e20c-400f-998e-84a74d62ff55':[43.0599,141.3546],
+'1cfd432a-58ef-478b-970e-eb24aca9a24a':[43.0581,141.3539]
 };
-const CE={"&#xC2DD;&#xC0AC;":"badge-food","&#xCE74;&#xD398;":"badge-cafe","&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;":"badge-sight"};
-const CL={"&#xC2DD;&#xC0AC;":"[&#xC2DD;&#xC0AC;]","&#xCE74;&#xD398;":"[&#xCE74;&#xD398;]","&#xAD6C;&#xACBD;&#xAC70;&#xB9AC;":"[&#xAD6C;&#xACBD;]"};
-const TL={"lunch":"&#xC810;&#xC2EC;","dinner":"&#xC800;&#xB141;","morning":"&#xC544;&#xCE68;","cafe":"&#xCE74;&#xD398;&#xD0C0;&#xC784;","free":"&#xC790;&#xC720;&#xC2DC;&#xAC04;"};
-
-let CUR=null, SEL={}, STATUS={energy:null,hunger:null,will:null}, PLACES=[], SESSIONS=[], VOTES={};
+const CE={'\uC2DD\uC0AC':'badge-food','\uCE74\uD398':'badge-cafe','\uAD6C\uACBD\uAC70\uB9AC':'badge-sight'};
+const CL={'\uC2DD\uC0AC':'[\uC2DD\uC0AC]','\uCE74\uD398':'[\uCE74\uD398]','\uAD6C\uACBD\uAC70\uB9AC':'[\uAD6C\uACBD]'};
+const TL={'lunch':'\uC810\uC2EC','dinner':'\uC800\uB141','morning':'\uC544\uCE68','cafe':'\uCE74\uD398\uD0C0\uC784','free':'\uC790\uC720\uC2DC\uAC04'};
+let CUR=null,SEL={},STATUS={energy:null,hunger:null,will:null},PLACES=[],SESSIONS=[],VOTES={};
 let refreshTimer=null;
-
-// Haversine distance in meters
 function haversine(lat1,lng1,lat2,lng2){
-  const R=6371000;
-  const dLat=(lat2-lat1)*Math.PI/180;
-  const dLng=(lng2-lng1)*Math.PI/180;
+  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
   const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-
-function distLabel(m){
-  if(m<400) return {label:Math.round(m)+'m &#xB3C4;&#xBCF4;',transport:'&#xB3C4;&#xBCF4; ('+Math.round(m/70)+'&#xBD84;)'};
-  if(m<1500) return {label:Math.round(m)+'m',transport:'&#xB3C4;&#xBCF4; ('+Math.round(m/70)+'&#xBD84;) &#xB610;&#xB294; &#xC9C0;&#xD558;&#xCCA0;'};
-  return {label:(m/1000).toFixed(1)+'km',transport:'&#xC9C0;&#xD558;&#xCCA0;/&#xBC84;&#xC2A4; &#xAD8C;&#xC7A5; ('+Math.round(m/250)+'&#xBD84;&#xB300;)'};
+function distLabel(m,lowEnergy){
+  const walk=Math.round(m/70),transit=Math.round(m/250);
+  if(m<400) return {label:Math.round(m)+'m',transport:'\uB3C4\uBCF4 '+walk+'\uBD84'};
+  if(m<1500){
+    const t=lowEnergy?'\uC9C0\uD558\uCCA0/\uBC84\uC2A4 \uAD8C\uC7A5':'\uB3C4\uBCF4 '+walk+'\uBD84';
+    return {label:Math.round(m)+'m',transport:t};
+  }
+  return {label:(m/1000).toFixed(1)+'km',transport:'\uC9C0\uD558\uCCA0/\uBC84\uC2A4 '+transit+'\uBD84\uB300'};
 }
-
-function api(path,opts={}){
+function api(path,opts){
+  opts=opts||{};
   return fetch(SUPA+'/rest/v1/'+path,{
-    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})},
-    ...opts
+    headers:Object.assign({'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},opts.headers||{}),
+    method:opts.method||'GET',
+    body:opts.body||undefined
   }).then(r=>r.json());
 }
-
 function toast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
 }
-
-// Login
 function initLogin(){
   const grid=document.getElementById('nameGrid');
   grid.innerHTML='';
-  MEMBERS.forEach(m=>{
+  MEMBERS.forEach(function(m){
     const b=document.createElement('button');
-    b.className='name-btn';
-    b.textContent=m.name;
-    b.dataset.mid=m.id;
-    b.addEventListener('click',()=>selectName(m));
+    b.className='name-btn';b.textContent=m.name;b.dataset.mid=m.id;
+    b.addEventListener('click',function(){selectName(m);});
     grid.appendChild(b);
   });
   document.getElementById('enterBtn').addEventListener('click',doLogin);
-  document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('pinInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+  document.getElementById('logoutBtn').addEventListener('click',doLogout);
+  document.querySelector('.tabs').addEventListener('click',function(e){
+    const tab=e.target.closest('[data-tab]');
+    if(tab) switchTab(tab.dataset.tab);
+  });
+  document.getElementById('saveStatusBtn').addEventListener('click',saveStatus);
+  document.getElementById('genCourseBtn').addEventListener('click',genCourse);
+  document.getElementById('addPlaceBtn').addEventListener('click',addPlace);
+  document.getElementById('addSessBtn').addEventListener('click',addSession);
+  document.querySelectorAll('.emo-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      const key=btn.dataset.key;
+      document.querySelectorAll('[data-key="'+key+'"]').forEach(function(b){b.classList.remove('sel');});
+      btn.classList.add('sel');
+      STATUS[key]=parseInt(btn.dataset.val);
+    });
+  });
   const saved=localStorage.getItem('sv_member');
-  if(saved){const m=MEMBERS.find(x=>x.id===saved);if(m){CUR=m;showMain();}}
+  if(saved){const m=MEMBERS.find(function(x){return x.id===saved;});if(m){CUR=m;showMain();}}
 }
-
 function selectName(m){
-  document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('sel'));
-  document.querySelector('[data-mid="'+m.id+'"]').classList.add('sel');
-  document.getElementById('pinLabel').textContent=m.name+'&#xB2D8;&#xC758; PIN&#xC744; &#xC785;&#xB825;&#xD558;&#xC138;&#xC694;';
+  document.querySelectorAll('.name-btn').forEach(function(b){b.classList.remove('sel');});
+  const btn=document.querySelector('[data-mid="'+m.id+'"]');
+  if(btn) btn.classList.add('sel');
+  document.getElementById('pinLabel').textContent=m.name+'\uB2D8\uC758 PIN\uC744 \uC785\uB825\uD558\uC138\uC694';
   window._selMember=m;
   document.getElementById('pinInput').focus();
 }
-
 function doLogin(){
   const m=window._selMember;
-  if(!m){toast('&#xC774;&#xB984;&#xC744; &#xC120;&#xD0DD;&#xD574;&#xC8FC;&#xC138;&#xC694;');return;}
+  if(!m){toast('\uC774\uB984\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694');return;}
   const pin=document.getElementById('pinInput').value;
-  if(pin!==m.pin){toast('PIN&#xC774; &#xB2E4;&#xB985;&#xB2C8;&#xB2E4;');return;}
-  CUR=m;
-  localStorage.setItem('sv_member',m.id);
-  showMain();
+  if(pin!==m.pin){toast('PIN\uC774 \uB2E4\uB985\uB2C8\uB2E4');return;}
+  CUR=m;localStorage.setItem('sv_member',m.id);showMain();
 }
-
 function doLogout(){
-  localStorage.removeItem('sv_member');
-  CUR=null;
+  localStorage.removeItem('sv_member');CUR=null;
   document.getElementById('pinInput').value='';
-  document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('sel'));
-  document.getElementById('pinLabel').textContent='&#xC774;&#xB984;&#xC744; &#xC120;&#xD0DD;&#xD558;&#xC138;&#xC694;';
+  document.querySelectorAll('.name-btn').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('pinLabel').textContent='\uC774\uB984\uC744 \uC120\uD0DD\uD558\uC138\uC694';
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('mainScreen').classList.remove('active');
   if(refreshTimer)clearInterval(refreshTimer);
 }
-
 function showMain(){
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('mainScreen').classList.add('active');
-  document.getElementById('topName').textContent=CUR.name+' &#xB2D8;';
-  if(CUR.admin){
-    document.getElementById('adminTab').style.display='';
-  }
-  loadSess();
-  loadTeamStatus();
+  document.getElementById('topName').textContent=CUR.name+' \uB2D8';
+  if(CUR.admin) document.getElementById('adminTab').style.display='';
+  loadSess();loadTeamStatus();
   refreshTimer=setInterval(loadSess,30000);
 }
-
 function switchTab(t){
-  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
-  document.querySelector('[data-tab="'+t+'"]').classList.add('active');
-  ['vote','status','course','admin'].forEach(id=>{
+  document.querySelectorAll('.tab').forEach(function(el){el.classList.remove('active');});
+  const activeTab=document.querySelector('[data-tab="'+t+'"]');
+  if(activeTab) activeTab.classList.add('active');
+  ['vote','status','course','admin'].forEach(function(id){
     const el=document.getElementById('tab'+id.charAt(0).toUpperCase()+id.slice(1));
-    if(el) el.style.display= id===t?'':'none';
+    if(el) el.style.display=(id===t?'':'none');
   });
   if(t==='admin') loadAdminSessions();
+  if(t==='status') loadTeamStatus();
 }
-
-async function loadSess(){
-  try{
-    const sessions=await api('vote_sessions?order=day,time_slot&select=*');
-    const places=await api('places?order=category,name');
-    const votes=await api('votes?select=*');
-    PLACES=places;
-    SESSIONS=sessions;
+function loadSess(){
+  return Promise.all([
+    api('vote_sessions?order=day,time_slot&select=*'),
+    api('places?order=category,name'),
+    api('votes?select=*')
+  ]).then(function(results){
+    SESSIONS=results[0];PLACES=results[1];
     VOTES={};
-    votes.forEach(v=>{
+    results[2].forEach(function(v){
       if(!VOTES[v.session_id])VOTES[v.session_id]=[];
       VOTES[v.session_id].push(v);
     });
     renderSessions();
-  }catch(e){
-    document.getElementById('swrap').innerHTML='<p style="color:red;padding:16px">&#xB85C;&#xB4DC; &#xC2E4;&#xD328;: '+e.message+'</p>';
-  }
+  }).catch(function(e){
+    document.getElementById('swrap').innerHTML='<p style="color:red;padding:16px">\uB85C\uB4DC \uC2E4\uD328: '+e.message+'</p>';
+  });
 }
-
 function renderSessions(){
   const wrap=document.getElementById('swrap');
-  if(!SESSIONS.length){wrap.innerHTML='<p style="color:#999;padding:16px;text-align:center">&#xC0DD;&#xC131;&#xB41C; &#xD22C;&#xD45C; &#xC138;&#xC158;&#xC774; &#xC5C6;&#xC5B4;&#xC694;</p>';return;}
-  
-  let html='';
-  let lastDay=null;
-  SESSIONS.forEach(sess=>{
+  if(!SESSIONS.length){wrap.innerHTML='<p style="color:#999;padding:16px;text-align:center">\uC0DD\uC131\uB41C \uD22C\uD45C \uC138\uC158\uC774 \uC5C6\uC5B4\uC694</p>';return;}
+  let html='';let lastDay=null;
+  SESSIONS.forEach(function(sess){
     if(sess.day!==lastDay){
       html+='<div class="section-title">Day '+sess.day+'</div>';
       lastDay=sess.day;
     }
-    const sessVotes=VOTES[sess.id]||[];
-    const myVote=sessVotes.find(v=>v.member_id===CUR.id);
-    const now=new Date();
-    const dl=new Date(sess.deadline);
+    const sv=VOTES[sess.id]||[];
+    const myVote=sv.find(function(v){return v.member_id===CUR.id;});
+    const now=new Date(),dl=new Date(sess.deadline);
     const open=!sess.closed&&now<dl;
     const catClass=CE[sess.category]||'badge-food';
     const catLabel=CL[sess.category]||sess.category;
     const timeLabel=TL[sess.time_slot]||sess.time_slot;
     const dlStr=dl.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    
     html+='<div class="sess-card" data-sid="'+sess.id+'">';
-    html+='<div class="sess-header">';
-    html+='<div><div class="sess-title">Day'+sess.day+' '+timeLabel+' <span class="badge '+catClass+'">'+catLabel+'</span></div>';
-    if(sess.closed){
-      html+='<div class="deadline-ok">&#xD22C;&#xD45C; &#xC885;&#xB8CC;</div>';
-    } else if(now>dl){
-      html+='<div class="deadline-tag">&#xB9C8;&#xAC10; &#xB3FC;&#xC74C;</div>';
-    } else {
-      html+='<div class="deadline-ok">~'+dlStr+' &#xD22C;&#xD45C; &#xC9C4;&#xD589; &#xC911;</div>';
-    }
-    html+='</div>';
-    html+='<div class="sess-meta">'+sessVotes.length+'/4&#xD45C;</div>';
-    html+='</div>';
-    
-    // Who voted chips
+    html+='<div class="sess-header"><div>';
+    html+='<div class="sess-title">Day'+sess.day+' '+timeLabel+' <span class="badge '+catClass+'">'+catLabel+'</span></div>';
+    if(sess.closed){html+='<div class="deadline-tag">\uD22C\uD45C \uC885\uB8CC</div>';}
+    else if(now>dl){html+='<div class="deadline-tag">\uB9C8\uAC10 \uB3FC\uC74C</div>';}
+    else{html+='<div class="deadline-ok">~'+dlStr+' \uC9C4\uD589 \uC911</div>';}
+    html+='</div><div class="sess-meta">'+sv.length+'/4\uD45C</div></div>';
     html+='<div class="voted-chips">';
-    MEMBERS.forEach(mem=>{
-      const v=sessVotes.find(vv=>vv.member_id===mem.id);
+    MEMBERS.forEach(function(mem){
+      const v=sv.find(function(vv){return vv.member_id===mem.id;});
       html+='<span class="chip'+(v?' voted':'')+'">'+( v?'V ':'-')+mem.name+'</span>';
     });
     html+='</div>';
-    
-    // Winner banner if closed
     if(sess.closed&&sess.winner_place_id){
-      const wp=PLACES.find(p=>p.id===sess.winner_place_id);
-      html+='<div class="winner-banner"><div class="wt">&#x1F3C6; &#xC120;&#xD0DD;&#xB41C; &#xC7A5;&#xC18C;</div><div class="wn">'+(wp?wp.name_kr:sess.winner_place_id)+'</div></div>';
+      const wp=PLACES.find(function(p){return p.id===sess.winner_place_id;});
+      html+='<div class="winner-banner"><div class="wt">\uC120\uD0DD\uB41C \uC7A5\uC18C</div><div class="wn">'+(wp?wp.name_kr:'-')+'</div></div>';
     }
-    
-    // Place list with vote bars
-    const sessPlaces=PLACES.filter(p=>p.category===sess.category);
+    const sp=PLACES.filter(function(p){return p.category===sess.category;});
     html+='<div class="place-list" style="margin-top:10px">';
-    sessPlaces.forEach(p=>{
-      const pVotes=sessVotes.filter(v=>v.place_id===p.id);
-      const pct=sessVotes.length>0?Math.round(pVotes.length/sessVotes.length*100):0;
+    sp.forEach(function(p){
+      const pv=sv.filter(function(v){return v.place_id===p.id;});
+      const pct=sv.length>0?Math.round(pv.length/sv.length*100):0;
       const isMine=myVote&&myVote.place_id===p.id;
-      const canSelect=open&&!myVote;
-      const isSelected=SEL[sess.id]===p.id;
-      
-      html+='<div class="place-item'+(isMine?' selected':'')+(isSelected?' selected':'')+'" data-sid="'+sess.id+'" data-pid="'+p.id+'">';
+      const isSel=SEL[sess.id]===p.id;
+      html+='<div class="place-item'+(isMine||isSel?' selected':'')+'" data-sid="'+sess.id+'" data-pid="'+p.id+'">';
       html+='<div><div class="pname">'+p.name_kr+'</div>';
-      html+='<div class="pmeta">'+p.sub_category+' · '+p.price_range+'</div>';
+      html+='<div class="pmeta">'+p.sub_category+' - '+p.price_range+'</div>';
       html+='<div class="vote-bar-wrap"><div class="vote-bar-row">';
       html+='<div class="vote-bar-bg"><div class="vote-bar-fill" style="width:'+pct+'%"></div></div>';
-      html+='<span class="vote-count">'+pVotes.length+'&#xD45C;</span>';
-      if(pVotes.length>0){
-        const whoNames=pVotes.map(v=>{const mem=MEMBERS.find(m=>m.id===v.member_id);return mem?mem.name:'?';}).join(', ');
-        html+='<span style="font-size:.7rem;color:#888">'+whoNames+'</span>';
+      html+='<span class="vote-count">'+pv.length+'\uD45C</span>';
+      if(pv.length>0){
+        const who=pv.map(function(v){const m=MEMBERS.find(function(x){return x.id===v.member_id;});return m?m.name:'?';}).join(', ');
+        html+='<span style="font-size:.7rem;color:#888">'+who+'</span>';
       }
       html+='</div></div></div>';
-      html+='<div class="pcheck'+(isMine||isSelected?' selected':'')+'"></div>';
+      html+='<div class="pcheck'+(isMine||isSel?' selected':'')+'"></div>';
       html+='</div>';
     });
     html+='</div>';
-    
-    // Action buttons
-    if(open&&!myVote){
-      html+='<button class="submit-btn" data-sid="'+sess.id+'">&#xD22C;&#xD45C; &#xC81C;&#xCD9C;&#xD558;&#xAE30;</button>';
-    } else if(open&&myVote){
-      html+='<button class="change-btn" data-sid="'+sess.id+'">&#x1F504; &#xD22C;&#xD45C; &#xBCC0;&#xACBD;&#xD558;&#xAE30;</button>';
-      html+='<button class="cancel-btn" data-sid="'+sess.id+'" data-vid="'+myVote.id+'">&#xD22C;&#xD45C; &#xCDE8;&#xC18C;</button>';
-    } else if(!open&&!sess.closed){
-      html+='<div class="closed-banner">&#xB9C8;&#xAC10;&#xB41C; &#xD22C;&#xD45C;&#xC785;&#xB2C8;&#xB2E4;</div>';
+    if(open&&!myVote){html+='<button class="submit-btn" data-sid="'+sess.id+'">\uD22C\uD45C \uC81C\uCD9C\uD558\uAE30</button>';}
+    else if(open&&myVote){
+      html+='<button class="change-btn" data-sid="'+sess.id+'">\uD22C\uD45C \uBCC0\uACBD\uD558\uAE30</button>';
+      html+='<button class="cancel-btn" data-sid="'+sess.id+'" data-vid="'+myVote.id+'">\uD22C\uD45C \uCDE8\uC18C</button>';
     }
-    
+    else if(!open&&!sess.closed){html+='<div class="closed-banner">\uB9C8\uAC10\uB41C \uD22C\uD45C</div>';}
     html+='</div>';
   });
   wrap.innerHTML=html;
-  
-  // Event delegation
-  wrap.querySelectorAll('.place-item').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const sid=el.dataset.sid, pid=el.dataset.pid;
-      const sess=SESSIONS.find(s=>s.id===sid);
-      const sessVotes=VOTES[sid]||[];
-      const myVote=sessVotes.find(v=>v.member_id===CUR.id);
-      const now=new Date(), dl=new Date(sess.deadline);
-      if(sess.closed||now>=dl||myVote) return;
-      SEL[sid]=pid;
-      renderSessions();
+  wrap.querySelectorAll('.place-item').forEach(function(el){
+    el.addEventListener('click',function(){
+      const sid=el.dataset.sid,pid=el.dataset.pid;
+      const sess=SESSIONS.find(function(s){return s.id===sid;});
+      if(!sess) return;
+      const sv=VOTES[sid]||[];
+      const myVote=sv.find(function(v){return v.member_id===CUR.id;});
+      if(sess.closed||new Date()>=new Date(sess.deadline)||myVote) return;
+      SEL[sid]=pid;renderSessions();
     });
   });
-  wrap.querySelectorAll('.submit-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>submitVote(btn.dataset.sid));
+  wrap.querySelectorAll('.submit-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){submitVote(btn.dataset.sid);});
   });
-  wrap.querySelectorAll('.change-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
+  wrap.querySelectorAll('.change-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
       const sid=btn.dataset.sid;
-      const sessVotes=VOTES[sid]||[];
-      const myVote=sessVotes.find(v=>v.member_id===CUR.id);
+      const sv=VOTES[sid]||[];
+      const myVote=sv.find(function(v){return v.member_id===CUR.id;});
       if(myVote){
-        fetch(SUPA+'/rest/v1/votes?id=eq.'+myVote.id,{
-          method:'DELETE',
-          headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
-        }).then(()=>{delete SEL[sid];toast('&#xBCC0;&#xACBD; &#xBAA8;&#xB4DC;: &#xB2E4;&#xC2DC; &#xC120;&#xD0DD;&#xD574;&#xC8FC;&#xC138;&#xC694;');loadSess();});
+        fetch(SUPA+'/rest/v1/votes?id=eq.'+myVote.id,{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+        .then(function(){delete SEL[sid];toast('\uBCC0\uACBD \uBAA8\uB4DC');loadSess();});
       }
     });
   });
-  wrap.querySelectorAll('.cancel-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      fetch(SUPA+'/rest/v1/votes?id=eq.'+btn.dataset.vid,{
-        method:'DELETE',
-        headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
-      }).then(()=>{toast('&#xD22C;&#xD45C; &#xCDE8;&#xC18C;');loadSess();});
+  wrap.querySelectorAll('.cancel-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      fetch(SUPA+'/rest/v1/votes?id=eq.'+btn.dataset.vid,{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+      .then(function(){toast('\uD22C\uD45C \uCDE8\uC18C');loadSess();});
     });
   });
 }
-
-async function submitVote(sid){
+function submitVote(sid){
   const pid=SEL[sid];
-  if(!pid){toast('&#xC7A5;&#xC18C;&#xB97C; &#xC120;&#xD0DD;&#xD574;&#xC8FC;&#xC138;&#xC694;');return;}
-  try{
-    await fetch(SUPA+'/rest/v1/votes',{
-      method:'POST',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({session_id:sid,member_id:CUR.id,place_id:pid})
-    });
-    delete SEL[sid];
-    toast('&#xD22C;&#xD45C; &#xC644;&#xB8CC;!');
-    await loadSess();
-  }catch(e){toast('&#xC624;&#xB958;: '+e.message);}
+  if(!pid){toast('\uC7A5\uC18C\uB97C \uC120\uD0DD\uD574\uC8FC\uC138\uC694');return;}
+  fetch(SUPA+'/rest/v1/votes',{
+    method:'POST',
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({session_id:sid,member_id:CUR.id,place_id:pid})
+  }).then(function(){delete SEL[sid];toast('\uD22C\uD45C \uC644\uB8CC!');loadSess();});
 }
-
-// Status tab
-document.querySelectorAll('.emo-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const key=btn.dataset.key;
-    document.querySelectorAll('[data-key="'+key+'"]').forEach(b=>b.classList.remove('sel'));
-    btn.classList.add('sel');
-    STATUS[key]=parseInt(btn.dataset.val);
-  });
-});
-
-async function saveStatus(){
+function saveStatus(){
   if(STATUS.energy===null||STATUS.hunger===null||STATUS.will===null){
-    toast('&#xBAA8;&#xB4E0; &#xD56D;&#xBAA9;&#xC744; &#xC120;&#xD0DD;&#xD574;&#xC8FC;&#xC138;&#xC694;');return;
+    toast('\uBAA8\uB4E0 \uD56D\uBAA9 \uC120\uD0DD');return;
   }
-  try{
-    await fetch(SUPA+'/rest/v1/status_checks',{
-      method:'POST',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({member_id:CUR.id,energy:STATUS.energy,hunger:STATUS.hunger,will_to_go:STATUS.will,timestamp:new Date().toISOString()})
-    });
-    toast('&#xC0C1;&#xD0DC; &#xC800;&#xC7A5; &#xC644;&#xB8CC;!');
-    updateAISuggestion();
-    loadTeamStatus();
-  }catch(e){toast('&#xC624;&#xB958;: '+e.message);}
+  fetch(SUPA+'/rest/v1/status_checks',{
+    method:'POST',
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({member_id:CUR.id,energy:STATUS.energy,hunger:STATUS.hunger,will_to_go:STATUS.will,timestamp:new Date().toISOString()})
+  }).then(function(){toast('\uC0C1\uD0DC \uC800\uC7A5!');updateAI();loadTeamStatus();});
 }
-
-function updateAISuggestion(){
+function updateAI(){
   const box=document.getElementById('aiBox');
-  const e=STATUS.energy, h=STATUS.hunger, w=STATUS.will;
-  let msg='';
-  const avg=(e+h+w)/3;
+  const e=STATUS.energy,h=STATUS.hunger,w=STATUS.will;
+  var msg='';
   if(e===0||w===0){
-    msg='&#xC27C;&#xC5B4;&#xC694;! &#xC624;&#xB298;&#xC740; &#xD638;&#xD154;&#xC5D0;&#xC11C; &#xC27C;&#xB294; &#xB0A0;&#xB85C; &#xD558;&#xB294; &#xAC8C; &#xC5B4;&#xB54C;&#xC694;? &#xAC00;&#xAE4C;&#xC6B4; &#xD3B8;&#xC758;&#xC810;&#xC774;&#xB098; &#xBC30;&#xB2EC; &#xC74C;&#xC2DD;&#xC744; &#xCD94;&#xCC9C;&#xD55C;&#xAC8C;&#xC694; &#x1F6CF;';
+    msg='\uC27C\uC5B4\uC694! \uC624\uB298\uC740 \uD638\uD154\uC5D0\uC11C \uD9B4\uB294 \uB0A0\uB85C \uD558\uB294 \uAC8C \uC5B4\uB54C\uC694? \uAC00\uAE4C\uC6B4 \uD3B8\uC758\uC810\uC774\uB098 \uBC30\uB2EC\uC74C\uC2DD\uC744 \uCD94\uCC9C\uD574\uC694.';
   } else if(h>=100){
-    msg='&#xBC30;&#xACE0;&#xD30C;&#xC8FD;! &#xC9C0;&#xAE08; &#xBC14;&#xB85C; &#xC2DD;&#xC0AC;&#xC5D0; &#xAC00;&#xC2DC;&#xB294; &#xAC8C; &#xAC00;&#xC7A5; &#xC911;&#xC694;&#xD574;&#xC694; &#x1F374;';
+    msg='\uBC30\uACE0\uD30C\uC8FD! \uC9C0\uAE08 \uBC14\uB85C \uC2DD\uC0AC\uBD80\uD130 \uAC00\uC2DC\uB294 \uAC8C \uC81C\uC77C \uC911\uC694\uD574\uC694.';
   } else if(e>=80&&w>=80){
-    msg='&#xCCB4;&#xB825;&#xB3C4; &#xB118;&#xCE58;&#xACE0; &#xC758;&#xC9C0;&#xB3C4; &#xD3FC;&#xD3FC;&#xD574;&#xC694;! &#xAC11;&#xD50C;&#xC774; &#xC774;&#xB3D9;&#xD574;&#xB3C4; &#xC88B;&#xC544;&#xC694; &#x1F4AA;';
+    msg='\uCCB4\uB825\uB3C4 \uB118\uCE58\uACE0 \uC758\uC9C0\uB3C4 \uD3FC\uD3FC! \uAC01\uD50C\uC774 \uC774\uB3D9\uD574\uB3C4 \uC88B\uC544\uC694.';
   } else if(e<=30&&w>=60){
-    msg='&#xC0B4;&#xC9DD; &#xD588;&#xC9C0;&#xB9CC; &#xB098;&#xAC00;&#xACE0; &#xC2F6;&#xC73C;&#xC2DC;&#xAD70;&#xC694;! &#xAC00;&#xAE4C;&#xC6B4; &#xC804;&#xCC60;&#xC5ED;&#xC73C;&#xB85C; &#xC774;&#xB3D9;&#xD558;&#xB294; &#xC27D;&#xB294; &#xCF54;&#xC2A4;&#xB97C; &#xCD94;&#xCC9C;&#xD560;&#xAC8C;&#xC694; &#x1F68A;';
-  } else if(avg>=60){
-    msg='&#xACE0;&#xB8E8; &#xC55E;&#xAC8C; &#xB098;&#xAC00; &#xBD10;&#xC694;! &#xB3C4;&#xBCF4; &#xC704;&#xC8FC;&#xB85C; &#xC5B4;&#xB5BB;&#xAC00;&#xC694;? &#x1F6B6;';
+    msg='\uC0B4\uC9DD \uD588\uC9C0\uB9CC \uB098\uAC00\uACE0 \uC2F6\uC73C\uC2DC\uAD70\uC694! \uAC00\uAE4C\uC6B4 \uC9C0\uD558\uCCA0\uC5ED \uC774\uB3D9 \uCF54\uC2A4\uB97C \uCD94\uCC9C\uD574\uB4DC\uB9B4\uAC8C\uC694.';
+  } else if((e+h+w)/3>=60){
+    msg='\uACE0\uB8E8 \uC55E\uAC8C \uB098\uAC00 \uBD10\uC694! \uB3C4\uBCF4 \uC704\uC8FC \uCF54\uC2A4 \uC5B4\uB5A8\uAC00\uC694?';
   } else {
-    msg='&#xBE44;&#xAD50;&#xC801; &#xD3B8;&#xD55C; &#xC2DC;&#xAC04;&#xC744; &#xBCF4;&#xB0B4;&#xB294; &#xAC83; &#xC5B4;&#xB54C;&#xC694;? &#xD0C0;&#xB204;&#xD0A4; &#xCF54;&#xC9C0; &#xC1FC;&#xD551;&#xC774;&#xB098; &#xC624;&#xB3C4;&#xB9AC; &#xC0B0;&#xCC45; &#xCD94;&#xCC9C; &#x1F6CD;';
+    msg='\uD0C0\uB204\uD0A4 \uCF54\uC9C0 \uC1FC\uD551\uC774\uB098 \uC624\uB3C4\uB9AC \uC0B0\uCC45\uCC98\uB7FC \uBE44\uAD50\uC801 \uD3B8\uD55C \uC77C\uC815 \uAD8C\uC7A5!';
   }
-  box.textContent=msg;
-  box.classList.add('loaded');
+  box.textContent=msg;box.classList.add('loaded');
 }
-
-async function loadTeamStatus(){
-  try{
-    // Get latest status per member
-    const data=await api('status_checks?order=timestamp.desc&limit=20');
+function loadTeamStatus(){
+  api('status_checks?order=timestamp.desc&limit=20').then(function(data){
     const latest={};
-    data.forEach(s=>{
-      if(!latest[s.member_id]) latest[s.member_id]=s;
-    });
+    data.forEach(function(s){if(!latest[s.member_id])latest[s.member_id]=s;});
     const wrap=document.getElementById('teamStatusWrap');
-    if(!Object.keys(latest).length){wrap.innerHTML='<p style="color:#999;font-size:.85rem">&#xC544;&#xC9C1; &#xC0C1;&#xD0DC; &#xC815;&#xBCF4;&#xAC00; &#xC5C6;&#xC5B4;&#xC694;</p>';return;}
-    let html='';
-    MEMBERS.forEach(m=>{
-      const s=latest[m.id];
-      if(!s)return;
+    if(!Object.keys(latest).length){wrap.innerHTML='<p style="color:#999;font-size:.85rem">\uC544\uC9C1 \uC0C1\uD0DC \uC815\uBCF4\uAC00 \uC5C6\uC5B4\uC694</p>';return;}
+    var html='';
+    MEMBERS.forEach(function(m){
+      const s=latest[m.id];if(!s)return;
       const e=s.energy,h=s.hunger,w=s.will_to_go;
-      let eIcon=e>=80?'&#x1F7E2;':e>=50?'&#x1F7E1;':'&#x1F534;';
-      html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0">';
+      const eIcon=e>=80?'[\uC88B\uC74C]':e>=50?'[\uBCF4\uD1B5]':'[\uD658\uC7A5]';
+      html+='<div class="team-status-row">';
       html+='<span style="font-weight:700;min-width:52px;font-size:.85rem">'+m.name+'</span>';
-      html+='<span style="font-size:.75rem;color:#555">&#xCCB4;&#xB825; '+eIcon+(e>=80?'&#xC88B;&#xC74C;':e>=50?'&#xBCF4;&#xD1B5;':'&#xD238;&#xC5BC;')+'</span>';
-      html+='<span style="font-size:.75rem;color:#555">&#xBC30;&#xACE0;&#xD30C;&#xC9D1; '+(h>=80?'&#x1F4A5;&#xB9E4;&#xC6B0;':h>=50?'&#xD30C;&#xC9D1;':'&#xAD34;&#xCC2E;')+'</span>';
-      html+='<span style="font-size:.75rem;color:#555">&#xC758;&#xC9C0; '+(w>=80?'&#x1F525;&#x1F4AA;':w>=50?'&#x1F44D;':'&#x1F634;')+'</span>';
+      html+='<span style="font-size:.75rem;color:#555">\uCCB4\uB825 '+eIcon+'</span>';
+      html+='<span style="font-size:.75rem;color:#555">\uBC30\uACE0\uD30C\uC9D1: '+h+'</span>';
+      html+='<span style="font-size:.75rem;color:#555">\uC758\uC9C0: '+w+'</span>';
       html+='</div>';
     });
     wrap.innerHTML=html;
-  }catch(e){console.error(e);}
+  }).catch(function(){});
 }
-
-async function genCourse(){
+function genCourse(){
   const result=document.getElementById('courseResult');
-  result.innerHTML='<p style="color:#999;font-size:.85rem">&#xC0DD;&#xC131; &#xC911;...</p>';
-  
-  // Get latest team status
-  try{
-    const statusData=await api('status_checks?order=timestamp.desc&limit=20');
+  result.innerHTML='<p style="color:#999;font-size:.85rem">\uC0DD\uC131 \uC911...</p>';
+  api('status_checks?order=timestamp.desc&limit=20').then(function(statusData){
     const latest={};
-    statusData.forEach(s=>{if(!latest[s.member_id])latest[s.member_id]=s;});
-    const memberStatuses=Object.values(latest);
-    
-    // Calculate team averages
+    statusData.forEach(function(s){if(!latest[s.member_id])latest[s.member_id]=s;});
+    const ms=Object.values(latest);
     const teamAvg={
-      energy: memberStatuses.length? Math.round(memberStatuses.reduce((a,s)=>a+s.energy,0)/memberStatuses.length):60,
-      hunger: memberStatuses.length? Math.round(memberStatuses.reduce((a,s)=>a+s.hunger,0)/memberStatuses.length):60,
-      will: memberStatuses.length? Math.round(memberStatuses.reduce((a,s)=>a+(s.will_to_go||60),0)/memberStatuses.length):60
+      energy:ms.length?Math.round(ms.reduce(function(a,s){return a+s.energy;},0)/ms.length):60,
+      hunger:ms.length?Math.round(ms.reduce(function(a,s){return a+s.hunger;},0)/ms.length):60,
+      will:ms.length?Math.round(ms.reduce(function(a,s){return a+(s.will_to_go||60);},0)/ms.length):60
     };
-    
-    // Get winning votes from closed sessions
-    const closedSessions=SESSIONS.filter(s=>s.closed&&s.winner_place_id);
-    const openSessions=SESSIONS.filter(s=>!s.closed);
-    
-    // Build course steps from winning places (closed) + likely winners (open, most voted)
+    const lowE=teamAvg.energy<50;
+    const closedS=SESSIONS.filter(function(s){return s.closed&&s.winner_place_id;});
+    const openS=SESSIONS.filter(function(s){return !s.closed;});
     const courseItems=[];
-    
-    // Add closed/decided places
-    closedSessions.forEach(sess=>{
-      const place=PLACES.find(p=>p.id===sess.winner_place_id);
-      if(place) courseItems.push({sess,place,decided:true});
+    closedS.forEach(function(sess){
+      const place=PLACES.find(function(p){return p.id===sess.winner_place_id;});
+      if(place) courseItems.push({sess:sess,place:place,decided:true});
     });
-    
-    // Add most-voted places for open sessions
-    openSessions.forEach(sess=>{
-      const sessVotes=VOTES[sess.id]||[];
-      if(sessVotes.length>0){
-        const counts={};
-        sessVotes.forEach(v=>{counts[v.place_id]=(counts[v.place_id]||0)+1;});
-        const topId=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
-        const place=PLACES.find(p=>p.id===topId);
-        if(place) courseItems.push({sess,place,decided:false,votes:counts[topId]});
+    openS.forEach(function(sess){
+      const sv=VOTES[sess.id]||[];
+      if(sv.length>0){
+        var counts={};
+        sv.forEach(function(v){counts[v.place_id]=(counts[v.place_id]||0)+1;});
+        var topId=Object.entries(counts).sort(function(a,b){return b[1]-a[1];})[0][0];
+        const place=PLACES.find(function(p){return p.id===topId;});
+        if(place) courseItems.push({sess:sess,place:place,decided:false});
       }
     });
-    
-    // Sort by day, then time_slot order
     const timeOrder={morning:0,lunch:1,cafe:2,dinner:3,free:4};
-    courseItems.sort((a,b)=>{
+    courseItems.sort(function(a,b){
       if(a.sess.day!==b.sess.day) return a.sess.day-b.sess.day;
       return (timeOrder[a.sess.time_slot]||5)-(timeOrder[b.sess.time_slot]||5);
     });
-    
-    if(courseItems.length===0){
-      result.innerHTML='<p style="color:#999;font-size:.85rem;text-align:center">&#xD22C;&#xD45C; &#xACB0;&#xACFC;&#xAC00; &#xC5C6;&#xC5B4;&#xC694;. &#xBA3C;&#xC800; &#xD22C;&#xD45C; &#xD380;&#xC5D0;&#xC11C; &#xD22C;&#xD45C;&#xD574;&#xBCF4;&#xC138;&#xC694;!</p>';
+    if(!courseItems.length){
+      result.innerHTML='<p style="color:#999;font-size:.85rem;text-align:center">\uD22C\uD45C \uACB0\uACFC\uAC00 \uC5C6\uC5B4\uC694. \uBA3C\uC800 \uD22C\uD45C\uD574\uBCF4\uC138\uC694!</p>';
       return;
     }
-    
-    // Calculate distances between consecutive places
-    let html='';
-    
+    var html='';
     // Team status header
-    const energyBar=teamAvg.energy>=80?'&#x1F7E2;&#x1F7E2;&#x1F7E2;':teamAvg.energy>=50?'&#x1F7E1;&#x1F7E1;&#x26AA;':'&#x1F534;&#x26AA;&#x26AA;';
     html+='<div style="background:#f8f9ff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:.8rem;color:#555">';
-    html+='<b>&#xD300; &#xD3C9;&#xADE0; &#xCCB4;&#xB825;</b> '+energyBar+'  &#xCCB4;&#xB825; '+teamAvg.energy+'%  &#xBC30;&#xACE0;&#xD30C;&#xC9D1; '+teamAvg.hunger+'%  &#xC758;&#xC9C0; '+teamAvg.will+'%';
-    
-    // Intensity recommendation
+    html+='<b>\uD300 \uD3C9\uADE0</b>  \uCCB4\uB825 '+teamAvg.energy+'%  \uBC30\uACE0\uD30C\uC9D1 '+teamAvg.hunger+'%  \uC758\uC9C0 '+teamAvg.will+'%';
     if(teamAvg.energy<30||teamAvg.will<30){
-      html+='<br><span style="color:#e53935;font-weight:600">&#x26A0;&#xFE0F; &#xD300; &#xCCB4;&#xB825;&#xC774; &#xB099;&#xC544;&#xC694;. &#xAC00;&#xAE4C;&#xC6B4; &#xCF54;&#xC2A4; &#xC704;&#xC8FC;&#xB85C; &#xCD94;&#xCC9c;&#xD569;&#xB2C8;&#xB2E4;</span>';
+      html+='<br><span style="color:#e53935;font-weight:600">\uD300 \uCCB4\uB825\uC774 \uB099\uC544\uC694. \uAC00\uAE4C\uC6B4 \uCF54\uC2A4 \uAD8C\uC7A5</span>';
     } else if(teamAvg.energy>=80&&teamAvg.will>=70){
-      html+='<br><span style="color:#43a047;font-weight:600">&#x1F4AA; &#xD300; &#xCCB4;&#xB825; &#xCD5C;&#xC0C1;! &#xC801;&#xADF9;&#xC801;&#xC778; &#xCF54;&#xC2A4;&#xB97C; &#xC989;&#xAE30;&#xC138;&#xC694;</span>';
+      html+='<br><span style="color:#43a047;font-weight:600">\uD300 \uCCB4\uB825 \uCD5C\uC0C1! \uC801\uADF9\uC801\uC778 \uCF54\uC2A4 \uC989\uAE30\uC138\uC694</span>';
     }
     html+='</div>';
-    
-    // Course steps
-    let lastLat=null, lastLng=null;
-    let lastDay=null;
-    
-    courseItems.forEach((item,i)=>{
+    var lastLat=null,lastLng=null,lastDay=null;
+    courseItems.forEach(function(item,i){
       if(item.sess.day!==lastDay){
         html+='<div class="section-title" style="margin-top:'+(i>0?'16':'4')+'px">Day '+item.sess.day+'</div>';
-        lastDay=item.sess.day;
-        lastLat=null; lastLng=null;
+        lastDay=item.sess.day;lastLat=null;lastLng=null;
       }
-      
-      const coords=PLACE_COORDS[item.place.name_kr]||item.place.coords;
-      let distInfo='';
+      const coords=PLACE_COORDS[item.place.id];
+      var distHtml='';
       if(lastLat!==null&&coords){
         const dist=haversine(lastLat,lastLng,coords[0],coords[1]);
-        const dl=distLabel(dist);
-        
-        // Adjust transport recommendation based on team energy
-        let transport=dl.transport;
-        if(teamAvg.energy<50&&dist>300){
-          transport=transport.replace('&#xB3C4;&#xBCF4;','&#xC9C0;&#xD558;&#xCCA0;/&#xBC84;&#xC2A4; &#xAD8C;&#xC7A5;');
-        }
-        distInfo='<div class="step-dist">&#x2192; '+dl.label+'</div><div class="step-transport">'+transport+'</div>';
+        const dl=distLabel(dist,lowE);
+        distHtml='<div class="step-dist">&#8594; '+dl.label+'</div><div class="step-transport">'+dl.transport+'</div>';
       }
       if(coords){lastLat=coords[0];lastLng=coords[1];}
-      
       const timeLabel=TL[item.sess.time_slot]||item.sess.time_slot;
       const catClass=CE[item.place.category]||'badge-food';
       const catLabel=CL[item.place.category]||item.place.category;
-      const decLabel=item.decided?'<span style="font-size:.7rem;color:#43a047;font-weight:700">&#x2713; &#xD655;&#xC815;</span>':'<span style="font-size:.7rem;color:#f39c12;font-weight:700">(&#xD22C;&#xD45C; &#xC9C4;&#xD589; &#xC911;)</span>';
-      
+      const decLabel=item.decided
+        ?'<span style="font-size:.7rem;color:#43a047;font-weight:700">&#10003; \uD655\uC815</span>'
+        :'<span style="font-size:.7rem;color:#f39c12;font-weight:700">(\uD22C\uD45C \uC9C4\uD589 \uC911)</span>';
       html+='<div class="course-step">';
       html+='<div class="step-num">'+(i+1)+'</div>';
       html+='<div class="step-body">';
       html+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
       html+='<span class="step-name">'+item.place.name_kr+'</span>';
       html+='<span class="badge '+catClass+'">'+catLabel+'</span>';
-      html+='<span style="font-size:.72rem;color:#888">'+timeLabel+'</span>';
-      html+=decLabel;
+      html+='<span style="font-size:.72rem;color:#888">'+timeLabel+'</span>'+decLabel;
       html+='</div>';
       html+='<div style="font-size:.75rem;color:#888;margin-top:2px">'+item.place.price_range+'</div>';
-      if(distInfo) html+=distInfo;
-      html+='</div>';
-      html+='</div>';
+      if(distHtml) html+=distHtml;
+      html+='</div></div>';
     });
-    
-    // Wrap-up advice
+    // Advice footer
     html+='<div style="background:#e8f5e9;border-radius:10px;padding:12px;margin-top:16px;font-size:.82rem;color:#1b5e20;line-height:1.7">';
-    const totalItems=courseItems.length;
     if(teamAvg.energy<40){
-      html+='&#x1F4A1; &#xCCB4;&#xB825;&#xC774; &#xBD80;&#xC871;&#xD574;&#xC694;. &#xC7A5;&#xC18C; &#xAC04; &#xC774;&#xB3D9;&#xC740; &#xAC00;&#xAE09;&#xC801; &#xB300;&#xC911;&#xAD50;&#xD1B5;&#xC744; &#xC774;&#xC6A9;&#xD558;&#xACE0;, &#xD734;&#xC2DD; &#xD3EC;&#xD568;&#xD574;&#xC11C; '+totalItems+'&#xAC1C; &#xC77C;&#xC815;&#xC774; &#xBD80;&#xB2F4;&#xC2A4;&#xB7EC;&#xC6B8; &#xC218; &#xC788;&#xC5B4;&#xC694;.';
+      html+='\uCCB4\uB825\uC774 \uBD80\uC871\uD574\uC694. \uC7A5\uC18C \uAC04 \uC774\uB3D9\uC740 \uAC00\uAE09\uC801 \uB300\uC911\uAD50\uD1B5\uC744 \uC774\uC6A9\uD558\uC138\uC694.';
     } else if(teamAvg.energy>=70){
-      html+='&#x1F4AA; &#xCCB4;&#xB825; &#xCDA9;&#xBD84;&#xD574;&#xC694;! '+totalItems+'&#xAC1C; &#xC77C;&#xC815; &#xBAA8;&#xB450; &#xBB38;&#xC81C;&#xC5C6;&#xC774; &#xC9C4;&#xD589; &#xAC00;&#xB2A5;&#xD574; &#xBCF4;&#xC5EC;&#xC694;. &#xC7A5;&#xC18C; &#xC0AC;&#xC774; &#xAC10;&#xC0AC;&#xD55C; &#xCE74;&#xD398; &#xD0C0;&#xC784;&#xB3C4; &#xB1A0;&#xCE58;&#xC138;&#xC694;!';
+      html+='\uCCB4\uB825 \uCDA9\uBD84! \uAC70\uB9AC\uAC00 \uBA3C \uACF3\uB3C4 \uB3C4\uBCF4\uB85C \uCDA9\uBD84\uD788 \uC774\uB3D9 \uAC00\uB2A5\uD574\uC694.';
     } else {
-      html+='&#x1F4CD; &#xC801;&#xB2F9;&#xD55C; &#xCCB4;&#xB825;&#xC774;&#xC5D0;&#xC694;. &#xB450; &#xC7A5;&#xC18C; &#xC0AC;&#xC774; &#xAC70;&#xB9AC;&#xAC00; &#xBA40;&#xBA74; &#xB300;&#xC911;&#xAD50;&#xD1B5;&#xC744; &#xC801;&#xADF9; &#xD65C;&#xC6A9;&#xD558;&#xB294; &#xAC8C; &#xC88B;&#xC544;&#xC694;.';
+      html+='\uC801\uB2F9\uD55C \uCCB4\uB825\uC774\uC5D0\uC694. 1.5km \uC774\uC0C1 \uAC70\uB9AC\uB294 \uB300\uC911\uAD50\uD1B5\uC744 \uC801\uADF9 \uD65C\uC6A9\uD558\uC138\uC694.';
     }
     html+='</div>';
-    
     result.innerHTML=html;
-  }catch(e){
-    result.innerHTML='<p style="color:red;font-size:.85rem">&#xC624;&#xB958;: '+e.message+'</p>';
-  }
+  }).catch(function(e){
+    result.innerHTML='<p style="color:red">\uC624\uB958: '+e.message+'</p>';
+  });
 }
-
-// Admin: Add place
-async function addPlace(){
+function addPlace(){
   const name=document.getElementById('newPlaceName').value.trim();
   const cat=document.getElementById('newPlaceCat').value;
   const sub=document.getElementById('newPlaceSub').value.trim();
@@ -770,114 +648,75 @@ async function addPlace(){
   const desc=document.getElementById('newPlaceDesc').value.trim();
   const lat=parseFloat(document.getElementById('newPlaceLat').value)||null;
   const lng=parseFloat(document.getElementById('newPlaceLng').value)||null;
-  
-  if(!name){toast('&#xC7A5;&#xC18C; &#xC774;&#xB984;&#xC744; &#xC785;&#xB825;&#xD574;&#xC8FC;&#xC138;&#xC694;');return;}
-  
-  try{
-    const body={name:name,name_kr:name,category:cat,sub_category:sub||cat,price_range:price||'-',description:desc||name};
-    const r=await fetch(SUPA+'/rest/v1/places',{
-      method:'POST',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-      body:JSON.stringify(body)
-    });
-    const d=await r.json();
+  if(!name){toast('\uC7A5\uC18C \uC774\uB984 \uC785\uB825 \uD544\uC694');return;}
+  const body={name:name,name_kr:name,category:cat,sub_category:sub||cat,price_range:price||'-',description:desc||name};
+  fetch(SUPA+'/rest/v1/places',{
+    method:'POST',
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(body)
+  }).then(function(r){return r.json();}).then(function(d){
     if(d&&d[0]){
-      // Store coords locally if provided
-      if(lat&&lng) PLACE_COORDS[name]=[lat,lng];
-      toast('''+name+'' &#xCD94;&#xAC00; &#xC644;&#xB8CC;!');
-      // Clear inputs
-      ['newPlaceName','newPlaceSub','newPlacePrice','newPlaceDesc','newPlaceLat','newPlaceLng'].forEach(id=>{
+      if(lat&&lng) PLACE_COORDS[d[0].id]=[lat,lng];
+      toast('\uCD94\uAC00 \uC644\uB8CC: '+name);
+      ['newPlaceName','newPlaceSub','newPlacePrice','newPlaceDesc','newPlaceLat','newPlaceLng'].forEach(function(id){
         document.getElementById(id).value='';
       });
       loadSess();
-    } else {
-      toast('&#xCD94;&#xAC00; &#xC2E4;&#xD328;');
-    }
-  }catch(e){toast('&#xC624;&#xB958;: '+e.message);}
+    } else {toast('\uCD94\uAC00 \uC2E4\uD328');}
+  }).catch(function(e){toast('\uC624\uB958: '+e.message);});
 }
-
-// Admin: Add session
-async function addSession(){
+function addSession(){
   const day=parseInt(document.getElementById('newSessDay').value);
   const time=document.getElementById('newSessTime').value;
   const cat=document.getElementById('newSessCat').value;
   const dl=document.getElementById('newSessDeadline').value;
-  if(!dl){toast('&#xB9C8;&#xAC10; &#xC2DC;&#xAC04;&#xC744; &#xC124;&#xC815;&#xD574;&#xC8FC;&#xC138;&#xC694;');return;}
-  try{
-    await fetch(SUPA+'/rest/v1/vote_sessions',{
-      method:'POST',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({day,time_slot:time,category:cat,deadline:new Date(dl).toISOString(),closed:false})
-    });
-    toast('&#xC138;&#xC158; &#xC0DD;&#xC131; &#xC644;&#xB8CC;!');
-    loadSess();
-    loadAdminSessions();
-  }catch(e){toast('&#xC624;&#xB958;: '+e.message);}
+  if(!dl){toast('\uB9C8\uAC10 \uC2DC\uAC04 \uC124\uC815 \uD544\uC694');return;}
+  fetch(SUPA+'/rest/v1/vote_sessions',{
+    method:'POST',
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({day:day,time_slot:time,category:cat,deadline:new Date(dl).toISOString(),closed:false})
+  }).then(function(){toast('\uC138\uC158 \uC0DD\uC131 \uC644\uB8CC!');loadSess();loadAdminSessions();});
 }
-
-async function loadAdminSessions(){
-  const wrap=document.getElementById('adminSessWrap');
-  const sessions=await api('vote_sessions?order=day,time_slot');
-  let html='<div class="admin-card"><div class="admin-title">&#xC138;&#xC158; &#xAD00;&#xB9AC;</div>';
-  sessions.forEach(sess=>{
-    const dl=new Date(sess.deadline).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    const catLabel=CL[sess.category]||sess.category;
-    const timeLabel=TL[sess.time_slot]||sess.time_slot;
-    html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #ffe0cc;flex-wrap:wrap">';
-    html+='<span style="font-size:.82rem;flex:1">Day'+sess.day+' '+timeLabel+' '+catLabel+' ~'+dl+'</span>';
-    if(!sess.closed){
-      html+='<button class="admin-btn" data-sid="'+sess.id+'" onclick="closeSession(''+sess.id+'')">&#xB9C8;&#xAC10;</button>';
-    } else {
-      html+='<span style="font-size:.75rem;color:#999">&#xC885;&#xB8CC;</span>';
-    }
-    html+='<button class="admin-btn danger" data-sid="'+sess.id+'" onclick="deleteSession(''+sess.id+'')">&#xC0AD;&#xC81C;</button>';
+function loadAdminSessions(){
+  api('vote_sessions?order=day,time_slot').then(function(sessions){
+    var html='<div class="admin-card"><div class="admin-title">\uC138\uC158 \uAD00\uB9AC</div>';
+    sessions.forEach(function(sess){
+      const dl=new Date(sess.deadline).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const catLabel=CL[sess.category]||sess.category;
+      const timeLabel=TL[sess.time_slot]||sess.time_slot;
+      html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #ffe0cc;flex-wrap:wrap">';
+      html+='<span style="font-size:.82rem;flex:1">Day'+sess.day+' '+timeLabel+' '+catLabel+' ~'+dl+'</span>';
+      if(!sess.closed){html+='<button class="admin-btn" onclick="closeSession(\"'+sess.id+'\")">\uB9C8\uAC10</button>';}
+      else{html+='<span style="font-size:.75rem;color:#999">\uC885\uB8CC</span>';}
+      html+='<button class="admin-btn danger" onclick="deleteSession(\"'+sess.id+'\")">\uC0AD\uC81C</button>';
+      html+='</div>';
+    });
     html+='</div>';
+    document.getElementById('adminSessWrap').innerHTML=html;
   });
-  html+='</div>';
-  wrap.innerHTML=html;
 }
-
-async function closeSession(sid){
-  const sessVotes=VOTES[sid]||[];
-  if(sessVotes.length===0){
-    // Close with no winner
-    await fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{
-      method:'PATCH',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({closed:true})
-    });
-  } else {
-    // Find winner
-    const counts={};
-    sessVotes.forEach(v=>{counts[v.place_id]=(counts[v.place_id]||0)+1;});
-    const winnerId=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
-    await fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{
-      method:'PATCH',
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({closed:true,winner_place_id:winnerId})
-    });
+function closeSession(sid){
+  const sv=VOTES[sid]||[];
+  var winnerId=null;
+  if(sv.length>0){
+    var counts={};
+    sv.forEach(function(v){counts[v.place_id]=(counts[v.place_id]||0)+1;});
+    winnerId=Object.entries(counts).sort(function(a,b){return b[1]-a[1];})[0][0];
   }
-  toast('&#xC138;&#xC158; &#xB9C8;&#xAC10;!');
-  await loadSess();
-  loadAdminSessions();
+  const body=Object.assign({closed:true},winnerId?{winner_place_id:winnerId}:{});
+  fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{
+    method:'PATCH',
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  }).then(function(){toast('\uC138\uC158 \uB9C8\uAC10!');loadSess();loadAdminSessions();});
 }
-
-async function deleteSession(sid){
-  if(!confirm('&#xC138;&#xC158;&#xC744; &#xC0AD;&#xC81C;&#xD558;&#xACA0;&#xC5B4;&#xC694;?')) return;
-  await fetch(SUPA+'/rest/v1/votes?session_id=eq.'+sid,{
-    method:'DELETE',
-    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
-  });
-  await fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{
-    method:'DELETE',
-    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
-  });
-  toast('&#xC0AD;&#xC81C; &#xC644;&#xB8CC;');
-  await loadSess();
-  loadAdminSessions();
+function deleteSession(sid){
+  if(!window.confirm('\uC0AD\uC81C\uD558\uACA0\uC5B4\uC694?')) return;
+  fetch(SUPA+'/rest/v1/votes?session_id=eq.'+sid,{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+  .then(function(){
+    return fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+  }).then(function(){toast('\uC0AD\uC81C \uC644\uB8CC');loadSess();loadAdminSessions();});
 }
-
-// Init
 document.addEventListener('DOMContentLoaded',initLogin);
 </script>
 </body>
