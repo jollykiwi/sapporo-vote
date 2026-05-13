@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>âï¸ Sapporo Vote</title>
+<title>✈️ Sapporo Vote</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
 body{background:#f0f4ff;min-height:100vh}
@@ -102,28 +102,28 @@ select.admin-input{background:#fff}
 
 <div id="loginScreen" class="screen active">
   <div class="login-title">&#x2708;&#xFE0F; Sapporo Vote</div>
-  <div class="login-sub">ë¹í í¬í ìì¤í</div>
+  <div class="login-sub">비행 투표 시스템</div>
   <div class="name-grid" id="nameGrid"></div>
   <div class="pin-box">
-    <div class="pin-label" id="pinLabel">ì´ë¦ì ì ííì¸ì</div>
+    <div class="pin-label" id="pinLabel">이름을 선택하세요</div>
     <input type="password" class="pin-input" id="pinInput" placeholder="PIN" maxlength="4" inputmode="numeric">
   </div>
-  <button class="login-btn" id="enterBtn">ìì¥ íê¸°</button>
+  <button class="login-btn" id="enterBtn">입장 하기</button>
 </div>
 
 <div id="mainScreen" class="screen">
   <div id="topbar">
     <div>
       <div class="tname" id="topName"></div>
-      <div class="tday">ì¿í¬ë¡ ì¬í</div>
+      <div class="tday">삿포로 여행</div>
     </div>
-    <button id="logoutBtn">ë¡ê·¸ìì</button>
+    <button id="logoutBtn">로그아웃</button>
   </div>
   <div class="tabs">
-    <div class="tab active" data-tab="vote">í¬í</div>
-    <div class="tab" data-tab="status">ìí</div>
-    <div class="tab" data-tab="course">ì½ì¤</div>
-    <div class="tab" data-tab="admin" id="adminTab" style="display:none">ê´ë¦¬</div>
+    <div class="tab active" data-tab="vote">투표</div>
+    <div class="tab" data-tab="status">상태</div>
+    <div class="tab" data-tab="course">코스</div>
+    <div class="tab" data-tab="admin" id="adminTab" style="display:none">관리</div>
   </div>
 
   <div id="tabVote" class="content">
@@ -132,102 +132,102 @@ select.admin-input{background:#fff}
 
   <div id="tabStatus" class="content" style="display:none">
     <div class="status-card">
-      <div class="status-title">ì§ê¸ ìí ì²´í¬</div>
+      <div class="status-title">지금 상태 체크</div>
       <div class="status-row">
-        <div class="status-label">ì²´ë ¥ ìí</div>
+        <div class="status-label">체력 상태</div>
         <div class="emoji-row">
-          <button class="emo-btn" data-key="energy" data-val="100">ìëì§ ë§ë¬µ</button>
-          <button class="emo-btn" data-key="energy" data-val="60">ë³´íµ</button>
-          <button class="emo-btn" data-key="energy" data-val="30">ì¡°ê¸ íì;</button>
-          <button class="emo-btn" data-key="energy" data-val="0">ëë¬´ ì§ì¹¨</button>
+          <button class="emo-btn" data-key="energy" data-val="100">에너지 만묵</button>
+          <button class="emo-btn" data-key="energy" data-val="60">보통</button>
+          <button class="emo-btn" data-key="energy" data-val="30">조금 했임;</button>
+          <button class="emo-btn" data-key="energy" data-val="0">너무 지침</button>
         </div>
       </div>
       <div class="status-row">
-        <div class="status-label">ë°°ê³ í ìí</div>
+        <div class="status-label">배고픔 상태</div>
         <div class="emoji-row">
-          <button class="emo-btn" data-key="hunger" data-val="100">ë°°ê³ íì£½!</button>
-          <button class="emo-btn" data-key="hunger" data-val="60">ì¡°ê¸ ë°°ê³ í</button>
-          <button class="emo-btn" data-key="hunger" data-val="30">ê´´ì°®ì</button>
-          <button class="emo-btn" data-key="hunger" data-val="0">ë°° ë¶ë¬</button>
+          <button class="emo-btn" data-key="hunger" data-val="100">배고파죽!</button>
+          <button class="emo-btn" data-key="hunger" data-val="60">조금 배고파</button>
+          <button class="emo-btn" data-key="hunger" data-val="30">괴찮아</button>
+          <button class="emo-btn" data-key="hunger" data-val="0">배 불러</button>
         </div>
       </div>
       <div class="status-row">
-        <div class="status-label">ì¸ì¶ ìì§</div>
+        <div class="status-label">외출 의지</div>
         <div class="emoji-row">
-          <button class="emo-btn" data-key="will" data-val="100">ë°ë¡ ëê°ì!</button>
-          <button class="emo-btn" data-key="will" data-val="60">ì¬ì¤ ê´´ì°®ì</button>
-          <button class="emo-btn" data-key="will" data-val="30">ì£¼íìì¼ë©´ì´</button>
-          <button class="emo-btn" data-key="will" data-val="0">ì¼ê³  ì¶ì´</button>
+          <button class="emo-btn" data-key="will" data-val="100">바로 나가자!</button>
+          <button class="emo-btn" data-key="will" data-val="60">사실 괴찮아</button>
+          <button class="emo-btn" data-key="will" data-val="30">주한있으면어</button>
+          <button class="emo-btn" data-key="will" data-val="0">쉼고 싶어</button>
         </div>
       </div>
-      <button class="save-status-btn" id="saveStatusBtn">ìí ì ì¥</button>
-      <div class="ai-box" id="aiBox">ìíë¥¼ ìë ¥íê³  ì ì¥íë©´ AI ì¶ì²ì ë°ì ì ìì´ì</div>
+      <button class="save-status-btn" id="saveStatusBtn">상태 저장</button>
+      <div class="ai-box" id="aiBox">상태를 입력하고 저장하면 AI 추천을 받을 수 있어요</div>
     </div>
     <div class="status-card">
-      <div class="status-title">í ìí íí©</div>
+      <div class="status-title">팀 상태 현황</div>
       <div id="teamStatusWrap"></div>
     </div>
   </div>
 
   <div id="tabCourse" class="content" style="display:none">
     <div class="course-card">
-      <div class="course-title">AI ì½ì¤ ì¶ì²</div>
-      <div style="font-size:.85rem;color:#666;margin-bottom:12px">í¬í ê²°ê³¼ + í ì²´ë ¥ ìíë¥¼ ë°íì¼ë¡ ì½ì¤ë¥¼ êµ¬ì±í´ëë¦´ê²ì. ì¥ì ê° ê±°ë¦¬ì ì´ëìë¨ë ìë ¤ëë ¤ì.</div>
-      <button class="gen-course-btn" id="genCourseBtn">ì½ì¤ ìì±íê¸°</button>
+      <div class="course-title">AI 코스 추천</div>
+      <div style="font-size:.85rem;color:#666;margin-bottom:12px">투표 결과 + 팀 체력 상태를 바탕으로 코스를 구성해드릴게요. 장소 간 거리와 이동수단도 알려드려요.</div>
+      <button class="gen-course-btn" id="genCourseBtn">코스 생성하기</button>
       <div id="courseResult" style="margin-top:16px"></div>
     </div>
   </div>
 
   <div id="tabAdmin" class="content" style="display:none">
     <div class="place-admin-card">
-      <div class="place-admin-title">ì¥ì ì¶ê°</div>
+      <div class="place-admin-title">장소 추가</div>
       <div class="admin-row">
-        <input class="admin-input" id="newPlaceName" placeholder="ì¥ì ì´ë¦ (íêµ­ì´)">
+        <input class="admin-input" id="newPlaceName" placeholder="장소 이름 (한국어)">
       </div>
       <div class="admin-row">
         <select class="admin-input" id="newPlaceCat">
-          <option value="ìì¬">ìì¬</option>
-          <option value="ì¹´í">ì¹´í</option>
-          <option value="êµ¬ê²½ê±°ë¦¬">êµ¬ê²½ê±°ë¦¬</option>
+          <option value="식사">식사</option>
+          <option value="카페">카페</option>
+          <option value="구경거리">구경거리</option>
         </select>
-        <input class="admin-input" id="newPlaceSub" placeholder="ì¸ë¶ (ë¼ë©´, ì¹´í ë±)">
+        <input class="admin-input" id="newPlaceSub" placeholder="세부 (라면, 카페 등)">
       </div>
       <div class="admin-row">
-        <input class="admin-input" id="newPlacePrice" placeholder="ê°ê²©ë (ì: ê1,000~3,000)">
-        <input class="admin-input" id="newPlaceDesc" placeholder="ì§§ì ì¤ëª">
+        <input class="admin-input" id="newPlacePrice" placeholder="가격대 (예: ꔜ1,000~3,000)">
+        <input class="admin-input" id="newPlaceDesc" placeholder="짧은 설명">
       </div>
       <div class="admin-row">
-        <input class="admin-input" id="newPlaceLat" placeholder="ìë (43.0625)" type="number" step="0.0001">
-        <input class="admin-input" id="newPlaceLng" placeholder="ê²½ë (141.3549)" type="number" step="0.0001">
+        <input class="admin-input" id="newPlaceLat" placeholder="위도 (43.0625)" type="number" step="0.0001">
+        <input class="admin-input" id="newPlaceLng" placeholder="경도 (141.3549)" type="number" step="0.0001">
       </div>
       <div style="font-size:.75rem;color:#999;margin-bottom:8px">
-        êµ¬ê¸ ì§ëìì ì¢í íì¸: <a href="https://maps.google.com" target="_blank" style="color:#667eea">êµ¬ê¸ ì§ë</a>
+        구글 지도에서 좀표 확인: <a href="https://maps.google.com" target="_blank" style="color:#667eea">구글 지도</a>
       </div>
-      <button class="admin-btn success" id="addPlaceBtn">ì¥ì ì¶ê°</button>
+      <button class="admin-btn success" id="addPlaceBtn">장소 추가</button>
     </div>
     <div class="admin-card">
-      <div class="admin-title">í¬í ì¸ì ìì±</div>
+      <div class="admin-title">투표 세션 생성</div>
       <div class="admin-row">
         <select class="admin-input" id="newSessDay">
           <option value="1">Day 1</option>
           <option value="2">Day 2</option>
         </select>
         <select class="admin-input" id="newSessTime">
-          <option value="lunch">ì ì¬</option>
-          <option value="dinner">ì ë</option>
-          <option value="morning">ìì¹¨</option>
-          <option value="cafe">ì¹´ííì</option>
-          <option value="free">ìì ìê°</option>
+          <option value="lunch">점심</option>
+          <option value="dinner">저녁</option>
+          <option value="morning">아침</option>
+          <option value="cafe">카페타임</option>
+          <option value="free">자유시간</option>
         </select>
         <select class="admin-input" id="newSessCat">
-          <option value="ìì¬">ìì¬</option>
-          <option value="ì¹´í">ì¹´í</option>
-          <option value="êµ¬ê²½ê±°ë¦¬">êµ¬ê²½ê±°ë¦¬</option>
+          <option value="식사">식사</option>
+          <option value="카페">카페</option>
+          <option value="구경거리">구경거리</option>
         </select>
       </div>
       <div class="admin-row">
         <input class="admin-input" id="newSessDeadline" type="datetime-local">
-        <button class="admin-btn" id="addSessBtn">ì¸ì ìì±</button>
+        <button class="admin-btn" id="addSessBtn">세션 생성</button>
       </div>
     </div>
     <div id="adminSessWrap"></div>
@@ -511,7 +511,7 @@ function updateAI(){
   const e=STATUS.energy,h=STATUS.hunger,w=STATUS.will;
   var msg='';
   if(e===0||w===0){
-    msg='\uC26C\uC5B4\uC694! \uC624\uB298\uC740 \uD638\uD154\uC5D0\uC11C �\uB294 \uB0A0\uB85C \uD558\uB294 \uAC8C \uC5B4\uB54C\uC694? \uAC00\uAE4C\uC6B4 \uD3B8\uC758\uC810\uC774\uB098 \uBC30\uB2EC\uC74C\uC2DD\uC744 \uCD94\uCC9C\uD574\uC694.';
+    msg='\uC26C\uC5B4\uC694! \uC624\uB298\uC740 \uD638\uD154\uC5D0\uC11C \uD9B4\uB294 \uB0A0\uB85C \uD558\uB294 \uAC8C \uC5B4\uB54C\uC694? \uAC00\uAE4C\uC6B4 \uD3B8\uC758\uC810\uC774\uB098 \uBC30\uB2EC\uC74C\uC2DD\uC744 \uCD94\uCC9C\uD574\uC694.';
   } else if(h>=100){
     msg='\uBC30\uACE0\uD30C\uC8FD! \uC9C0\uAE08 \uBC14\uB85C \uC2DD\uC0AC\uBD80\uD130 \uAC00\uC2DC\uB294 \uAC8C \uC81C\uC77C \uC911\uC694\uD574\uC694.';
   } else if(e>=80&&w>=80){
