@@ -284,13 +284,11 @@ function distLabel(m,lowEnergy){
   }
   return {label:(m/1000).toFixed(1)+'km',transport:'\uC9C0\uD558\uCCA0/\uBC84\uC2A4 '+transit+'\uBD84\uB300'};
 }
-function api(path,opts){
-  opts=opts||{};
-  return fetch(SUPA+'/rest/v1/'+path,{
-    headers:Object.assign({'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},opts.headers||{}),
-    method:opts.method||'GET',
-    body:opts.body||undefined
-  }).then(r=>r.json());
+function api(path,method,body){
+  var opts={method:method||'GET',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}};
+  if(body) opts.body=JSON.stringify(body);
+  if(method==='POST'||method==='PATCH') opts.headers['Prefer']='return=representation';
+  return fetch(SUPA+'/rest/v1/'+path,opts).then(function(r){return r.json();});
 }
 function toast(msg){
   const t=document.getElementById('toast');
@@ -373,13 +371,17 @@ function switchTab(t){
 }
 function loadSess(){
   return Promise.all([
-    api('vote_sessions?order=day,time_slot&select=*'),
+    api('vote_sessions?order=day_number,meal_time&select=*'),
     api('places?order=category,name'),
     api('votes?select=*')
   ]).then(function(results){
+    if(!Array.isArray(results[0])||!Array.isArray(results[1])){
+      document.getElementById('swrap').innerHTML='<p style="color:#999;padding:16px;text-align:center">\uB85C\uB4DC \uC2E4\uD328 - \uC7A0\uC2DC \uD6C4 \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694</p>';
+      return;
+    }
     SESSIONS=results[0];PLACES=results[1];
     VOTES={};
-    results[2].forEach(function(v){
+    (results[2]||[]).forEach(function(v){
       if(!VOTES[v.session_id])VOTES[v.session_id]=[];
       VOTES[v.session_id].push(v);
     });
@@ -391,24 +393,24 @@ function loadSess(){
 function renderSessions(){
   const wrap=document.getElementById('swrap');
   if(!SESSIONS.length){wrap.innerHTML='<p style="color:#999;padding:16px;text-align:center">\uC0DD\uC131\uB41C \uD22C\uD45C \uC138\uC158\uC774 \uC5C6\uC5B4\uC694</p>';return;}
-  let html='';let lastDay=null;
+  var html='';var lastDay=null;
   SESSIONS.forEach(function(sess){
-    if(sess.day!==lastDay){
-      html+='<div class="section-title">Day '+sess.day+'</div>';
-      lastDay=sess.day;
+    if(sess.day_number!==lastDay){
+      html+='<div class="section-title">Day '+sess.day_number+'</div>';
+      lastDay=sess.day_number;
     }
     const sv=VOTES[sess.id]||[];
     const myVote=sv.find(function(v){return v.member_id===CUR.id;});
     const now=new Date(),dl=new Date(sess.deadline);
-    const open=!sess.closed&&now<dl;
+    const open=!sess.is_closed&&now<dl;
     const catClass=CE[sess.category]||'badge-food';
     const catLabel=CL[sess.category]||sess.category;
-    const timeLabel=TL[sess.time_slot]||sess.time_slot;
+    const timeLabel=TL[sess.meal_time]||sess.meal_time;
     const dlStr=dl.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
     html+='<div class="sess-card" data-sid="'+sess.id+'">';
     html+='<div class="sess-header"><div>';
-    html+='<div class="sess-title">Day'+sess.day+' '+timeLabel+' <span class="badge '+catClass+'">'+catLabel+'</span></div>';
-    if(sess.closed){html+='<div class="deadline-tag">\uD22C\uD45C \uC885\uB8CC</div>';}
+    html+='<div class="sess-title">Day'+sess.day_number+' '+timeLabel+' <span class="badge '+catClass+'">'+catLabel+'</span></div>';
+    if(sess.is_closed){html+='<div class="deadline-tag">\uD22C\uD45C \uC885\uB8CC</div>';}
     else if(now>dl){html+='<div class="deadline-tag">\uB9C8\uAC10 \uB3FC\uC74C</div>';}
     else{html+='<div class="deadline-ok">~'+dlStr+' \uC9C4\uD589 \uC911</div>';}
     html+='</div><div class="sess-meta">'+sv.length+'/4\uD45C</div></div>';
@@ -418,8 +420,8 @@ function renderSessions(){
       html+='<span class="chip'+(v?' voted':'')+'">'+( v?'V ':'-')+mem.name+'</span>';
     });
     html+='</div>';
-    if(sess.closed&&sess.winner_place_id){
-      const wp=PLACES.find(function(p){return p.id===sess.winner_place_id;});
+    if(sess.is_closed&&sess.winning_place_id){
+      const wp=PLACES.find(function(p){return p.id===sess.winning_place_id;});
       html+='<div class="winner-banner"><div class="wt">\uC120\uD0DD\uB41C \uC7A5\uC18C</div><div class="wn">'+(wp?wp.name_kr:'-')+'</div></div>';
     }
     const sp=PLACES.filter(function(p){return p.category===sess.category;});
@@ -449,7 +451,7 @@ function renderSessions(){
       html+='<button class="change-btn" data-sid="'+sess.id+'">\uD22C\uD45C \uBCC0\uACBD\uD558\uAE30</button>';
       html+='<button class="cancel-btn" data-sid="'+sess.id+'" data-vid="'+myVote.id+'">\uD22C\uD45C \uCDE8\uC18C</button>';
     }
-    else if(!open&&!sess.closed){html+='<div class="closed-banner">\uB9C8\uAC10\uB41C \uD22C\uD45C</div>';}
+    else if(!open&&!sess.is_closed){html+='<div class="closed-banner">\uB9C8\uAC10\uB41C \uD22C\uD45C</div>';}
     html+='</div>';
   });
   wrap.innerHTML=html;
@@ -460,7 +462,7 @@ function renderSessions(){
       if(!sess) return;
       const sv=VOTES[sid]||[];
       const myVote=sv.find(function(v){return v.member_id===CUR.id;});
-      if(sess.closed||new Date()>=new Date(sess.deadline)||myVote) return;
+      if(sess.is_closed||new Date()>=new Date(sess.deadline)||myVote) return;
       SEL[sid]=pid;renderSessions();
     });
   });
@@ -549,7 +551,7 @@ function genCourse(){
   result.innerHTML='<p style="color:#999;font-size:.85rem">\uC0DD\uC131 \uC911...</p>';
   api('status_checks?order=timestamp.desc&limit=20').then(function(statusData){
     const latest={};
-    statusData.forEach(function(s){if(!latest[s.member_id])latest[s.member_id]=s;});
+    (Array.isArray(statusData)?statusData:[]).forEach(function(s){if(!latest[s.member_id])latest[s.member_id]=s;});
     const ms=Object.values(latest);
     const teamAvg={
       energy:ms.length?Math.round(ms.reduce(function(a,s){return a+s.energy;},0)/ms.length):60,
@@ -557,11 +559,11 @@ function genCourse(){
       will:ms.length?Math.round(ms.reduce(function(a,s){return a+(s.will_to_go||60);},0)/ms.length):60
     };
     const lowE=teamAvg.energy<50;
-    const closedS=SESSIONS.filter(function(s){return s.closed&&s.winner_place_id;});
-    const openS=SESSIONS.filter(function(s){return !s.closed;});
+    const closedS=SESSIONS.filter(function(s){return s.is_closed&&s.winning_place_id;});
+    const openS=SESSIONS.filter(function(s){return !s.is_closed;});
     const courseItems=[];
     closedS.forEach(function(sess){
-      const place=PLACES.find(function(p){return p.id===sess.winner_place_id;});
+      const place=PLACES.find(function(p){return p.id===sess.winning_place_id;});
       if(place) courseItems.push({sess:sess,place:place,decided:true});
     });
     openS.forEach(function(sess){
@@ -576,15 +578,14 @@ function genCourse(){
     });
     const timeOrder={morning:0,lunch:1,cafe:2,dinner:3,free:4};
     courseItems.sort(function(a,b){
-      if(a.sess.day!==b.sess.day) return a.sess.day-b.sess.day;
-      return (timeOrder[a.sess.time_slot]||5)-(timeOrder[b.sess.time_slot]||5);
+      if(a.sess.day_number!==b.sess.day_number) return a.sess.day_number-b.sess.day_number;
+      return (timeOrder[a.sess.meal_time]||5)-(timeOrder[b.sess.meal_time]||5);
     });
     if(!courseItems.length){
       result.innerHTML='<p style="color:#999;font-size:.85rem;text-align:center">\uD22C\uD45C \uACB0\uACFC\uAC00 \uC5C6\uC5B4\uC694. \uBA3C\uC800 \uD22C\uD45C\uD574\uBCF4\uC138\uC694!</p>';
       return;
     }
     var html='';
-    // Team status header
     html+='<div style="background:#f8f9ff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:.8rem;color:#555">';
     html+='<b>\uD300 \uD3C9\uADE0</b>  \uCCB4\uB825 '+teamAvg.energy+'%  \uBC30\uACE0\uD30C\uC9D1 '+teamAvg.hunger+'%  \uC758\uC9C0 '+teamAvg.will+'%';
     if(teamAvg.energy<30||teamAvg.will<30){
@@ -595,9 +596,9 @@ function genCourse(){
     html+='</div>';
     var lastLat=null,lastLng=null,lastDay=null;
     courseItems.forEach(function(item,i){
-      if(item.sess.day!==lastDay){
-        html+='<div class="section-title" style="margin-top:'+(i>0?'16':'4')+'px">Day '+item.sess.day+'</div>';
-        lastDay=item.sess.day;lastLat=null;lastLng=null;
+      if(item.sess.day_number!==lastDay){
+        html+='<div class="section-title" style="margin-top:'+(i>0?'16':'4')+'px">Day '+item.sess.day_number+'</div>';
+        lastDay=item.sess.day_number;lastLat=null;lastLng=null;
       }
       const coords=PLACE_COORDS[item.place.id];
       var distHtml='';
@@ -607,7 +608,7 @@ function genCourse(){
         distHtml='<div class="step-dist">&#8594; '+dl.label+'</div><div class="step-transport">'+dl.transport+'</div>';
       }
       if(coords){lastLat=coords[0];lastLng=coords[1];}
-      const timeLabel=TL[item.sess.time_slot]||item.sess.time_slot;
+      const timeLabel=TL[item.sess.meal_time]||item.sess.meal_time;
       const catClass=CE[item.place.category]||'badge-food';
       const catLabel=CL[item.place.category]||item.place.category;
       const decLabel=item.decided
@@ -625,14 +626,13 @@ function genCourse(){
       if(distHtml) html+=distHtml;
       html+='</div></div>';
     });
-    // Advice footer
     html+='<div style="background:#e8f5e9;border-radius:10px;padding:12px;margin-top:16px;font-size:.82rem;color:#1b5e20;line-height:1.7">';
     if(teamAvg.energy<40){
-      html+='\uCCB4\uB825\uC774 \uBD80\uC871\uD574\uC694. \uC7A5\uC18C \uAC04 \uC774\uB3D9\uC740 \uAC00\uAE09\uC801 \uB300\uC911\uAD50\uD1B5\uC744 \uC774\uC6A9\uD558\uC138\uC694.';
+      html+='\uCCB4\uB825 \uBD80\uC871. \uC7A5\uC18C \uAC04 \uC774\uB3D9\uC740 \uAC00\uAE09\uC801 \uB300\uC911\uAD50\uD1B5 \uC774\uC6A9\uD558\uC138\uC694.';
     } else if(teamAvg.energy>=70){
-      html+='\uCCB4\uB825 \uCDA9\uBD84! \uAC70\uB9AC\uAC00 \uBA3C \uACF3\uB3C4 \uB3C4\uBCF4\uB85C \uCDA9\uBD84\uD788 \uC774\uB3D9 \uAC00\uB2A5\uD574\uC694.';
+      html+='\uCCB4\uB825 \uCDA9\uBD84! \uAC70\uB9AC\uAC00 \uBA3C \uACF3\uB3C4 \uB3C4\uBCF4\uB85C \uC774\uB3D9 \uAC00\uB2A5.';
     } else {
-      html+='\uC801\uB2F9\uD55C \uCCB4\uB825\uC774\uC5D0\uC694. 1.5km \uC774\uC0C1 \uAC70\uB9AC\uB294 \uB300\uC911\uAD50\uD1B5\uC744 \uC801\uADF9 \uD65C\uC6A9\uD558\uC138\uC694.';
+      html+='\uC801\uB2F9\uD55C \uCCB4\uB825. 1.5km \uC774\uC0C1 \uAC70\uB9AC\uB294 \uB300\uC911\uAD50\uD1B5\uC744 \uD65C\uC6A9\uD558\uC138\uC694.';
     }
     html+='</div>';
     result.innerHTML=html;
@@ -649,15 +649,14 @@ function addPlace(){
   const lat=parseFloat(document.getElementById('newPlaceLat').value)||null;
   const lng=parseFloat(document.getElementById('newPlaceLng').value)||null;
   if(!name){toast('\uC7A5\uC18C \uC774\uB984 \uC785\uB825 \uD544\uC694');return;}
-  const body={name:name,name_kr:name,category:cat,sub_category:sub||cat,price_range:price||'-',description:desc||name};
   fetch(SUPA+'/rest/v1/places',{
     method:'POST',
     headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-    body:JSON.stringify(body)
+    body:JSON.stringify({name:name,name_kr:name,category:cat,sub_category:sub||cat,price_range:price||'-',description:desc||name})
   }).then(function(r){return r.json();}).then(function(d){
     if(d&&d[0]){
       if(lat&&lng) PLACE_COORDS[d[0].id]=[lat,lng];
-      toast('\uCD94\uAC00 \uC644\uB8CC: '+name);
+      toast('\uCD94\uAC00: '+name);
       ['newPlaceName','newPlaceSub','newPlacePrice','newPlaceDesc','newPlaceLat','newPlaceLng'].forEach(function(id){
         document.getElementById(id).value='';
       });
@@ -670,23 +669,26 @@ function addSession(){
   const time=document.getElementById('newSessTime').value;
   const cat=document.getElementById('newSessCat').value;
   const dl=document.getElementById('newSessDeadline').value;
-  if(!dl){toast('\uB9C8\uAC10 \uC2DC\uAC04 \uC124\uC815 \uD544\uC694');return;}
+  if(!dl){toast('\uB9C8\uAC10 \uC2DC\uAC04 \uD544\uC694');return;}
   fetch(SUPA+'/rest/v1/vote_sessions',{
     method:'POST',
     headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({day:day,time_slot:time,category:cat,deadline:new Date(dl).toISOString(),closed:false})
+    body:JSON.stringify({day_number:day,meal_time:time,category:cat,deadline:new Date(dl).toISOString(),is_closed:false})
   }).then(function(){toast('\uC138\uC158 \uC0DD\uC131 \uC644\uB8CC!');loadSess();loadAdminSessions();});
 }
 function loadAdminSessions(){
-  api('vote_sessions?order=day,time_slot').then(function(sessions){
+  fetch(SUPA+'/rest/v1/vote_sessions?order=day_number,meal_time',{
+    headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
+  }).then(function(r){return r.json();}).then(function(sessions){
+    if(!Array.isArray(sessions)){document.getElementById('adminSessWrap').innerHTML='';return;}
     var html='<div class="admin-card"><div class="admin-title">\uC138\uC158 \uAD00\uB9AC</div>';
     sessions.forEach(function(sess){
       const dl=new Date(sess.deadline).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
       const catLabel=CL[sess.category]||sess.category;
-      const timeLabel=TL[sess.time_slot]||sess.time_slot;
+      const timeLabel=TL[sess.meal_time]||sess.meal_time;
       html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #ffe0cc;flex-wrap:wrap">';
-      html+='<span style="font-size:.82rem;flex:1">Day'+sess.day+' '+timeLabel+' '+catLabel+' ~'+dl+'</span>';
-      if(!sess.closed){html+='<button class="admin-btn" onclick="closeSession(\"'+sess.id+'\")">\uB9C8\uAC10</button>';}
+      html+='<span style="font-size:.82rem;flex:1">Day'+sess.day_number+' '+timeLabel+' '+catLabel+' ~'+dl+'</span>';
+      if(!sess.is_closed){html+='<button class="admin-btn" onclick="closeSession(\"'+sess.id+'\")">\uB9C8\uAC10</button>';}
       else{html+='<span style="font-size:.75rem;color:#999">\uC885\uB8CC</span>';}
       html+='<button class="admin-btn danger" onclick="deleteSession(\"'+sess.id+'\")">\uC0AD\uC81C</button>';
       html+='</div>';
@@ -703,7 +705,7 @@ function closeSession(sid){
     sv.forEach(function(v){counts[v.place_id]=(counts[v.place_id]||0)+1;});
     winnerId=Object.entries(counts).sort(function(a,b){return b[1]-a[1];})[0][0];
   }
-  const body=Object.assign({closed:true},winnerId?{winner_place_id:winnerId}:{});
+  const body=Object.assign({is_closed:true},winnerId?{winning_place_id:winnerId}:{});
   fetch(SUPA+'/rest/v1/vote_sessions?id=eq.'+sid,{
     method:'PATCH',
     headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
